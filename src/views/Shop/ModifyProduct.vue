@@ -95,9 +95,6 @@ export default {
         await fetch('https://nails-australia-staging.herokuapp.com/shop/categories?subbs=true&withId=true')
       ).json();
       this.categories = await response.categories.flat();
-      if (this.categories[0] && this.categories[0]._id) {
-        await this.getCards(this.categories[0]._id);
-      }
     },
     async getCommodity(id) {
       const response = await (await fetch(`https://nails-australia-staging.herokuapp.com/shop/commodity/${id}`)).json();
