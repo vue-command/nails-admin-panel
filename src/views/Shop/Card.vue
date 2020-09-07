@@ -1,5 +1,5 @@
 <template>
-  <v-card class="cardfone ma-8 shop-card">
+  <v-card class="cardfone ma-8 shop-card" @click="handler(id)">
     <v-card flat class="px-0 pt-4 gray-background">
       <v-img :src="images[0]" width="100%" height="220" contain />
     </v-card>
@@ -62,9 +62,12 @@
 <script>
 export default {
   name: 'Card',
-  props: ['images', 'name', 'price', 'description', 'id'],
+  props: ['images', 'name', 'price', 'description', 'id', 'clickHandler'],
   methods: {
-    
+    handler(id){
+      console.log( this.clickHandler);
+      this.clickHandler(id)
+    }
   }
 }
 </script>

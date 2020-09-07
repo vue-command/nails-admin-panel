@@ -33,6 +33,7 @@
             :price="card.price"
             :description="card.description"
             :id="card._id"
+            v-bind:clickHandler="goToEditPage"
           />
         </v-row>
       </v-col>
