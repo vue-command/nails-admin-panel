@@ -16,6 +16,14 @@ export default {
 </script>
 
 <style>
+html,
+body,
+.v-application {
+  font-family: 'Archivo Narrow' !important;
+  background: #cbcbcb !important;
+}
+.v-application--wrap {
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
