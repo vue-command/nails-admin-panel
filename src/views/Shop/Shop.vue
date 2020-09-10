@@ -1,44 +1,19 @@
 <template>
-  <v-container>
-    <v-row class="text-center">
-      <v-col cols="12">
-        <h1>Shop management</h1>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="6">
-        <v-select
-          :items="categories"
-          item-text="name"
-          item-value="_id"
-          label="Category"
-          @change="selectCategory"
-          v-model="categories[0]"
-        >
-          Choose category
-        </v-select>
-      </v-col>
-      <v-col cols="6" justify="center" align="center">
-        <v-btn v-on:click.native="goToEditPage('new')">ADD NEW COMMODITY</v-btn>
-      </v-col>
-    </v-row>
+  <v-container v-if="!selectedItemToModify">
+    <MainHeader :selectCategory="selectCategory" :modifyHandler="modifyHandler" :categories="categories" />
     <v-row justify="start">
-      <v-col cols="12">
-        <v-row>
-          <Card
-            v-for="card in commodities"
-            :key="card.id"
-            :images="card.image"
-            :name="card.name"
-            :price="card.price"
-            :description="card.description"
-            :id="card._id"
-            v-bind:clickHandler="goToEditPage"
-          />
-        </v-row>
-      </v-col>
+      <CardsList
+        :cardClickHandler="modifyHandler"
+        :commodities="commodities"
+        :getCards="getCards"
+        :selectedCategory="selectedCategory"
+        :totalPages='totalPages'
+        :currentPage='currentPage'
+        :setPage='setPage'
+      />
     </v-row>
   </v-container>
+  <ModifyProduct v-else :productId="selectedItemToModify" :clearHandler="clearSelectedItemToModify" />
 </template>
 <style scoped>
 .home {
@@ -47,16 +22,31 @@
 </style>
 
 <script>
-import Card from './Card.vue';
+import CardsList from './CardsList.vue';
+import MainHeader from './MainHeader.vue';
+import ModifyProduct from './ModifyProduct.vue';
 export default {
-  name: 'Home',
+  name: 'ShopEdit',
   data() {
     return {
       categories: [],
       commodities: [],
+      selectedCategory: null,
+      totalItems: 0,
+      selectedItemToModify: null,
+
+      currentPage: 1,
     };
   },
-  components: { Card },
+  computed: {
+    totalPages() {
+      return Math.ceil(this.totalItems / 8);
+    },
+    skip() {
+      return this.currentPage * 8 - 8;
+    },
+  },
+  components: { CardsList, MainHeader, ModifyProduct },
   methods: {
     async getData() {
       const response = await (
@@ -64,20 +54,32 @@ export default {
       ).json();
       this.categories = await response.categories.flat();
       if (this.categories[0] && this.categories[0]._id) {
-        await this.getCards(this.categories[0]._id);
+        this.selectedCategory = await this.categories[0]._id;
+        await this.getCards(this.selectedCategory);
       }
     },
-    async getCards(categoryId) {
+    async getCards(categoryId, skip) {
       const items = await (
-        await fetch(`https://nails-australia-staging.herokuapp.com/shop/commodities/${categoryId}`)
+        await fetch(`https://nails-australia-staging.herokuapp.com/shop/commodities/${categoryId}?skip=${skip || 0}`)
       ).json();
       this.commodities = await items.commodities;
+      this.totalItems = await items.total;
     },
     selectCategory(categoryId) {
+      this.selectedCategory = categoryId;
+      this.currentPage = 1
       this.getCards(categoryId);
     },
-    goToEditPage(id) {
-      this.$router.push({ name: 'ModifyProduct', params: { productId: id } });
+    modifyHandler(id) {
+      this.selectedItemToModify = id;
+      // this.$router.push({ name: 'ModifyProduct', params: { productId: id } });
+    },
+    clearSelectedItemToModify() {
+      this.selectedItemToModify = null;
+    },
+    setPage(page) {
+      this.currentPage = page;
+      this.getCards(this.selectedCategory, this.skip);
     },
   },
   created() {

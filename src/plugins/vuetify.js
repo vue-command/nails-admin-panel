@@ -1,10 +1,19 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+import '@mdi/font/css/materialdesignicons.css'
 
 Vue.use(Vuetify)
 
 export default new Vuetify({
+  icons: {
+    iconfont: 'mdi',
+    values: {
+      expand: 'mdi-expand-more',
+      home: 'mdi-home-circle',
+      back: 'mdi-arrow-left'
+    }
+  },
   theme: {
     options: {
       customProperties: true,
