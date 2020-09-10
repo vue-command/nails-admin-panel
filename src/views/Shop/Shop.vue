@@ -2,15 +2,17 @@
   <v-container v-if="!selectedItemToModify">
     <MainHeader :selectCategory="selectCategory" :modifyHandler="modifyHandler" :categories="categories" />
     <v-row justify="start">
-      <CardsList
-        :cardClickHandler="modifyHandler"
-        :commodities="commodities"
-        :getCards="getCards"
-        :selectedCategory="selectedCategory"
-        :totalPages='totalPages'
-        :currentPage='currentPage'
-        :setPage='setPage'
-      />
+      <v-col cols="12">
+        <CardsList
+          :cardClickHandler="modifyHandler"
+          :commodities="commodities"
+          :getCards="getCards"
+          :selectedCategory="selectedCategory"
+          :totalPages="totalPages"
+          :currentPage="currentPage"
+          :setPage="setPage"
+        />
+      </v-col>
     </v-row>
   </v-container>
   <ModifyProduct v-else :productId="selectedItemToModify" :clearHandler="clearSelectedItemToModify" />
@@ -67,7 +69,7 @@ export default {
     },
     selectCategory(categoryId) {
       this.selectedCategory = categoryId;
-      this.currentPage = 1
+      this.currentPage = 1;
       this.getCards(categoryId);
     },
     modifyHandler(id) {

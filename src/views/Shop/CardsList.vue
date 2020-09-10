@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row v-if="totalPages">
     <v-col cols="12">
       <v-row>
         <Card
@@ -26,6 +26,11 @@
       ></v-pagination>
     </v-row>
   </v-row>
+  <v-row v-else>
+    <v-col>
+      <h1>No commodities</h1>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -36,13 +41,13 @@ export default {
   components: { Card },
   data() {
     return {
-      page: this.currentPage
-    }
+      page: this.currentPage,
+    };
   },
   watch: {
-    currentPage(newVal){
-      this.page = newVal
-    }
+    currentPage(newVal) {
+      this.page = newVal;
+    },
   },
   methods: {},
 };
