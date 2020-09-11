@@ -1,15 +1,12 @@
 <template>
   <v-container>
     <v-row>
+      <v-btn @click="openFormHandler('online')" v-if="showBtnAddCourse">add online course</v-btn>
+      <v-btn @click="openFormHandler('offline')" v-if="showBtnAddCourse">add offline course</v-btn>
+      <v-btn  v-if="showBackBtn" @click="backHandler">back</v-btn>
       <v-col cols="12" offset-sm="2" sm="8" class="pa-0 mb-4">
-        <v-card flat class="transparent" style="color:#fff;">
-          <v-card-title>Portal terms of use</v-card-title>
-          <v-card-text
-            style="color:#fff;"
-          >Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vel reprehenderit repellendus nesciunt voluptatibus porro saepe dicta numquam aliquid aperiam explicabo a nisi sapiente, velit, veritatis nobis. Placeat doloremque in inventore.</v-card-text>
-        </v-card>
       </v-col>
-      <v-form ref="form">
+      <v-form ref="form" v-if="showForm">
         <v-row>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
             <v-text-field
@@ -17,7 +14,6 @@
               :rules="[rules.required]"
               label="Category"
               outlined
-              dark
             ></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
@@ -26,7 +22,6 @@
               :rules="[rules.required, rules.mailValidation]"
               label="E-mail"
               outlined
-              dark
             ></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
@@ -35,24 +30,23 @@
               :rules="[rules.required, rules.phoneValidation]"
               label="Phone number"
               outlined
-              dark
             ></v-text-field>
           </v-col>
-          <v-col v-if="type='offline'" cols="12" offset-sm="4" sm="4" class="pa-0" >
+          <v-col v-if="type === 'offline'" cols="12" offset-sm="4" sm="4" class="pa-0" >
             <div v-for="(textField, i) in textFields" :key="i" class="d-flex input-container">
                 <v-text-field
                   :label="textField.label1"
                   v-model="textField.value1"
                   :rules="[rules.required]"
                   outlined
-                  dark
+  
                 ></v-text-field>
                 <v-text-field
                   :label="textField.label2"
                   v-model="textField.value2"
                   :rules="[rules.required]"
                   outlined
-                  dark
+  
                   class="ml-4"
                 ></v-text-field>
                 <v-btn @click="remove(i)" v-if="i !== 0" class="remove"><v-icon>mdi-delete</v-icon></v-btn>
@@ -63,7 +57,7 @@
             
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
-            <v-text-field v-model="author" :rules="[rules.required]" label="Author" outlined dark></v-text-field>
+            <v-text-field v-model="author" :rules="[rules.required]" label="Author" outlined></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
             <v-text-field
@@ -71,7 +65,6 @@
               :rules="[rules.required]"
               label="Instructor"
               outlined
-              dark
             ></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
@@ -80,7 +73,6 @@
               :rules="[rules.required]"
               label="Category"
               outlined
-              dark
             ></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
@@ -89,7 +81,6 @@
               :rules="[rules.required]"
               label="Name of course"
               outlined
-              dark
             ></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
@@ -98,7 +89,6 @@
               :rules="[rules.required]"
               label="Subtitle"
               outlined
-              dark
             ></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
@@ -107,11 +97,10 @@
               :rules="[rules.required]"
               label="Access (days)"
               outlined
-              dark
             ></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
-            <v-text-field v-model="price" :rules="[rules.required]" label="Price" outlined dark></v-text-field>
+            <v-text-field v-model="price" :rules="[rules.required]" label="Price" outlined></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
             <v-textarea
@@ -119,7 +108,6 @@
               :rules="[rules.required]"
               label="This course is suitable for"
               outlined
-              dark
               no-resize
             ></v-textarea>
           </v-col>
@@ -129,7 +117,6 @@
               :rules="[rules.required]"
               label="Description"
               outlined
-              dark
               no-resize
             ></v-textarea>
           </v-col>
@@ -138,7 +125,6 @@
               v-model="checkbox1"
               :rules="[rules.required]"
               label="Agree to privacy policy"
-              dark
             ></v-checkbox>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
@@ -146,7 +132,6 @@
               v-model="checkbox2"
               :rules="[rules.required]"
               label="Agree to portal terms of use"
-              dark
             ></v-checkbox>
           </v-col>
           <v-col cols="12" style="text-align:center" class="pa-0">
@@ -155,7 +140,6 @@
               rounded
               outlined
               small
-              dark
               min-width="90"
               class="yellow-button mt-4"
               @click="checkForm"
@@ -181,7 +165,7 @@
 </style>
 <script>
 export default {
-  name: 'personal-data',
+  name: 'add-course',
   data () {
     return {
       businessName: '',
@@ -207,6 +191,10 @@ export default {
         },
        
       ],
+      type: '',
+      showForm: '',
+      showBtnAddCourse:true,
+      showBackBtn: false,
       rules: {
         required: (v) => !!v || 'input is required',
         minLengthName: (v) => v.length <= 15 || 'the maximum number of characters entered',
@@ -257,7 +245,25 @@ export default {
 
      remove (index) {
          this.textFields.splice(index, 1)
-     }
+     },
+    //  onlineHandler () {
+    //   this.typeCourse ='online'
+    //   this.showForm = true
+    //   this.showBackBtn = true
+    //   this.showBtnAddCourse = false
+    // },
+    openFormHandler (typeCourse) {
+      this.type = typeCourse
+      this.showForm = true
+      this.showBackBtn = true
+      this.showBtnAddCourse = false
+    },
+    backHandler () {
+      this.showForm= false
+      this.type = ''
+      this.showBackBtn = false
+      this.showBtnAddCourse = true
+    }
   }
 }
 </script>

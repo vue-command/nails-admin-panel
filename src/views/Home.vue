@@ -2,8 +2,11 @@
   <v-container>
     <v-row class="text-center">
       <v-col cols="6" lg="6">
-        <v-btn @click="goToCourses">
-          COURSES
+        <v-btn @click="goToAllCourses">
+          ALL COURSES
+        </v-btn>
+        <v-btn @click="goToAddCourse">
+          ADD COURSES
         </v-btn>
       </v-col>
       <v-col cols="6" lg="6">
@@ -27,8 +30,11 @@ export default {
     goToShop() {
       this.$router.push({name: "ShopEdit"})
     },
-    goToCourses() {
+    goToAllCourses() {
        this.$router.push({name: "courses"})
+    },
+    goToAddCourse() {
+       this.$router.push({name: "add-course"})
     }
   }
 };
