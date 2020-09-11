@@ -35,15 +35,15 @@
           <v-col v-if="type === 'offline'" cols="12" offset-sm="4" sm="4" class="pa-0" >
             <div v-for="(textField, i) in dateOfCourses" :key="i" class="d-flex input-container">
                 <v-text-field
-                  :label="textField.label1"
-                  v-model="textField.value1"
+                  :label="labelDateOfCourse"
+                  v-model="textField.date"
                   :rules="[rules.required]"
                   outlined
   
                 ></v-text-field>
                 <v-text-field
-                  :label="textField.label2"
-                  v-model="textField.value2"
+                  :label="labelAvailableSpots"
+                  v-model="textField.spots"
                   :rules="[rules.required]"
                   outlined
   
@@ -94,8 +94,8 @@
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
           <div v-for="(textField, i) in courseSuitable" :key="i" class="d-flex input-container">
                 <v-text-field
-                  :label="textField.label"
-                  v-model="textField.text"
+                  :label="labelForSuitable"
+                  v-model="courseSuitable[i]"
                   :rules="[rules.required]"
                   outlined
   
@@ -155,6 +155,7 @@
         :description="this.description"
         :dateOfCourses="this.dateOfCourses"
         :url="this.url"
+        :resetData="resetData"
         />
     </v-row>
   </v-container>
@@ -184,12 +185,12 @@ export default {
       category: '',
       nameOfCourse: '',
       subtitle: '',
+      labelDateOfCourse: 'date of the course', 
+      labelAvailableSpots: 'available spots',
       dateOfCourses: [
-        { 
-          label1: 'date of the course', 
-          value1: '',
-          label2: 'available spots',
-          value2: ''
+        {  
+          date: '',
+          spots: ''
         },
        
       ],
@@ -198,29 +199,19 @@ export default {
       author: '',
       inctructor: '',
       infoBonus: '',
-      courseSuitable: [
-        {
-          label: 'This course is suitable for',
-          text: ''
-        }
-      ],
+      labelForSuitable:'This course is suitable for',
+      courseSuitable: [''],
       description: '',
       file:[],
       url:null,
       type: '',
-      showForm: '',
+      showForm: false,
       showBtnAddCourse:true,
       showBackBtn: false,
       showPreview: false,
       rules: {
         required: (v) => !!v || 'input is required',
         minLengthName: (v) => v.length <= 15 || 'the maximum number of characters entered',
-        mailValidation: (v) =>
-          /^(\w+\.?\w+\.?\w+?|\d+\.?\d+\.?\d+)([@])(\w+|\d+)\.{1}[a-zA-Z]{2,3}$/.test(v) || 'invalid email',
-        phoneValidation: (v) =>
-          /^\({0,1}((0|\+61)(2|4|3|7|8)){0,1}\){0,1}( |-){0,1}[0-9]{2}( |-){0,1}[0-9]{2}( |-){0,1}[0-9]{1}( |-){0,1}[0-9]{3}$/.test(
-            v
-          ) || 'invalid number'
       }
     }
   },
@@ -229,59 +220,40 @@ export default {
       Preview_image() {
       this.url = URL.createObjectURL(this.file)
     },
-    sendData () {
-      // this.$store.dispatch('', {
-      //   businessName: this.businessName,
-      //   email: this.email,
-      //   phone: this.phone,
-      //   author: this.author,
-      //   instructor: this.instructor,
-      //   category: this.category,
-      //   nameOfCourse: this.nameOfCourse,
-      //   subtitle: this.subtitle,
-      //   access: this.access,
-      //   price: this.price,
-      //   courseSuitable: this.courseSuitable,
-      //   description: this.description,
-      //   textFields: this.textFields
-      // });
-
-      // ['businessName', 'email', 'phone', 'author', 'instructor', 'category', 'nameOfCourse', 'subtitle', 'access', 'price', 'courseSuitable', 'description', 'checkbox1', 'checkbox2'].forEach((item) => { this[item] = '' })
+    resetData () {
+      ['category', 'nameOfCourse', 'subtitle', 'days', 'price', 'author', 'inctructor', 'infoBonus', 'description', 'type'].forEach((item) => { this[item] = '' })
+      this.file = []
+      this.url = null
+      this.courseSuitable = ['']
+      this.dateOfCourses =  [
+        {
+          date: '',
+          spots: ''
+        },
+      ]
     },
     checkForm () {
       if (this.$refs.form.validate()) {
         this.showPreview = true
         this.showForm = false
-        // this.sendData()
       }
     },
     add () {
         this.dateOfCourses.push({ 
-          label1: 'date of the course', 
-          value1: '',
-          label2: 'available spots',
-          value2: ''
+          date: '',
+          spots: ''
         })
      },
      addSuitable () {
-        this.courseSuitable.push({ 
-          label: 'This course is suitable for', 
-          text: '',
-        })
+        this.courseSuitable.push('')
      },
 
      remove (index) {
          this.dateOfCourses.splice(index, 1)
      },
       removeSuitable (index) {
-         this.dateOfCourses.splice(index, 1)
+         this.courseSuitable.splice(index, 1)
      },
-    //  onlineHandler () {
-    //   this.typeCourse ='online'
-    //   this.showForm = true
-    //   this.showBackBtn = true
-    //   this.showBtnAddCourse = false
-    // },
     openFormHandler (typeCourse) {
       this.type = typeCourse
       this.showForm = true

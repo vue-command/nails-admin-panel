@@ -48,7 +48,7 @@
 <script>
 export default {
   props:['img', 'nameOfCourse',
-  'subtitle', 'price', 'author', 'inctructor', 'infoBonus', 'courseSuitable', 'description', 'days', 'category', 'dateOfCourses', 'url'],
+  'subtitle', 'price', 'author', 'inctructor', 'infoBonus', 'courseSuitable', 'description', 'days', 'category', 'dateOfCourses', 'url', 'resetData'],
   // name: 'course-online',
   data () {
     return {
@@ -85,6 +85,7 @@ export default {
         },
         body: formData
       })
+      this.resetData()
     }
   },
   mounted () {
