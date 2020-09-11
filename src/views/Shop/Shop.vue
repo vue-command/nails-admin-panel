@@ -1,21 +1,31 @@
 <template>
   <v-container v-if="!selectedItemToModify">
-    <MainHeader :selectCategory="selectCategory" :modifyHandler="modifyHandler" :categories="categories" />
-    <v-row justify="start">
-      <v-col cols="12">
-        <CardsList
-          :cardClickHandler="modifyHandler"
-          :commodities="commodities"
-          :getCards="getCards"
-          :selectedCategory="selectedCategory"
-          :totalPages="totalPages"
-          :currentPage="currentPage"
-          :setPage="setPage"
-        />
-      </v-col>
-    </v-row>
+    <v-card>
+      <MainHeader
+        :selectCategory="selectCategory"
+        :modifyHandler="modifyHandler"
+        :categories="categories"
+      />
+      <v-row justify="start">
+        <v-col cols="12">
+          <CardsList
+            :cardClickHandler="modifyHandler"
+            :commodities="commodities"
+            :getCards="getCards"
+            :selectedCategory="selectedCategory"
+            :totalPages="totalPages"
+            :currentPage="currentPage"
+            :setPage="setPage"
+          />
+        </v-col>
+      </v-row>
+    </v-card>
   </v-container>
-  <ModifyProduct v-else :productId="selectedItemToModify" :clearHandler="clearSelectedItemToModify" />
+  <ModifyProduct
+    v-else
+    :productId="selectedItemToModify"
+    :clearHandler="clearSelectedItemToModify"
+  />
 </template>
 <style scoped>
 .home {
@@ -24,11 +34,11 @@
 </style>
 
 <script>
-import CardsList from './CardsList.vue';
-import MainHeader from './MainHeader.vue';
-import ModifyProduct from './ModifyProduct.vue';
+import CardsList from "./CardsList.vue";
+import MainHeader from "./MainHeader.vue";
+import ModifyProduct from "./ModifyProduct.vue";
 export default {
-  name: 'ShopEdit',
+  name: "ShopEdit",
   data() {
     return {
       categories: [],
@@ -52,7 +62,9 @@ export default {
   methods: {
     async getData() {
       const response = await (
-        await fetch('https://nails-australia-staging.herokuapp.com/shop/categories?subbs=true&withId=true')
+        await fetch(
+          "https://nails-australia-staging.herokuapp.com/shop/categories?subbs=true&withId=true"
+        )
       ).json();
       this.categories = await response.categories.flat();
       if (this.categories[0] && this.categories[0]._id) {
@@ -62,7 +74,11 @@ export default {
     },
     async getCards(categoryId, skip) {
       const items = await (
-        await fetch(`https://nails-australia-staging.herokuapp.com/shop/commodities/${categoryId}?skip=${skip || 0}`)
+        await fetch(
+          `https://nails-australia-staging.herokuapp.com/shop/commodities/${categoryId}?skip=${
+            skip || 0
+          }`
+        )
       ).json();
       this.commodities = await items.commodities;
       this.totalItems = await items.total;
