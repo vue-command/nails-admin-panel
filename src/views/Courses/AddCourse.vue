@@ -10,7 +10,7 @@
         <v-row>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
             <v-text-field
-              v-model="businessName"
+              v-model="category"
               :rules="[rules.required]"
               label="Category"
               outlined
@@ -18,22 +18,22 @@
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
             <v-text-field
-              v-model="email"
-              :rules="[rules.required, rules.mailValidation]"
-              label="E-mail"
+              v-model="nameOfCourse"
+              :rules="[rules.required]"
+              label="Name of Course"
               outlined
             ></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
             <v-text-field
-              v-model="phone"
-              :rules="[rules.required, rules.phoneValidation]"
-              label="Phone number"
+              v-model="subtitle"
+              :rules="[rules.required]"
+              label="Subtitle"
               outlined
             ></v-text-field>
           </v-col>
           <v-col v-if="type === 'offline'" cols="12" offset-sm="4" sm="4" class="pa-0" >
-            <div v-for="(textField, i) in textFields" :key="i" class="d-flex input-container">
+            <div v-for="(textField, i) in dateOfCourses" :key="i" class="d-flex input-container">
                 <v-text-field
                   :label="textField.label1"
                   v-model="textField.value1"
@@ -57,11 +57,27 @@
             
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
-            <v-text-field v-model="author" :rules="[rules.required]" label="Author" outlined></v-text-field>
+            <v-text-field v-model="days" :rules="[rules.required]" label="Access (days)" outlined></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
             <v-text-field
-              v-model="instructor"
+              v-model="price"
+              :rules="[rules.required]"
+              label="price"
+              outlined
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
+            <v-text-field
+              v-model="author"
+              :rules="[rules.required]"
+              label="Author"
+              outlined
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
+            <v-text-field
+              v-model="inctructor"
               :rules="[rules.required]"
               label="Instructor"
               outlined
@@ -69,47 +85,26 @@
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
             <v-text-field
-              v-model="category"
+              v-model="infoBonus"
               :rules="[rules.required]"
-              label="Category"
+              label="Info for bonus"
               outlined
             ></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
-            <v-text-field
-              v-model="nameOfCourse"
-              :rules="[rules.required]"
-              label="Name of course"
-              outlined
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
-            <v-text-field
-              v-model="subtitle"
-              :rules="[rules.required]"
-              label="Subtitle"
-              outlined
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
-            <v-text-field
-              v-model="access"
-              :rules="[rules.required]"
-              label="Access (days)"
-              outlined
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
-            <v-text-field v-model="price" :rules="[rules.required]" label="Price" outlined></v-text-field>
-          </v-col>
-          <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
-            <v-textarea
-              v-model="courseSuitable"
-              :rules="[rules.required]"
-              label="This course is suitable for"
-              outlined
-              no-resize
-            ></v-textarea>
+          <div v-for="(textField, i) in courseSuitable" :key="i" class="d-flex input-container">
+                <v-text-field
+                  :label="textField.label"
+                  v-model="textField.text"
+                  :rules="[rules.required]"
+                  outlined
+  
+                ></v-text-field>
+                <v-btn @click="removeSuitable(i)" v-if="i !== 0" class="remove"><v-icon>mdi-delete</v-icon></v-btn>
+            </div>
+            <div class="d-flex justify-end mb-8">
+              <v-btn @click="addSuitable" ><v-icon>mdi-plus</v-icon></v-btn>
+            </div>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
             <v-textarea
@@ -121,18 +116,16 @@
             ></v-textarea>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
-            <v-checkbox
-              v-model="checkbox1"
-              :rules="[rules.required]"
-              label="Agree to privacy policy"
-            ></v-checkbox>
-          </v-col>
-          <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
-            <v-checkbox
-              v-model="checkbox2"
-              :rules="[rules.required]"
-              label="Agree to portal terms of use"
-            ></v-checkbox>
+            <v-file-input
+              v-model="file"
+              color="deep-purple accent-4"
+              label="Cover picture"
+              placeholder="Select your file"
+              prepend-icon="mdi-paperclip"
+              outlined
+              @change="Preview_image"
+              :show-size="1000"
+            ></v-file-input>
           </v-col>
           <v-col cols="12" style="text-align:center" class="pa-0">
             <v-btn
@@ -147,6 +140,22 @@
           </v-col>
         </v-row>
       </v-form>
+      <PreviewCourse 
+        v-if="showPreview"
+        :category="this.category"
+        :days="this.days"
+        :img="this.file"
+        :nameOfCourse="this.nameOfCourse"
+        :subtitle="this.subtitle"
+        :price="this.price"
+        :author="this.author"
+        :inctructor="this.inctructor"
+        :infoBonus="this.infoBonus"
+        :courseSuitable="this.courseSuitable"
+        :description="this.description"
+        :dateOfCourses="this.dateOfCourses"
+        :url="this.url"
+        />
     </v-row>
   </v-container>
 </template>
@@ -164,25 +173,18 @@
 }
 </style>
 <script>
+import PreviewCourse from './PreviewCourse.vue'
 export default {
   name: 'add-course',
+  components: {
+    PreviewCourse
+  },
   data () {
     return {
-      businessName: '',
-      email: '',
-      phone: '',
-      author: '',
-      instructor: '',
       category: '',
       nameOfCourse: '',
       subtitle: '',
-      access: '',
-      price: '',
-      courseSuitable: '',
-      description: '',
-      checkbox1: '',
-      checkbox2: '',
-      textFields: [
+      dateOfCourses: [
         { 
           label1: 'date of the course', 
           value1: '',
@@ -191,10 +193,25 @@ export default {
         },
        
       ],
+      days: '',
+      price: '',
+      author: '',
+      inctructor: '',
+      infoBonus: '',
+      courseSuitable: [
+        {
+          label: 'This course is suitable for',
+          text: ''
+        }
+      ],
+      description: '',
+      file:[],
+      url:null,
       type: '',
       showForm: '',
       showBtnAddCourse:true,
       showBackBtn: false,
+      showPreview: false,
       rules: {
         required: (v) => !!v || 'input is required',
         minLengthName: (v) => v.length <= 15 || 'the maximum number of characters entered',
@@ -209,8 +226,10 @@ export default {
   },
 
   methods: {
+      Preview_image() {
+      this.url = URL.createObjectURL(this.file)
+    },
     sendData () {
-      console.log(this.textFields, this.businessName,)
       // this.$store.dispatch('', {
       //   businessName: this.businessName,
       //   email: this.email,
@@ -231,20 +250,31 @@ export default {
     },
     checkForm () {
       if (this.$refs.form.validate()) {
-        this.sendData()
+        this.showPreview = true
+        this.showForm = false
+        // this.sendData()
       }
     },
     add () {
-        this.textFields.push({ 
+        this.dateOfCourses.push({ 
           label1: 'date of the course', 
           value1: '',
           label2: 'available spots',
           value2: ''
         })
      },
+     addSuitable () {
+        this.courseSuitable.push({ 
+          label: 'This course is suitable for', 
+          text: '',
+        })
+     },
 
      remove (index) {
-         this.textFields.splice(index, 1)
+         this.dateOfCourses.splice(index, 1)
+     },
+      removeSuitable (index) {
+         this.dateOfCourses.splice(index, 1)
      },
     //  onlineHandler () {
     //   this.typeCourse ='online'
