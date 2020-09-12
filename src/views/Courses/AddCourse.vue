@@ -3,7 +3,7 @@
     <v-row>
       <v-btn @click="formHandler('online','open')" v-if="showBtnAddCourse">add online course</v-btn>
       <v-btn @click="formHandler('offline','open')" v-if="showBtnAddCourse">add offline course</v-btn>
-      <v-btn  v-if="showBackBtn" @click="formHandler">back</v-btn>
+      <v-btn  v-if="showBackBtn" @click="formHandler('','');resetData('')">back</v-btn>
       <v-col cols="12" offset-sm="2" sm="8" class="pa-0 mb-4">
       </v-col>
       <v-form ref="form" v-if="showForm">
@@ -52,10 +52,10 @@
                 dark
                 class="ml-4"
               ></v-text-field>
-              <v-btn @click="removeField(i)" v-if="i !== 0" class="remove"><v-icon>mdi-delete</v-icon></v-btn>
+              <v-btn @click="removeField(i,'')" v-if="i !== 0" class="remove"><v-icon>mdi-delete</v-icon></v-btn>
             </div>
             <div class="d-flex justify-end mb-8">
-              <v-btn @click="addField" ><v-icon>mdi-plus</v-icon></v-btn>
+              <v-btn @click="addField('')" ><v-icon>mdi-plus</v-icon></v-btn>
             </div>
             
           </v-col>
@@ -234,14 +234,10 @@ export default {
       Preview_image() {
       this.url = URL.createObjectURL(this.file)
     },
-    resetData () {
+    resetData (fromPreviewHandler) {
       ['category', 'nameOfCourse', 'subtitle', 'days', 'price', 'author', 'inctructor', 'infoBonus', 'description', 'type'].forEach((item) => { this[item] = '' })
       this.file = []
       this.url = null
-      this.showForm = false,
-      this.showBtnAddCourse = true,
-      this.showBackBtn = false,
-      this.showPreview = false,
       this.courseSuitable = ['']
       this.dateOfCourses =  [
         {
@@ -249,6 +245,12 @@ export default {
           spots: ''
         },
       ]
+      if (!!fromPreviewHandler) {
+        this.showForm = false
+        this.showBtnAddCourse = true
+        this.showBackBtn = false
+        this.showPreview = false
+      } 
     },
     checkForm () {
       if (this.$refs.form.validate()) {
@@ -256,24 +258,24 @@ export default {
       }
     },
     addField (entryField) {
-       return entryField === 'suitable' ? this.courseSuitable.push('') : this.dateOfCourses.push({ 
+       return !!entryField ? this.courseSuitable.push('') : this.dateOfCourses.push({ 
           date: '',
           spots: ''
         })   
      },
      removeField (index,entryField) {
-        return entryField === 'suitable' ?  this.courseSuitable.splice(index, 1) : this.dateOfCourses.splice(index, 1)
+        return !!entryField ?  this.courseSuitable.splice(index, 1) : this.dateOfCourses.splice(index, 1)
      },
     formHandler (typeCourse , type) {
       this.type = typeCourse
-      this.showForm = type === 'open'
-      this.showBackBtn = type === 'open'
-      this.showBtnAddCourse = type !== 'open'
+      this.showForm = !!type
+      this.showBackBtn = !!type
+      this.showBtnAddCourse = !type
     },
     previewHandler (type) {
-      this.showPreview = type === 'open' 
-      this.showForm = type !== 'open' 
-      this.showBackBtn = type !== 'open'
+      this.showPreview = !!type 
+      this.showForm = !type 
+      this.showBackBtn = !type
     },
     // closePreviewHandler() {
     //   this.showPreview = false

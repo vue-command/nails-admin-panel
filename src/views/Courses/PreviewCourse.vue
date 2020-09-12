@@ -90,7 +90,7 @@
         </v-card>
       </v-col>
       <v-col cols="12" xs="12"  order="2">
-        <v-btn @click="previewHandler">Edit Details</v-btn>
+        <v-btn @click="previewHandler('')">Edit Details</v-btn>
         <v-btn @click="sendData">Publish</v-btn>
       </v-col>
     </v-row>
@@ -128,7 +128,7 @@
         const formData = new FormData();
         let data = {
           category: this.category,
-          // nameOfCourse:this.nameOfCourse,
+          nameOfCourse:this.nameOfCourse,
           subtitle: this.subtitle,
           // dateOfCourses:this.dateOfCourses,
           accessDays: Number(this.days),
@@ -139,20 +139,24 @@
           // thisCourseIsSuitableFor:this.courseSuitable,
           description: this.description,
           file: this.img,
-        };
+        }
         console.log(data);
         for (const name in data) {
           formData.append(name, data[name]);
         }
+        if (this.type === 'offline') {
+         formData.append('dateOfCourses',JSON.stringify(this.dateOfCourses))
+        }
+        formData.append('thisCourseIsSuitableFor',JSON.stringify(this.courseSuitable))
         console.log(formData);
         fetch('https://nails-australia-staging.herokuapp.com/course/new/offline', {
           method: 'POST',
           headers: {
             'Content-Type': 'multipart/form-data',
           },
-          body: JSON.stringify(formData),
+          body:formData,
         });
-        this.resetData();
+        this.resetData('preview');
       },
     },
     mounted() {},
