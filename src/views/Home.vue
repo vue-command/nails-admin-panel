@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container >
     <v-row class="text-center">
       <v-col cols="6" lg="6">
         <v-btn @click="goToAllCourses">
@@ -18,9 +18,9 @@
   </v-container>
 </template>
 <style scoped>
-.home {
+/* .home {
   background: #000;
-}
+} */
 </style>
 <script>
 export default {

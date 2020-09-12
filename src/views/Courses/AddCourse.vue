@@ -1,9 +1,9 @@
 <template>
-  <v-container>
+  <v-container style="background: #000">
     <v-row>
-      <v-btn @click="openFormHandler('online')" v-if="showBtnAddCourse">add online course</v-btn>
-      <v-btn @click="openFormHandler('offline')" v-if="showBtnAddCourse">add offline course</v-btn>
-      <v-btn  v-if="showBackBtn" @click="backHandler">back</v-btn>
+      <v-btn @click="formHandler('online','open')" v-if="showBtnAddCourse">add online course</v-btn>
+      <v-btn @click="formHandler('offline','open')" v-if="showBtnAddCourse">add offline course</v-btn>
+      <v-btn  v-if="showBackBtn" @click="formHandler">back</v-btn>
       <v-col cols="12" offset-sm="2" sm="8" class="pa-0 mb-4">
       </v-col>
       <v-form ref="form" v-if="showForm">
@@ -14,6 +14,7 @@
               :rules="[rules.required]"
               label="Category"
               outlined
+              dark
             ></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
@@ -22,6 +23,7 @@
               :rules="[rules.required]"
               label="Name of Course"
               outlined
+              dark
             ></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
@@ -30,41 +32,43 @@
               :rules="[rules.required]"
               label="Subtitle"
               outlined
+              dark
             ></v-text-field>
           </v-col>
           <v-col v-if="type === 'offline'" cols="12" offset-sm="4" sm="4" class="pa-0" >
             <div v-for="(textField, i) in dateOfCourses" :key="i" class="d-flex input-container">
-                <v-text-field
-                  :label="labelDateOfCourse"
-                  v-model="textField.date"
-                  :rules="[rules.required]"
-                  outlined
-  
-                ></v-text-field>
-                <v-text-field
-                  :label="labelAvailableSpots"
-                  v-model="textField.spots"
-                  :rules="[rules.required]"
-                  outlined
-  
-                  class="ml-4"
-                ></v-text-field>
-                <v-btn @click="remove(i)" v-if="i !== 0" class="remove"><v-icon>mdi-delete</v-icon></v-btn>
+              <v-text-field
+                :label="labelDateOfCourse"
+                v-model="textField.date"
+                :rules="[rules.required]"
+                outlined
+                dark
+              ></v-text-field>
+              <v-text-field
+                :label="labelAvailableSpots"
+                v-model="textField.spots"
+                :rules="[rules.required]"
+                outlined
+                dark
+                class="ml-4"
+              ></v-text-field>
+              <v-btn @click="removeField(i)" v-if="i !== 0" class="remove"><v-icon>mdi-delete</v-icon></v-btn>
             </div>
             <div class="d-flex justify-end mb-8">
-              <v-btn @click="add" ><v-icon>mdi-plus</v-icon></v-btn>
+              <v-btn @click="addField" ><v-icon>mdi-plus</v-icon></v-btn>
             </div>
             
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
-            <v-text-field v-model="days" :rules="[rules.required]" label="Access (days)" outlined></v-text-field>
+            <v-text-field v-model="days" :rules="[rules.required,rules.onlyDigits]" label="Access (days)" outlined dark></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
             <v-text-field
               v-model="price"
-              :rules="[rules.required]"
+              :rules="[rules.required,rules.onlyDigits]"
               label="price"
               outlined
+              dark
             ></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
@@ -73,6 +77,7 @@
               :rules="[rules.required]"
               label="Author"
               outlined
+              dark
             ></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
@@ -81,6 +86,7 @@
               :rules="[rules.required]"
               label="Instructor"
               outlined
+              dark
             ></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
@@ -89,6 +95,7 @@
               :rules="[rules.required]"
               label="Info for bonus"
               outlined
+              dark
             ></v-text-field>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
@@ -98,12 +105,12 @@
                   v-model="courseSuitable[i]"
                   :rules="[rules.required]"
                   outlined
-  
+                  dark
                 ></v-text-field>
-                <v-btn @click="removeSuitable(i)" v-if="i !== 0" class="remove"><v-icon>mdi-delete</v-icon></v-btn>
+                <v-btn @click="removeField(i,'suitable')" v-if="i !== 0" class="remove"><v-icon>mdi-delete</v-icon></v-btn>
             </div>
             <div class="d-flex justify-end mb-8">
-              <v-btn @click="addSuitable" ><v-icon>mdi-plus</v-icon></v-btn>
+              <v-btn @click="addField('suitable')" ><v-icon>mdi-plus</v-icon></v-btn>
             </div>
           </v-col>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
@@ -112,6 +119,7 @@
               :rules="[rules.required]"
               label="Description"
               outlined
+              dark
               no-resize
             ></v-textarea>
           </v-col>
@@ -123,6 +131,7 @@
               placeholder="Select your file"
               prepend-icon="mdi-paperclip"
               outlined
+              dark
               @change="Preview_image"
               :show-size="1000"
             ></v-file-input>
@@ -132,7 +141,8 @@
               color="buttons"
               rounded
               outlined
-              small
+              large
+              dark
               min-width="90"
               class="yellow-button mt-4"
               @click="checkForm"
@@ -155,7 +165,10 @@
         :description="this.description"
         :dateOfCourses="this.dateOfCourses"
         :url="this.url"
+        :type="this.type"
         :resetData="resetData"
+        :previewHandler="previewHandler"
+        :formHandler="formHandler"
         />
     </v-row>
   </v-container>
@@ -212,6 +225,7 @@ export default {
       rules: {
         required: (v) => !!v || 'input is required',
         minLengthName: (v) => v.length <= 15 || 'the maximum number of characters entered',
+        onlyDigits: (v) => !/\D/g.test(v) || 'input should consist only of digits',
       }
     }
   },
@@ -224,6 +238,10 @@ export default {
       ['category', 'nameOfCourse', 'subtitle', 'days', 'price', 'author', 'inctructor', 'infoBonus', 'description', 'type'].forEach((item) => { this[item] = '' })
       this.file = []
       this.url = null
+      this.showForm = false,
+      this.showBtnAddCourse = true,
+      this.showBackBtn = false,
+      this.showPreview = false,
       this.courseSuitable = ['']
       this.dateOfCourses =  [
         {
@@ -234,38 +252,40 @@ export default {
     },
     checkForm () {
       if (this.$refs.form.validate()) {
-        this.showPreview = true
-        this.showForm = false
+        this.previewHandler('open')
       }
     },
-    add () {
-        this.dateOfCourses.push({ 
+    addField (entryField) {
+       return entryField === 'suitable' ? this.courseSuitable.push('') : this.dateOfCourses.push({ 
           date: '',
           spots: ''
-        })
+        })   
      },
-     addSuitable () {
-        this.courseSuitable.push('')
+     removeField (index,entryField) {
+        return entryField === 'suitable' ?  this.courseSuitable.splice(index, 1) : this.dateOfCourses.splice(index, 1)
      },
-
-     remove (index) {
-         this.dateOfCourses.splice(index, 1)
-     },
-      removeSuitable (index) {
-         this.courseSuitable.splice(index, 1)
-     },
-    openFormHandler (typeCourse) {
+    formHandler (typeCourse , type) {
       this.type = typeCourse
-      this.showForm = true
-      this.showBackBtn = true
-      this.showBtnAddCourse = false
+      this.showForm = type === 'open'
+      this.showBackBtn = type === 'open'
+      this.showBtnAddCourse = type !== 'open'
     },
-    backHandler () {
-      this.showForm= false
-      this.type = ''
-      this.showBackBtn = false
-      this.showBtnAddCourse = true
-    }
+    previewHandler (type) {
+      this.showPreview = type === 'open' 
+      this.showForm = type !== 'open' 
+      this.showBackBtn = type !== 'open'
+    },
+    // closePreviewHandler() {
+    //   this.showPreview = false
+    //   this.showForm = false
+    //   this.showBackBtn = false
+    // },
+    // backHandler () {
+    //   this.showForm= false
+    //   this.type = ''
+    //   this.showBackBtn = false
+    //   this.showBtnAddCourse = true
+    // }
   }
 }
 </script>
