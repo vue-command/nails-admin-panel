@@ -2,16 +2,18 @@
   <v-row v-if="totalPages">
     <v-col cols="12">
       <v-row>
+      <!--noindex
         <Card
           v-for="card in commodities"
           :key="card.id"
-          :images="card.image"
+          :image="card.coverImage.link"
           :name="card.name"
           :price="card.price"
           :description="card.brand"
           :id="card._id"
           v-bind:clickHandler="cardClickHandler"
         />
+        -->
       </v-row>
     </v-col>
     <v-row justify="center">

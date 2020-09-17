@@ -1,11 +1,11 @@
 <template>
-  <v-card class="cardfone ma-8 shop-card" @click="handler(id)">
+  <v-card class="cardfone ma-8 shop-card" @click="goToItem" min-width="210">
     <v-card flat class="px-0 pt-4 gray-background">
-      <v-img :src="images[0]" width="100%" height="220" contain />
+      <v-img :src="image" width="100%" height="220" contain />
     </v-card>
     <v-card-text class="text-wrap">
       <h4 class="color-black">{{ name }}</h4>
-      <h4>{{ description }}</h4>
+      <h4>{{ brand }}</h4>
     </v-card-text>
     <v-card-text class="price-wrap">
       <h4 class="color-black">{{ price }} AUD</h4>
@@ -14,6 +14,7 @@
 </template>
 
 <style scoped lang="scss">
+@import '@/css/variables.scss';
 .shop-card {
   cursor: pointer;
 }
@@ -31,27 +32,27 @@
   color: black;
 }
 .gray-background {
-  background-color: #f4f4f4;
+  background-color: $lightGray;
 }
 .shop-card {
-  background-color: #f4f4f4;
+  background-color: $lightGray;
   margin: 20px;
   width: calc(25% - 65px);
   height: 350px;
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1450px) {
   .shop-card {
     margin: 10px;
     width: calc(33% - 65px);
   }
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1095px) {
   .shop-card {
     margin: 10px;
     width: calc(50% - 65px);
   }
 }
-@media screen and (max-width: 540px) {
+@media screen and (max-width: 569px) {
   .shop-card {
     margin: 10px;
     width: -webkit-fill-available;
@@ -62,11 +63,10 @@
 <script>
 export default {
   name: 'Card',
-  props: ['images', 'name', 'price', 'description', 'id', 'clickHandler'],
+  props: ['image', 'name', 'price', 'brand', 'id'],
   methods: {
-    handler(id) {
-      this.clickHandler(id);
-    },
-  },
-};
+    goToItem () {
+    }
+  }
+}
 </script>
