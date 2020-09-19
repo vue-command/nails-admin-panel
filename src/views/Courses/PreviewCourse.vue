@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid style="background:black;">
     <v-row>
       <v-col
         cols="12"
@@ -118,7 +118,7 @@
       'formHandler',
       'type',
     ],
-    // name: 'course-online',
+     name: 'preview-course',
     data() {
       return {};
     },
@@ -130,13 +130,13 @@
           category: this.category,
           nameOfCourse:this.nameOfCourse,
           subtitle: this.subtitle,
-          // dateOfCourses:this.dateOfCourses,
+          dateOfCourses:this.dateOfCourses,
           accessDays: Number(this.days),
           price: Number(this.price),
           author: this.author,
           inctructor: this.inctructor,
           infoForBonus: this.infoBonus,
-          // thisCourseIsSuitableFor:this.courseSuitable,
+          thisCourseIsSuitableFor:this.courseSuitable,
           description: this.description,
           file: this.img,
         }
@@ -144,16 +144,18 @@
         for (const name in data) {
           formData.append(name, data[name]);
         }
-        if (this.type === 'offline') {
-         formData.append('dateOfCourses',JSON.stringify(this.dateOfCourses))
-        }
-        formData.append('thisCourseIsSuitableFor',JSON.stringify(this.courseSuitable))
+        // if (this.type === 'offline') {
+        //  formData.append('dateOfCourses',JSON.stringify(this.dateOfCourses))
+        // }
+        // formData.append('thisCourseIsSuitableFor',JSON.stringify(this.courseSuitable))
         console.log(formData);
         fetch('https://nails-australia-staging.herokuapp.com/course/new/offline', {
+          // fetch('https://ptsv2.com/t/qixhl-1600105288/post',{
           method: 'POST',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+          mode: 'no-cors',
+          // headers: {
+          //   'Content-Type': 'multipart/form-data',
+          // },
           body:formData,
         });
         this.resetData('preview');

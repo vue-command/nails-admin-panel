@@ -3,7 +3,11 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Shop from '../views/Shop/Shop.vue'
 import Courses from '../views/Courses/Courses.vue'
-import AddCourse from '../views/Courses/AddCourse.vue'
+import OnlineCourses from '../views/Courses/OnlineCourses.vue'
+import OfflineCourses from '../views/Courses/OfflineCourses.vue'
+import Form from '../views/Courses/Form.vue'
+import PreviewCourse from '../views/Courses/PreviewCourse.vue'
+
 
 Vue.use(VueRouter)
 
@@ -24,9 +28,24 @@ const routes = [
     component: Courses
   },
   {
-    path: '/add-course',
-    name: 'add-course',
-    component: AddCourse
+    path: '/online-courses',
+    name: 'online-courses',
+    component: OnlineCourses
+  },
+  {
+    path: '/offline-courses',
+    name: 'offline-courses',
+    component: OfflineCourses
+  },
+  {
+    path: '/form-courses',
+    name: 'form-courses',
+    component: Form
+  },
+  {
+    path: '/preview-course',
+    name: 'preview-course',
+    component: PreviewCourse
   }
 ]
 

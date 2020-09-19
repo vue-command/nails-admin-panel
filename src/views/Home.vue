@@ -3,11 +3,11 @@
     <v-row class="text-center">
       <v-col cols="6" lg="6">
         <v-btn @click="goToAllCourses">
-          ALL COURSES
+          COURSES
         </v-btn>
-        <v-btn @click="goToAddCourse">
+        <!-- <v-btn @click="goToAddCourse">
           ADD COURSES
-        </v-btn>
+        </v-btn> -->
       </v-col>
       <v-col cols="6" lg="6">
         <v-btn @click="goToShop">

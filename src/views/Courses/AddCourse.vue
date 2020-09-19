@@ -6,7 +6,7 @@
       <v-btn  v-if="showBackBtn" @click="formHandler('','');resetData('')">back</v-btn>
       <v-col cols="12" offset-sm="2" sm="8" class="pa-0 mb-4">
       </v-col>
-      <v-form ref="form" v-if="showForm">
+      <!-- <v-form ref="form" v-if="showForm">
         <v-row>
           <v-col cols="12" offset-sm="4" sm="4" class="pa-0">
             <v-text-field
@@ -149,8 +149,8 @@
             >submit</v-btn>
           </v-col>
         </v-row>
-      </v-form>
-      <PreviewCourse 
+      </v-form> -->
+      <!-- <PreviewCourse 
         v-if="showPreview"
         :category="this.category"
         :days="this.days"
@@ -169,7 +169,7 @@
         :resetData="resetData"
         :previewHandler="previewHandler"
         :formHandler="formHandler"
-        />
+        /> -->
     </v-row>
   </v-container>
 </template>
@@ -277,17 +277,6 @@ export default {
       this.showForm = !type 
       this.showBackBtn = !type
     },
-    // closePreviewHandler() {
-    //   this.showPreview = false
-    //   this.showForm = false
-    //   this.showBackBtn = false
-    // },
-    // backHandler () {
-    //   this.showForm= false
-    //   this.type = ''
-    //   this.showBackBtn = false
-    //   this.showBtnAddCourse = true
-    // }
   }
 }
 </script>
