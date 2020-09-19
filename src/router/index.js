@@ -37,16 +37,16 @@ const routes = [
     name: 'offline-courses',
     component: OfflineCourses
   },
-  {
-    path: '/form-courses',
-    name: 'form-courses',
-    component: Form
-  },
-  {
-    path: '/preview-course',
-    name: 'preview-course',
-    component: PreviewCourse
-  }
+  // {
+  //   path: '/form-courses',
+  //   name: 'form-courses',
+  //   component: Form
+  // },
+  // {
+  //   path: '/preview-course',
+  //   name: 'preview-course',
+  //   component: PreviewCourse
+  // }
 ]
 
 const router = new VueRouter({
