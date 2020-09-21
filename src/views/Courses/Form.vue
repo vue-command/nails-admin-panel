@@ -195,6 +195,8 @@ export default {
     id() {
      if(this.id) {
       this.typeCourse === 'offline' ? this.editCourseOffline(this.id) : this.editCourseOnline(this.id)
+    }else {
+      this.resetData()
     }
     },
     currentCourse(value) {
@@ -216,7 +218,7 @@ export default {
     Preview_image() {
       this.url = URL.createObjectURL(this.file);
     },
-    resetData(fromPreviewHandler) {
+    resetData() {
       [
         "category",
         "nameOfCourse",
@@ -224,7 +226,7 @@ export default {
         "days",
         "price",
         "author",
-        "inctructor",
+        "instructor",
         "infoBonus",
         "description",
         "type",

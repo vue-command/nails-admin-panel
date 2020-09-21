@@ -45,7 +45,7 @@ export default {
       showAddBtn: true,
       showBackBtn: false,
       type: "offline",
-      id: null
+      id: null,
     };
   },
   computed: {
@@ -81,6 +81,7 @@ export default {
       this.showCourses = !show;
       this.showAddBtn = !show;
       this.showBackBtn = show;
+      this.id = show ? this.id : null
     },
     editCourse(show, id) {
       this.openForm(show)

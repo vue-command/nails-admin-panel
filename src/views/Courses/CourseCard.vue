@@ -7,7 +7,7 @@
     <v-card-title class="pa-0 pl-4">
        {{ name }}
     </v-card-title>
-     <v-card-text class="pa-0 pl-4 pb-4">
+     <v-card-text class="pa-0 pl-4 pb-4 d-flex">
         {{subtitle}}
      </v-card-text>
     <v-card v-if="type === 'online'" flat class="ml-4 mb-4 d-flex">
@@ -58,6 +58,7 @@
         min-width="90"
         dark
         class="yellow-button"
+        @click="removeCourse"
       >Delete</v-btn>
     </v-card>
   </v-card>
@@ -70,7 +71,7 @@
 
 export default {
   name: 'course-card',
-  props: ['img', 'name', 'price', 'id', 'type', 'offline', 'online', 'subtitle', 'accessDays', 'editCourse'],
+  props: ['img', 'name', 'price', 'id', 'type', 'offline', 'online', 'subtitle', 'accessDays', 'editCourse','dialogId', 'deleteCourseId'],
   data () {
     return {
     }
@@ -79,6 +80,10 @@ export default {
     edit() {
       this.editCourse(true, this.id)
     },
+    removeCourse() {
+      this.$emit('update:dialogId', true)
+      this.deleteCourseId(this.id)
+    }
   }
   }
 </script>
