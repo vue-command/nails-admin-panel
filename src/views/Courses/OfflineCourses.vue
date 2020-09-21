@@ -3,7 +3,12 @@
     <h2>Offline Courses</h2>
     <v-btn @click="openForm(true)" v-if="showAddBtn">add new offline course</v-btn>
     <v-btn @click="openForm(false)" v-if="showBackBtn">back</v-btn>
-    <Form :showForm.sync="showForm" :showCourses.sync="showCourses" :typeCourse="type" />
+    <Form :showForm.sync="showForm"
+      :showCourses.sync="showCourses"
+      :typeCourse="type"
+      :id="id"
+      :editCourse="editCourse"
+    />
     <div v-if="showCourses" class="d-flex flex-wrap justify-center">
       <CourseCard
         v-for="(card, index) in offlineCourses"
@@ -40,6 +45,7 @@ export default {
       showAddBtn: true,
       showBackBtn: false,
       type: "offline",
+      id: null
     };
   },
   computed: {
@@ -76,6 +82,21 @@ export default {
       this.showAddBtn = !show;
       this.showBackBtn = show;
     },
+    editCourse(show) {
+      this.openForm(show)
+      // this.id = id
+    }
+    // async editCourse(show, id) {
+    //   this.openForm(show)
+    //    const response = await (
+    //     await fetch(
+    //       `https://nails-australia-staging.herokuapp.com/course/offline/${id}`
+    //     )
+    //   ).json();
+    //   this.courseData = response.offlineCourse
+    //   console.log(this.courseData)
+    //   this.currentCourse(response.offlineCourse)
+    // }
   },
   created() {
     this.getOfflineData();

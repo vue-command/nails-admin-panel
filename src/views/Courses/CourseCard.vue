@@ -10,6 +10,56 @@
      <v-card-text class="pa-0 pl-4 pb-4">
         {{subtitle}}
      </v-card-text>
+    <v-card v-if="type === 'online'" flat class="ml-4 mb-4 d-flex">
+      <v-btn
+        color="buttons"
+        rounded
+        small
+        outlined
+        primary
+        min-width="90"
+        class="yellow-button mr-4"
+      >pay</v-btn>
+      <v-btn
+        color="buttons"
+        rounded
+        small
+        min-width="90"
+        dark
+        class="yellow-button"
+      >more</v-btn>
+    </v-card>
+    <v-card v-else-if="type === 'offline'" flat class="ml-4 mb-4 d-flex">
+      <v-btn
+        color="buttons"
+        rounded
+        outlined
+        small
+        dark
+        min-width="90"
+        class="yellow-button"
+      >more</v-btn>
+    </v-card>
+    <v-card v-else flat class="ml-4 mb-4 d-flex">
+      <v-btn
+        color="buttons"
+        rounded
+        small
+        outlined
+        primary
+        min-width="90"
+        class="yellow-button mr-4"
+        @click="editCourseForm(true, id)"
+      >Edit</v-btn>
+      <v-btn
+        color="buttons"
+        rounded
+        small
+        min-width="90"
+        dark
+        class="yellow-button"
+      >Delete</v-btn>
+    </v-card>
   </v-card>
 </template>
 
@@ -20,21 +70,16 @@
 
 export default {
   name: 'course-card',
-  props: ['img', 'name', 'price', 'id', 'offline', 'online', 'subtitle', 'accessDays'],
+  props: ['img', 'name', 'price', 'id', 'type', 'offline', 'online', 'subtitle', 'accessDays', 'editCourse', 'editCourseForm'],
   data () {
     return {
     }
   },
   methods: {
-    detailOfflineInfo () {
-      this.$router.push({ name: 'course-offline', params: { id: this.id } })
+    edit() {
+      // this.editCourse(true, this.id)
+      this.editCourseForm(true, this.id)
     },
-    detailOnlineInfo () {
-      this.$router.push({ name: 'course-online', params: { id: this.id } })
-    },
-    payDetail () {
-      this.$router.push({ name: 'personal-data' })
-    }
   }
-}
+  }
 </script>

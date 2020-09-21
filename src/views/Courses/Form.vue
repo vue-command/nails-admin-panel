@@ -70,7 +70,7 @@
             <v-col cols="12" xs="12" md="6">
               <v-text-field v-model="author" :rules="[rules.required]" label="Author" outlined dark></v-text-field>
               <v-text-field
-                v-model="inctructor"
+                v-model="instructor"
                 :rules="[rules.required]"
                 label="Instructor"
                 outlined
@@ -141,6 +141,8 @@
           :name="nameOfCourse"
           :subtitle="subtitle"
           :price="price"
+          :type="typeCourse"
+          :editCourseForm="editCourseForm"
         />
         <!-- <v-card flat dark class="ma-4 d-flex flex-column" width="350" height="300">
           <v-img :src="url" contain />
@@ -184,7 +186,7 @@ export default {
     CourseCard
   },
   name: "form-courses",
-  props: ["showForm", "typeCourse"],
+  props: ["showForm", "typeCourse", 'id'],
   data() {
     return {
       category: "",
@@ -193,7 +195,7 @@ export default {
       days: "",
       price: "",
       author: "",
-      inctructor: "",
+      instructor: "",
       infoBonus: "",
       labelForSuitable: "This course is suitable for",
       description: "",
@@ -216,7 +218,24 @@ export default {
         onlyDigits: (v) =>
           !/\D/g.test(v) || "input should consist only of digits",
       },
+      currentCourse: null
     };
+  },
+  watch: {
+    currentCourse(value) {
+      this.category = value.category
+      this.nameOfCourse =  value.nameOfCourse
+      this.subtitle = value.subtitle
+      this.days = value.accessDays
+      this.price = value.price
+      this.author = value.author
+      this.instructor = value.instructor
+      this.infoBonus = value.infoForBonus
+      this.description = value.description
+      // this.file = [value.file]
+      // this.dateOfCourses = [...value.dateOfCourses]
+      // this.courseSuitable = [...value.courseSuitable]
+    }
   },
   methods: {
     Preview_image() {
@@ -284,10 +303,22 @@ export default {
         ? this.courseSuitable.splice(index, 1)
         : this.dateOfCourses.splice(index, 1);
     },
+    async editCourseForm(show, id) {
+      this.editCourse(show)
+      const response = await (
+        await fetch(
+          `https://nails-australia-staging.herokuapp.com/course/offline/${id}`
+        )
+      ).json();
+      console.log(response.offlineCourse)
+      this.currentCourse = await response.offlineCourse
+    }
   },
-  mounted() {
-    console.log(this.$route.params.type);
-  },
+  // updated () {
+  //   if(this.id) {
+  //     this.editCourse(this.id)
+  //   }
+  // },
   beforeDestroy() {
     // this.$route.params.type = ''
   },
