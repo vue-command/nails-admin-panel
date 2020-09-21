@@ -194,7 +194,7 @@ export default {
   watch: {
     id() {
      if(this.id) {
-      this.editCourse(this.id)
+      this.typeCourse === 'offline' ? this.editCourseOffline(this.id) : this.editCourseOnline(this.id)
     }
     },
     currentCourse(value) {
@@ -207,7 +207,7 @@ export default {
       this.instructor = value.instructor
       this.infoBonus = value.infoForBonus
       this.description = value.description
-      this.file = value.file[0].link
+      this.url = value.photo[0].link
       // this.dateOfCourses = value.dateOfCourses
       // this.courseSuitable = value.thisCourseIsSuitableFor
     }
@@ -243,26 +243,6 @@ export default {
     },
     checkForm() {
       if (this.$refs.form.validate()) {
-        this.$router.push({
-          name: "preview-course",
-          params: {
-            data: {
-              category: this.category,
-              nameOfCourse: this.nameOfCourse,
-              subtitle: this.subtitle,
-              dateOfCourses: this.dateOfCourses,
-              accessDays: Number(this.days),
-              price: Number(this.price),
-              author: this.author,
-              inctructor: this.inctructor,
-              infoForBonus: this.infoBonus,
-              thisCourseIsSuitableFor: this.courseSuitable,
-              description: this.description,
-              file: this.file,
-            },
-            img: this.url,
-          },
-        });
       }
     },
     addField(entryField) {
@@ -278,23 +258,22 @@ export default {
         ? this.courseSuitable.splice(index, 1)
         : this.dateOfCourses.splice(index, 1);
     },
-    async editCourse(id) {
+    async editCourseOffline(id) {
       const response = await (
         await fetch(
           `https://nails-australia-staging.herokuapp.com/course/offline/${id}`
         )
       ).json();
-      console.log(response.offlineCourse)
       this.currentCourse = await response.offlineCourse
+    },
+      async editCourseOnline(id) {
+      const response = await (
+        await fetch(
+          `https://nails-australia-staging.herokuapp.com/course/online/${id}`
+        )
+      ).json();
+      this.currentCourse = await response.onlineCourse
     }
-  },
-  // updated () {
-  //   if(this.id) {
-  //     this.editCourse(this.id)
-  //   }
-  // },
-  beforeDestroy() {
-    // this.$route.params.type = ''
   },
 };
 </script>

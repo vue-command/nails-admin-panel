@@ -3,7 +3,7 @@
     <h2>Online Courses</h2>
     <v-btn @click="openForm(true)" v-if="showAddBtn">add new online course</v-btn>
     <v-btn @click="openForm(false)" v-if="showBackBtn">back</v-btn>
-    <Form :showForm.sync="showForm" :showCourses.sync="showCourses" :typeCourse="type" />
+    <Form :showForm.sync="showForm" :showCourses.sync="showCourses" :typeCourse="type" :id="id"/>
     <div v-if="showCourses" class="d-flex flex-wrap justify-center">
       <CourseCard
         v-for="(card, index) in onlineCourses"
@@ -14,6 +14,7 @@
         :subtitle="card.subtitle"
         :price="card.price"
         :id="card._id"
+        :editCourse="editCourse"
       />
     </div>
     <v-btn v-if="isHideMoreButtonOnline" @click="getMoreOnlineCourses">more</v-btn>
@@ -40,6 +41,7 @@ export default {
       showAddBtn: true,
       showBackBtn: false,
       type: "online",
+      id: null
     };
   },
   computed: {
@@ -76,6 +78,10 @@ export default {
       this.showAddBtn = !show;
       this.showBackBtn = show;
     },
+      editCourse(show, id) {
+      this.openForm(show)
+      this.id = id
+    }
   },
   mounted() {
     this.getOnlineData();

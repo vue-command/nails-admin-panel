@@ -86,17 +86,6 @@ export default {
       this.openForm(show)
       this.id = id
     }
-    // async editCourse(show, id) {
-    //   this.openForm(show)
-    //    const response = await (
-    //     await fetch(
-    //       `https://nails-australia-staging.herokuapp.com/course/offline/${id}`
-    //     )
-    //   ).json();
-    //   this.courseData = response.offlineCourse
-    //   console.log(this.courseData)
-    //   this.currentCourse(response.offlineCourse)
-    // }
   },
   created() {
     this.getOfflineData();
