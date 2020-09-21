@@ -142,37 +142,7 @@
           :subtitle="subtitle"
           :price="price"
           :type="typeCourse"
-          :editCourseForm="editCourseForm"
         />
-        <!-- <v-card flat dark class="ma-4 d-flex flex-column" width="350" height="300">
-          <v-img :src="url" contain />
-          <v-card-title class="buttons--text pa-0 pl-4 pt-4">{{ days }} days | $ {{ price }}</v-card-title>
-          <v-card-title class="pa-0 pl-4">{{ nameOfCourse }}</v-card-title>
-          <v-card-text class="pa-0 pl-4 pb-4 d-flex">{{ subtitle }}</v-card-text>
-          <v-card v-if="type === 'online'" flat class="ml-4 mb-4 d-flex">
-            <v-btn
-              color="buttons"
-              rounded
-              small
-              outlined
-              primary
-              min-width="90"
-              class="yellow-button mr-4"
-            >pay</v-btn>
-            <v-btn color="buttons" rounded small min-width="90" dark class="yellow-button">more</v-btn>
-          </v-card>
-          <v-card v-else flat class="ml-4 pb-4 d-flex">
-            <v-btn
-              color="buttons"
-              rounded
-              outlined
-              small
-              dark
-              min-width="90"
-              class="yellow-button"
-            >more</v-btn>
-          </v-card>
-        </v-card>-->
       </v-col>
     </v-row>
   </v-container>
@@ -222,6 +192,11 @@ export default {
     };
   },
   watch: {
+    id() {
+     if(this.id) {
+      this.editCourse(this.id)
+    }
+    },
     currentCourse(value) {
       this.category = value.category
       this.nameOfCourse =  value.nameOfCourse
@@ -232,9 +207,9 @@ export default {
       this.instructor = value.instructor
       this.infoBonus = value.infoForBonus
       this.description = value.description
-      // this.file = [value.file]
-      // this.dateOfCourses = [...value.dateOfCourses]
-      // this.courseSuitable = [...value.courseSuitable]
+      this.file = value.file[0].link
+      // this.dateOfCourses = value.dateOfCourses
+      // this.courseSuitable = value.thisCourseIsSuitableFor
     }
   },
   methods: {
@@ -303,8 +278,7 @@ export default {
         ? this.courseSuitable.splice(index, 1)
         : this.dateOfCourses.splice(index, 1);
     },
-    async editCourseForm(show, id) {
-      this.editCourse(show)
+    async editCourse(id) {
       const response = await (
         await fetch(
           `https://nails-australia-staging.herokuapp.com/course/offline/${id}`

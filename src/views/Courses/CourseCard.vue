@@ -49,7 +49,7 @@
         primary
         min-width="90"
         class="yellow-button mr-4"
-        @click="editCourseForm(true, id)"
+        @click="edit"
       >Edit</v-btn>
       <v-btn
         color="buttons"
@@ -70,15 +70,14 @@
 
 export default {
   name: 'course-card',
-  props: ['img', 'name', 'price', 'id', 'type', 'offline', 'online', 'subtitle', 'accessDays', 'editCourse', 'editCourseForm'],
+  props: ['img', 'name', 'price', 'id', 'type', 'offline', 'online', 'subtitle', 'accessDays', 'editCourse'],
   data () {
     return {
     }
   },
   methods: {
     edit() {
-      // this.editCourse(true, this.id)
-      this.editCourseForm(true, this.id)
+      this.editCourse(true, this.id)
     },
   }
   }

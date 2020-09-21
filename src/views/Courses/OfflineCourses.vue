@@ -7,7 +7,6 @@
       :showCourses.sync="showCourses"
       :typeCourse="type"
       :id="id"
-      :editCourse="editCourse"
     />
     <div v-if="showCourses" class="d-flex flex-wrap justify-center">
       <CourseCard
@@ -19,6 +18,7 @@
         :subtitle="card.subtitle"
         :price="card.price"
         :id="card._id"
+        :editCourse="editCourse"
       />
     </div>
     <v-btn v-if="!isHideMoreButtonOffline" @click="getMoreOfflineCourses">more</v-btn>
@@ -82,9 +82,9 @@ export default {
       this.showAddBtn = !show;
       this.showBackBtn = show;
     },
-    editCourse(show) {
+    editCourse(show, id) {
       this.openForm(show)
-      // this.id = id
+      this.id = id
     }
     // async editCourse(show, id) {
     //   this.openForm(show)
