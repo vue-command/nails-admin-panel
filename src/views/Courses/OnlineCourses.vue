@@ -31,11 +31,11 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="green darken-1" text @click="dialogId = false; deleteCourseId(null)">
+          <v-btn color="green darken-1" text @click="dialogId = false">
             Disagree
           </v-btn>
 
-          <v-btn color="green darken-1" text @click="deleteCourse(id)">
+          <v-btn color="green darken-1" text @click="deleteCourse(deleteId)">
             Agree
           </v-btn>
         </v-card-actions>
@@ -66,8 +66,14 @@ export default {
       showBackBtn: false,
       type: "online",
       dialogId: false,
-      id: null
+      id: null,
+      deleteId:null
     };
+  },
+  watch: {
+    dialogId() {
+      if (!this.dialogId) this.deleteId = null
+    }
   },
   computed: {
     isHideMoreButtonOnline() {
@@ -114,7 +120,7 @@ export default {
       this.id = id;
     },
     deleteCourseId(id) {
-      this.id = id
+      this.deleteId = id
     }
   },
   mounted() {
