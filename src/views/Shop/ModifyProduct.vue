@@ -11,99 +11,99 @@
     </v-row>
 
     <v-card class="base-card pa-10">
-      <v-row class="text-center">
-        <v-col cols="12">
-          <h1>{{ productId === 'new' ? 'NEW' : 'MODIFY' }} PRODUCT</h1>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12">
-          <v-card class="pa-5" outlined>
-            <v-form ref="form" v-model="valid">
-              <v-row>
-                <v-col cols="12" md="6" sm="12" xl="6" lg="6">
-                  <v-select
-                    :items="categories"
-                    outlined
-                    :rules="[rules.required]"
-                    item-text="name"
-                    item-value="_id"
-                    label="Category"
-                    @change="selectCategory"
-                    v-model="category"
-                  >Choose category</v-select>
-                  <v-textarea
-                    v-model="speciﬁcations"
-                    :rules="[rules.required]"
-                    label="Speciﬁcation"
-                    outlined
-                  ></v-textarea>
-                  <v-col cols="6">
-                    <v-text-field
-                      v-model="price"
-                      :rules="[rules.required]"
-                      label="Price"
-                      type="number"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                </v-col>
-                <v-col cols="12" xl="6" md="6" lg="6" sm="12">
-                  <v-text-field v-model="brand" :rules="[rules.required]" label="Brand" outlined></v-text-field>
-                  <v-text-field v-model="name" :rules="[rules.required]" label="Name" outlined></v-text-field>
-                  <v-text-field
-                    v-model="codeOfProduct"
-                    :rules="[rules.required]"
-                    label="Code"
-                    outlined
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-btn color="success">Save</v-btn>
-                </v-col>
-              </v-row>
-            </v-form>
-          </v-card>
-          <v-row>
-            <v-col>
-              <v-card outlined>
-                <v-row>
-                  <v-col>
-                    <h3>COVER PICTURE</h3>
-                    <v-row>
-                      <v-col cols="12" lg="4">
-                        <v-file-input
-                          v-model="files"
-                          color="deep-purple accent-4"
-                          label="Cover picture"
-                          placeholder="Select your file"
-                          prepend-icon="mdi-paperclip"
+      <v-col cols="12">
+        <v-row class="text-center">
+          <v-col cols="12">
+            <h1>{{ productId === 'new' ? 'NEW' : 'MODIFY' }} PRODUCT</h1>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12">
+            <v-row>
+              <v-col cols="12" sm="6">
+                <v-form ref="form" v-model="valid">
+                  <v-row>
+                    <v-col cols="12" md="6" sm="12" xl="6" lg="6">
+                      <v-select
+                        :items="categories"
+                        outlined
+                        :rules="[rules.required]"
+                        item-text="name"
+                        item-value="_id"
+                        label="Category"
+                        @change="selectCategory"
+                        v-model="category"
+                      >Choose category</v-select>
+                      <v-textarea
+                        v-model="speciﬁcations"
+                        :rules="[rules.required]"
+                        label="Speciﬁcation"
+                        outlined
+                      ></v-textarea>
+                      <v-col cols="6">
+                        <v-text-field
+                          v-model="price"
+                          :rules="[rules.required]"
+                          label="Price"
+                          type="number"
                           outlined
-                          :show-size="1000"
-                        ></v-file-input>
-                        <v-col>
-                          <v-btn color="success" class="ma-5">UPLOAD</v-btn>
-                          <v-btn class="ma-5">Cancel</v-btn>
-                        </v-col>
+                        ></v-text-field>
                       </v-col>
-                      <v-col cols="12" lg="8">
-                        <v-img :src="coverImage" max-height="200" with="200" contain></v-img>
-                      </v-col>
-                    </v-row>
-                  </v-col>
+                    </v-col>
+
+                    <v-col cols="12" xl="6" md="6" lg="6" sm="12">
+                      <v-text-field
+                        v-model="brand"
+                        :rules="[rules.required]"
+                        label="Brand"
+                        outlined
+                      ></v-text-field>
+                      <v-text-field v-model="name" :rules="[rules.required]" label="Name" outlined></v-text-field>
+                      <v-text-field
+                        v-model="codeOfProduct"
+                        :rules="[rules.required]"
+                        label="Code"
+                        outlined
+                      ></v-text-field>
+                      <v-file-input
+                        v-model="coverImage"
+                        color="deep-purple accent-4"
+                        label="Cover picture"
+                        placeholder="Select your file"
+                        prepend-icon="mdi-paperclip"
+                        outlined
+                        :show-size="1000"
+                        :clearable="false"
+                      ></v-file-input>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-btn color="success" :disabled='isSaveDisabled'>Save</v-btn>
+                    </v-col>
+                  </v-row>
+                </v-form>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-row justify="center">
+                  <Card
+                    :image="coverImageSrc"
+                    :name="name || 'Name'"
+                    :brand="brand || 'Brand'"
+                    :price="price"
+                  />
                 </v-row>
-              </v-card>
-            </v-col>
-          </v-row>
+              </v-col>
+            </v-row>
+          </v-col>
+
           <v-row>
             <v-col>
               <v-card outlined>
                 <v-col>
                   <h3>PAGE IMAGES</h3>
                   <v-row>
-                    <v-card v-for="(image, index) in imagesToUpload" :key="index" class="pa-5 ma-5">
+                    <v-card v-for="(image, index) in images" :key="index" class="pa-5 ma-5">
                       <v-img :src="image" height="100" width="100" contain></v-img>
                       <v-btn>DELETE</v-btn>
                     </v-card>
@@ -131,11 +131,11 @@
               min-width="90"
               class="yellow-button mt-4"
               @click="submit"
-              :disabled="!valid"
+              :disabled="isSaveDisabled"
             >Check and confirm</v-btn>
           </v-col>
-        </v-col>
-      </v-row>
+        </v-row>
+      </v-col>
     </v-card>
   </v-container>
 </template>
@@ -143,6 +143,7 @@
 <style scoped></style>
 
 <script>
+import Card from "./Card.vue";
 export default {
   name: "ModifyProduct",
   props: ["productId", "clearHandler"],
@@ -163,12 +164,15 @@ export default {
       },
       images: [],
       imagesToUpload: [],
-      coverImage:
-        "https://previews.123rf.com/images/pavelstasevich/pavelstasevich1811/pavelstasevich181101065/112815953-no-image-available-icon-flat-vector.jpg",
+      coverImage: null,
+      coverImageSrc: require("./assets/noImage.jpg"),
     };
   },
-  components: {},
+  components: { Card },
   watch: {
+    coverImage(newVal) {
+      this.coverImageSrc = URL.createObjectURL(newVal);
+    },
     currentProduct(newVal) {
       this.category = newVal.categoryId;
       this.brand = newVal.brand;
@@ -213,6 +217,18 @@ export default {
       console.log(data);
     },
     selectCategory() {},
+  },
+  computed: {
+    isSaveDisabled() {
+      let isDisabled = true;
+      if (this.productId !== "new") isDisabled = Boolean(!this.valid);
+      else {
+        if (this.valid) {
+          isDisabled = !this.coverImage;
+        }
+      }
+      return isDisabled;
+    },
   },
   created() {
     this.getData();
