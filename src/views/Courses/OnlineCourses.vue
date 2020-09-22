@@ -1,9 +1,9 @@
 <template>
   <v-card flat dark>
     <h2>Online Courses</h2>
-    <v-btn @click="openForm(true)" v-if="showAddBtn">add new online course</v-btn>
-    <v-btn @click="openForm(false)" v-if="showBackBtn">back</v-btn>
-    <Form :showForm.sync="showForm" :showCourses.sync="showCourses" :typeCourse="type" :id="id" />
+    <v-btn @click="openForm(true); methodPost = true" v-if="showAddBtn">add new online course</v-btn>
+    <v-btn @click="openForm(false); methodPost = false" v-if="showBackBtn">back</v-btn>
+    <Form :showForm.sync="showForm" :showCourses.sync="showCourses" :typeCourse="type" :id="id" :methodPost="methodPost"/>
     <div v-if="showCourses" class="d-flex flex-wrap justify-center">
       <CourseCard
         v-for="(card, index) in onlineCourses"
@@ -21,20 +21,12 @@
     </div>
     <v-dialog v-model="dialogId" max-width="290">
       <v-card>
-        <v-card-title class="headline">Use Google's location service?</v-card-title>
-
-        <v-card-text>
-          Let Google help apps determine location. This means sending anonymous location data to
-          Google, even when no apps are running.
-        </v-card-text>
-
+        <v-card-title class="headline">Are you sure you want to delete this course?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-
           <v-btn color="green darken-1" text @click="dialogId = false">
             Disagree
           </v-btn>
-
           <v-btn color="green darken-1" text @click="deleteCourse(deleteId)">
             Agree
           </v-btn>
@@ -67,7 +59,8 @@ export default {
       type: "online",
       dialogId: false,
       id: null,
-      deleteId:null
+      deleteId:null,
+      methodPost: false
     };
   },
   watch: {
@@ -77,8 +70,9 @@ export default {
   },
   computed: {
     isHideMoreButtonOnline() {
-      if (this.error) return false;
-      return this.onlineCourses.length <= this.totalOnlineCourses;
+      if (this.error) return false
+      if (this.showForm) return false
+      return this.onlineCourses.length <= this.totalOnlineCourses
     }
   },
   methods: {
@@ -95,7 +89,7 @@ export default {
           `https://nails-australia-staging.herokuapp.com/course/offline?skip=${this.onlineCourses.length}`
         )
       ).json();
-      if (response.onlineCourses !== undefined) {
+      if (response.onlineCourses) {
         response.onlineCourses.forEach(item => {
           this.onlineCourses.push(item);
         });
@@ -106,7 +100,6 @@ export default {
          method: 'DELETE'
        })
        this.dialogId = false
-       this.id = null
     },
     openForm(show) {
       this.showForm = show;
@@ -123,7 +116,7 @@ export default {
       this.deleteId = id
     }
   },
-  mounted() {
+ created() {
     this.getOnlineData();
   }
 };

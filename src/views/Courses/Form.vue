@@ -27,48 +27,61 @@
                 outlined
                 dark
               ></v-text-field>
-              <div v-for="(textField, i) in dateOfCourses" :key="i" class="d-flex input-container">
-                <v-text-field
-                  :label="labelDateOfCourse"
-                  v-model="textField.date"
-                  :rules="[rules.required]"
-                  outlined
-                  dark
-                ></v-text-field>
-                <v-text-field
-                  :label="labelAvailableSpots"
-                  v-model="textField.spots"
-                  :rules="[rules.required]"
-                  outlined
-                  dark
-                  class="ml-4"
-                ></v-text-field>
-                <v-btn @click="removeField(i,'')" v-if="i !== 0" class="remove">
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
+              <div v-if="typeCourse === 'offline'">
+                <div
+                  v-for="(textField, i) in dateOfCourses"
+                  :key="i"
+                  class="d-flex input-container"
+                >
+                  <v-text-field
+                    :label="labelDateOfCourse"
+                    v-model="textField.date"
+                    :rules="[rules.required]"
+                    outlined
+                    dark
+                  ></v-text-field>
+                  <v-text-field
+                    :label="labelAvailableSpots"
+                    v-model="textField.spots"
+                    :rules="[rules.required]"
+                    outlined
+                    dark
+                    class="ml-4"
+                  ></v-text-field>
+                  <v-btn @click="removeField(i, '')" v-if="i !== 0" class="remove">
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </div>
+                <div class="d-flex justify-end mb-8">
+                  <v-btn @click="addField('')">
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                </div>
               </div>
-              <div class="d-flex justify-end mb-8">
-                <v-btn @click="addField('')">
-                  <v-icon>mdi-plus</v-icon>
-                </v-btn>
-              </div>
+
               <v-text-field
                 v-model="days"
-                :rules="[rules.required,rules.onlyDigits]"
+                :rules="[rules.required, rules.onlyDigits]"
                 label="Access (days)"
                 outlined
                 dark
               ></v-text-field>
               <v-text-field
                 v-model="price"
-                :rules="[rules.required,rules.onlyDigits]"
+                :rules="[rules.required, rules.onlyDigits]"
                 label="price"
                 outlined
                 dark
               ></v-text-field>
             </v-col>
             <v-col cols="12" xs="12" md="6">
-              <v-text-field v-model="author" :rules="[rules.required]" label="Author" outlined dark></v-text-field>
+              <v-text-field
+                v-model="author"
+                :rules="[rules.required]"
+                label="Author"
+                outlined
+                dark
+              ></v-text-field>
               <v-text-field
                 v-model="instructor"
                 :rules="[rules.required]"
@@ -91,7 +104,7 @@
                   outlined
                   dark
                 ></v-text-field>
-                <v-btn @click="removeField(i,'suitable')" v-if="i !== 0" class="remove">
+                <v-btn @click="removeField(i, 'suitable')" v-if="i !== 0" class="remove">
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </div>
@@ -129,7 +142,8 @@
                 min-width="90"
                 class="yellow-button mt-4"
                 @click="checkForm"
-              >submit</v-btn>
+                >submit</v-btn
+              >
             </v-col>
           </v-row>
         </v-form>
@@ -144,19 +158,36 @@
           :type="typeCourse"
         />
       </v-col>
+      <CourseCardDetail
+        :category="this.category"
+        :days="this.days"
+        :img="this.file"
+        :nameOfCourse="this.nameOfCourse"
+        :subtitle="this.subtitle"
+        :price="this.price"
+        :author="this.author"
+        :instructor="this.instructor"
+        :infoBonus="this.infoBonus"
+        :courseSuitable="this.courseSuitable"
+        :description="this.description"
+        :dateOfCourses="this.dateOfCourses"
+        :url="this.url"
+        :type="this.typeCourse"
+      />
     </v-row>
   </v-container>
 </template>
-<style scoped>
-</style>
+<style scoped></style>
 <script>
-import CourseCard from './CourseCard.vue'
+import CourseCard from "./CourseCard.vue";
+import CourseCardDetail from "./CourseCardDetail.vue";
 export default {
-  components:{
-    CourseCard
+  components: {
+    CourseCard,
+    CourseCardDetail
   },
   name: "form-courses",
-  props: ["showForm", "typeCourse", 'id'],
+  props: ["showForm", "typeCourse", "id","methodPost"],
   data() {
     return {
       category: "",
@@ -173,8 +204,8 @@ export default {
       dateOfCourses: [
         {
           date: "",
-          spots: "",
-        },
+          spots: ""
+        }
       ],
       courseSuitable: [""],
       labelDateOfCourse: "date of the course",
@@ -182,36 +213,37 @@ export default {
       url: null,
       type: "",
       rules: {
-        required: (v) => !!v || "input is required",
-        minLengthName: (v) =>
-          v.length <= 15 || "the maximum number of characters entered",
-        onlyDigits: (v) =>
-          !/\D/g.test(v) || "input should consist only of digits",
+        required: v => !!v || "input is required",
+        minLengthName: v => v.length <= 15 || "the maximum number of characters entered",
+        onlyDigits: v => !/\D/g.test(v) || "input should consist only of digits"
       },
       currentCourse: null
     };
   },
   watch: {
     id() {
-     if(this.id) {
-      this.typeCourse === 'offline' ? this.editCourseOffline(this.id) : this.editCourseOnline(this.id)
-    }else {
-      this.resetData()
-    }
+      if (this.id) {
+        this.typeCourse === "offline"
+          ? this.editCourseOffline(this.id)
+          : this.editCourseOnline(this.id);
+      } else {
+        this.resetData();
+      }
     },
     currentCourse(value) {
-      this.category = value.category
-      this.nameOfCourse =  value.nameOfCourse
-      this.subtitle = value.subtitle
-      this.days = value.accessDays
-      this.price = value.price
-      this.author = value.author
-      this.instructor = value.instructor
-      this.infoBonus = value.infoForBonus
-      this.description = value.description
-      this.url = value.photo[0].link
+      this.category = value.category;
+      this.nameOfCourse = value.nameOfCourse;
+      this.subtitle = value.subtitle;
+      this.days = value.accessDays;
+      this.price = value.price;
+      this.author = value.author;
+      this.instructor = value.instructor;
+      this.infoBonus = value.infoForBonus;
+      this.description = value.description;
+      this.url = value.photo[0].link;
+      this.file = value.photo[0].link;
       // this.dateOfCourses = value.dateOfCourses
-      // this.courseSuitable = value.thisCourseIsSuitableFor
+      this.courseSuitable = value.thisCourseIsSuitableFor;
     }
   },
   methods: {
@@ -229,8 +261,8 @@ export default {
         "instructor",
         "infoBonus",
         "description",
-        "type",
-      ].forEach((item) => {
+        "type"
+      ].forEach(item => {
         this[item] = "";
       });
       this.file = [];
@@ -239,12 +271,13 @@ export default {
       this.dateOfCourses = [
         {
           date: "",
-          spots: "",
-        },
+          spots: ""
+        }
       ];
     },
     checkForm() {
       if (this.$refs.form.validate()) {
+        this.sendData();
       }
     },
     addField(entryField) {
@@ -252,7 +285,7 @@ export default {
         ? this.courseSuitable.push("")
         : this.dateOfCourses.push({
             date: "",
-            spots: "",
+            spots: ""
           });
     },
     removeField(index, entryField) {
@@ -262,20 +295,64 @@ export default {
     },
     async editCourseOffline(id) {
       const response = await (
-        await fetch(
-          `https://nails-australia-staging.herokuapp.com/course/offline/${id}`
-        )
+        await fetch(`https://nails-australia-staging.herokuapp.com/course/offline/${id}`)
       ).json();
-      this.currentCourse = await response.offlineCourse
+      this.currentCourse = await response.offlineCourse;
     },
-      async editCourseOnline(id) {
+    async editCourseOnline(id) {
       const response = await (
-        await fetch(
-          `https://nails-australia-staging.herokuapp.com/course/online/${id}`
-        )
+        await fetch(`https://nails-australia-staging.herokuapp.com/course/online/${id}`)
       ).json();
-      this.currentCourse = await response.onlineCourse
+      this.currentCourse = await response.onlineCourse;
+    },
+    sendData() {
+      const formData = new FormData();
+      const offlineRequest = "https://nails-australia-staging.herokuapp.com/course/new/offline";
+      const onlineRequest = "https://nails-australia-staging.herokuapp.com/course/new/online";
+
+      let data = {
+        category: this.category,
+        nameOfCourse: this.nameOfCourse,
+        subtitle: this.subtitle,
+        dateOfCourses: this.dateOfCourses,
+        accessDays: Number(this.days),
+        price: Number(this.price),
+        author: this.author,
+        instructor: this.instructor,
+        infoForBonus: this.infoBonus,
+        thisCourseIsSuitableFor: this.courseSuitable,
+        description: this.description,
+        file: this.file
+      };
+      console.log(data);
+      for (const name in data) {
+        formData.append(name, data[name]);
+      }
+      // if (this.typeCourse === 'offline') {
+      //  formData.append('dateOfCourses',JSON.stringify(this.dateOfCourses))
+      // }
+      // formData.append('thisCourseIsSuitableFor',JSON.stringify(this.courseSuitable))
+      console.log(formData);
+      fetch(
+        this.methodPost
+          ? this.typeCourse === "offline"
+            ? offlineRequest
+            : onlineRequest
+          : this.typeCourse === "offline"
+          ? `${offlineRequest.replace(/[/]new/gi,'')}/${this.id}`
+          : `${onlineRequest.replace(/[/]new/gi,'')}/${this.id}`,
+        {
+          method: this.methodPost ? "POST" : "PUT",
+          // mode: "no-cors",
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          body: formData
+        }
+      );
+      this.resetData();
+      this.$router.push({ name: "Home" });
     }
-  },
+  }
 };
 </script>
