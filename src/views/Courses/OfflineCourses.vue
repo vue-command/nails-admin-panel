@@ -1,5 +1,5 @@
 <template>
-  <v-card flat dark>
+  <v-card flat class="transparent">
     <h2>Offline Courses</h2>
     <v-btn @click="openForm(true);methodPost = true" v-if="showAddBtn">add new offline course</v-btn>
     <v-btn @click="openForm(false);methodPost = false" v-if="showBackBtn">back</v-btn>

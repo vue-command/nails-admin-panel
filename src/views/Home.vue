@@ -5,9 +5,6 @@
         <v-btn @click="goToAllCourses">
           COURSES
         </v-btn>
-        <!-- <v-btn @click="goToAddCourse">
-          ADD COURSES
-        </v-btn> -->
       </v-col>
       <v-col cols="6" lg="6">
         <v-btn @click="goToShop">
@@ -18,9 +15,6 @@
   </v-container>
 </template>
 <style scoped>
-/* .home {
-  background: #000;
-} */
 </style>
 <script>
 export default {
@@ -32,9 +26,6 @@ export default {
     },
     goToAllCourses() {
        this.$router.push({name: "courses"})
-    },
-    goToAddCourse() {
-       this.$router.push({name: "add-course"})
     }
   }
 };

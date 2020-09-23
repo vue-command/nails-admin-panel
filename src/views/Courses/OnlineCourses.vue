@@ -1,6 +1,6 @@
 <template>
-  <v-card flat dark>
-    <h2>Online Courses</h2>
+  <v-card flat class="transparent">
+    <h2 color="text--white">Online Courses</h2>
     <v-btn @click="openForm(true); methodPost = true" v-if="showAddBtn">add new online course</v-btn>
     <v-btn @click="openForm(false); methodPost = false" v-if="showBackBtn">back</v-btn>
     <Form :showForm.sync="showForm" :showCourses.sync="showCourses" :typeCourse="type" :id="id" :methodPost="methodPost"/>

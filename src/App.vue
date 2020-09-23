@@ -1,16 +1,26 @@
 <template>
   <v-app>
-      <v-main>
-      <router-view />
+    <v-main>
+      <component :is="layout">
+        <router-view />
+      </component>
     </v-main>
- </v-app>
+  </v-app>
 </template>
 
 <script>
-
+import CoursesLayout from './views/Layouts/CoursesLayout.vue'
+import ShopLayout from './views/Layouts/ShopLayout.vue'
 export default {
-  name: 'App',
+  name: "App",
   components: {
+    CoursesLayout,
+    ShopLayout
+  },
+  computed: {
+    layout() {
+      return (this.$route.meta.layout || 'shop') + '-layout'
+    },
   },
 };
 </script>
@@ -19,8 +29,8 @@ export default {
 html,
 body,
 .v-application {
-  font-family: 'Archivo Narrow' !important;
-  background: #cbcbcb !important;
+  font-family: "Archivo Narrow" !important;
+  /* background: #cbcbcb !important; */
 }
 .v-application--wrap {
 }
@@ -29,7 +39,7 @@ body,
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  /* color: #2c3e50; */
+  /* margin-top: 60px; */
 }
 </style>

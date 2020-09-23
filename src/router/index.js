@@ -18,21 +18,25 @@ const routes = [
   {
     path: '/shop',
     name: 'ShopEdit',
+    meta: {layout:'shop' },
     component: Shop
   },
   {
     path: '/courses',
     name: 'courses',
+    meta: {layout:'courses' },
     component: Courses
   },
   {
     path: '/online-courses',
     name: 'online-courses',
+    meta: {layout:'courses' },
     component: OnlineCourses
   },
   {
     path: '/offline-courses',
     name: 'offline-courses',
+    meta: {layout:'courses' },
     component: OfflineCourses
   },
 ]

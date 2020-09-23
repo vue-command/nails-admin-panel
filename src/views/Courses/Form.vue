@@ -242,7 +242,8 @@ export default {
       this.description = value.description;
       this.url = value.photo[0].link;
       this.file = value.photo[0].link;
-      // this.dateOfCourses = value.dateOfCourses
+      this.dateOfCourses.map(item => item.spots = value.availableSpots)
+      this.dateOfCourses.map(item => item.date = value.dateOfCorses)
       this.courseSuitable = value.thisCourseIsSuitableFor;
     }
   },
