@@ -242,8 +242,6 @@ export default {
       this.description = value.description;
       this.url = value.photo[0].link;
       this.file = value.photo[0].link;
-      this.dateOfCourses.map(item => item.spots = value.availableSpots)
-      this.dateOfCourses.map(item => item.date = value.dateOfCorses)
       this.courseSuitable = value.thisCourseIsSuitableFor;
     }
   },
@@ -315,7 +313,7 @@ export default {
         category: this.category,
         nameOfCourse: this.nameOfCourse,
         subtitle: this.subtitle,
-        dateOfCourses: this.dateOfCourses,
+        // dateOfCourses: this.dateOfCourses,
         accessDays: Number(this.days),
         price: Number(this.price),
         author: this.author,
@@ -332,7 +330,11 @@ export default {
       // if (this.typeCourse === 'offline') {
       //  formData.append('dateOfCourses',JSON.stringify(this.dateOfCourses))
       // }
-      formData.append('thisCourseIsSuitableFor[]', JSON.stringify(this.courseSuitable))
+      // formData.append('thisCourseIsSuitableFor[]', JSON.stringify(this.courseSuitable))
+      this.courseSuitable.forEach(item => {
+      formData.append('thisCourseIsSuitableFor[]', item)
+      })
+
       console.log(formData);
       fetch(
         this.methodPost
