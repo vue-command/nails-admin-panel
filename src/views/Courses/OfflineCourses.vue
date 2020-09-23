@@ -3,13 +3,22 @@
     <h2>Offline Courses</h2>
     <v-btn @click="openForm(true);methodPost = true" v-if="showAddBtn">add new offline course</v-btn>
     <v-btn @click="openForm(false);methodPost = false" v-if="showBackBtn">back</v-btn>
-    <Form :showForm.sync="showForm" :showCourses.sync="showCourses" :typeCourse="type" :id="id" :methodPost="methodPost"/>
+    <Form
+      :showForm.sync="showForm"
+      :showCourses.sync="showCourses"
+      :typeCourse="type"
+      :id="id"
+      :methodPost="methodPost"
+    />
+    <div v-if="showSpiner" class="mt-16">
+      <v-progress-circular :size="100" :width="7" color="purple" indeterminate></v-progress-circular>
+    </div>
     <div v-if="showCourses" class="d-flex flex-wrap justify-center">
       <CourseCard
         v-for="(card, index) in offlineCourses"
         :key="index"
         :accessDays="card.accessDays"
-        :img="card.photo[0].link"
+        :img="validateImg(card)"
         :name="card.nameOfCourse"
         :subtitle="card.subtitle"
         :price="card.price"
@@ -21,21 +30,17 @@
     </div>
     <v-dialog v-model="dialogId" max-width="290">
       <v-card>
-        <v-card-title class="headline"> Are you sure you want to delete this course?</v-card-title>
+        <v-card-title class="headline">Are you sure you want to delete this course?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="green darken-1" text @click="dialogId = false">
-            Disagree
-          </v-btn>
+          <v-btn color="green darken-1" text @click="dialogId = false">Disagree</v-btn>
 
-          <v-btn color="green darken-1" text @click="deleteCourse(deleteId)">
-            Agree
-          </v-btn>
+          <v-btn color="green darken-1" text @click="deleteCourse(deleteId)">Agree</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-btn v-if="!isHideMoreButtonOffline" @click="getMoreOfflineCourses">more</v-btn>
+    <v-btn v-if="isHideMoreButtonOffline" @click="getMoreOfflineCourses">more</v-btn>
   </v-card>
 </template>
 <script>
@@ -46,7 +51,7 @@ export default {
   name: "offline-courses",
   components: {
     CourseCard,
-    Form
+    Form,
   },
   data() {
     return {
@@ -62,19 +67,29 @@ export default {
       id: null,
       dialogId: false,
       deleteId: null,
-      methodPost: false
+      methodPost: false,
+      showSpiner: true,
+      coverImageSrc: require("./assets/noImage.jpg"),
     };
+  },
+  watch: {
+    offlineCourses() {
+      this.offlineCourses.length <= 0
+        ? (this.showSpiner = true)
+        : (this.showSpiner = false);
+    },
   },
   computed: {
     isHideMoreButtonOffline() {
-      if (this.error) return false;
-      return this.offlineCourses.length <= this.totalOfflineCourses;
-    }
+      return this.offlineCourses.length < this.totalOfflineCourses && !this.error;
+    },
   },
   methods: {
     async getOfflineData() {
       const response = await (
-        await fetch("https://nails-australia-staging.herokuapp.com/course/offline")
+        await fetch(
+          "https://nails-australia-staging.herokuapp.com/course/offline"
+        )
       ).json();
       this.offlineCourses = response.offlineCourses;
       this.totalOfflineCourses = response.total;
@@ -86,16 +101,24 @@ export default {
         )
       ).json();
       if (response.offlineCourses) {
-        response.offlineCourses.forEach(item => {
-          this.offlineCourses.push(item);
-        });
+        this.offlineCourses = [...this.offlineCourses, ...response.offlineCourses];
       } else this.error = true;
     },
     deleteCourse(id) {
-      fetch(`https://nails-australia-staging.herokuapp.com/course/offline/${id}`, {
-        method: "DELETE"
-      });
+      fetch(
+        `https://nails-australia-staging.herokuapp.com/course/offline/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
       this.dialogId = false;
+    },
+    validateImg (card) {
+      let img = card?.photo[0]?.link
+    if (!img) {
+      img = this.coverImageSrc
+    }
+    return img
     },
     openForm(show) {
       this.showForm = show;
@@ -110,10 +133,10 @@ export default {
     },
     deleteCourseId(id) {
       this.deleteId = id;
-    }
+    },
   },
   created() {
     this.getOfflineData();
-  }
+  },
 };
 </script>

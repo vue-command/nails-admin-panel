@@ -1,6 +1,6 @@
 <template>
   <v-card dark class="cardfone ma-16" width="350" min-height="360">
-    <v-img :src="img" contain />
+    <v-img :src=" error ? coverImageSrc : img" @error="onError" height="200px"/>
     <v-card-title class="buttons--text pa-0 pl-4 pt-4">
        {{accessDays}} days | $ {{ price }}
     </v-card-title>
@@ -72,13 +72,16 @@
 export default {
   name: 'course-card',
   props: ['img', 'name', 'price', 'id', 'type', 'offline', 'online', 'subtitle', 'accessDays', 'editCourse','dialogId', 'deleteCourseId'],
-  data () {
-    return {
-    }
-  },
+  data: () => ({
+    coverImageSrc: require("./assets/noImage.jpg"),
+    error: false
+  }),
   methods: {
     edit() {
       this.editCourse(true, this.id)
+    },
+     onError () {
+      this.error = true
     },
     removeCourse() {
       this.$emit('update:dialogId', true)

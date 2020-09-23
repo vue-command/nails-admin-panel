@@ -321,7 +321,7 @@ export default {
         author: this.author,
         instructor: this.instructor,
         infoForBonus: this.infoBonus,
-        thisCourseIsSuitableFor: this.courseSuitable,
+        // thisCourseIsSuitableFor: this.courseSuitable,
         description: this.description,
         file: this.file
       };
@@ -332,7 +332,7 @@ export default {
       // if (this.typeCourse === 'offline') {
       //  formData.append('dateOfCourses',JSON.stringify(this.dateOfCourses))
       // }
-      // formData.append('thisCourseIsSuitableFor',JSON.stringify(this.courseSuitable))
+      formData.append('thisCourseIsSuitableFor[]', JSON.stringify(this.courseSuitable))
       console.log(formData);
       fetch(
         this.methodPost
@@ -345,9 +345,9 @@ export default {
         {
           method: this.methodPost ? "POST" : "PUT",
           // mode: "no-cors",
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+          // headers: {
+          //   'Content-Type': 'multipart/form-data',
+          // },
           body: formData
         }
       );

@@ -8,7 +8,7 @@
 <script>
 export default {
   data: () => ({
-    homeImage: require("../Courses/assets/home.svg"),
+    homeImage: require('../views/Courses/assets/home.svg'),
     coursesName: ['online-courses','offline-courses']
   }),
   methods: {
