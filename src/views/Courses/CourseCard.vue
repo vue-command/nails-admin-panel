@@ -1,6 +1,6 @@
 <template>
   <v-card dark class="cardfone ma-16" width="350" min-height="360">
-    <v-img :src=" error ? coverImageSrc : img" @error="onError" height="200px"/>
+    <v-img :src="img" @error="onError" height="200px"/>
     <v-card-title class="buttons--text pa-0 pl-4 pt-4">
        {{accessDays}} days | $ {{ price }}
     </v-card-title>

@@ -1,8 +1,22 @@
 <template>
   <v-card flat class="transparent">
     <h2 color="text--white">Online Courses</h2>
-    <v-btn @click="openForm(true); methodPost = true" v-if="showAddBtn">add new online course</v-btn>
-    <v-btn @click="openForm(false); methodPost = false" v-if="showBackBtn">back</v-btn>
+    <v-btn
+      @click="
+        openForm(true);
+        methodPost = true;
+      "
+      v-if="showAddBtn"
+      >add new online course</v-btn
+    >
+    <v-btn
+      @click="
+        openForm(false);
+        methodPost = false;
+      "
+      v-if="showBackBtn"
+      >back</v-btn
+    >
     <Form
       :showForm.sync="showForm"
       :showCourses.sync="showCourses"
@@ -11,7 +25,12 @@
       :methodPost="methodPost"
     />
     <div v-if="showSpiner" class="mt-16">
-      <v-progress-circular :size="100" :width="7" color="purple" indeterminate></v-progress-circular>
+      <v-progress-circular
+        :size="100"
+        :width="7"
+        color="purple"
+        indeterminate
+      ></v-progress-circular>
     </div>
     <div v-if="showCourses" class="d-flex flex-wrap justify-center">
       <CourseCard
@@ -30,15 +49,23 @@
     </div>
     <v-dialog v-model="dialogId" max-width="290">
       <v-card>
-        <v-card-title class="headline">Are you sure you want to delete this course?</v-card-title>
+        <v-card-title class="headline"
+          >Are you sure you want to delete this course?</v-card-title
+        >
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="dialogId = false">Disagree</v-btn>
-          <v-btn color="green darken-1" text @click="deleteCourse(deleteId)">Agree</v-btn>
+          <v-btn color="green darken-1" text @click="dialogId = false"
+            >Disagree</v-btn
+          >
+          <v-btn color="green darken-1" text @click="deleteCourse(deleteId)"
+            >Agree</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-btn v-if="isHideMoreButtonOnline" @click="getMoreOnlineCourses">more</v-btn>
+    <v-btn v-if="isHideMoreButtonOnline" @click="getMoreOnlineCourses"
+      >more</v-btn
+    >
   </v-card>
 </template>
 <script>
@@ -83,7 +110,11 @@ export default {
   },
   computed: {
     isHideMoreButtonOnline() {
-      return this.onlineCourses.length < this.totalOnlineCourses && !this.error;
+      return (
+        this.onlineCourses.length < this.totalOnlineCourses &&
+        !this.error &&
+        !this.showForm
+      );
     },
   },
   methods: {
@@ -105,7 +136,7 @@ export default {
 
       if (response.onlineCourses) {
         // this.onlineCourses = [...this.onlineCourses, ...response.onlineCourses];
-       this.onlineCourses = this.onlineCourses.concat(response.onlineCourses)
+        this.onlineCourses = this.onlineCourses.concat(response.onlineCourses);
       } else this.error = true;
     },
     validateImg(card) {
@@ -115,14 +146,19 @@ export default {
       }
       return img;
     },
-    deleteCourse(id) {
-      fetch(
-        `https://nails-australia-staging.herokuapp.com/course/online/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      this.dialogId = false;
+    async deleteCourse(id) {
+      const { deleted } = await (
+        await fetch(
+          `https://nails-australia-staging.herokuapp.com/course/online/${id}`,
+          {
+            method: "DELETE",
+          }
+        )
+      ).json();
+      if (deleted) {
+        await this.getOnlineData();
+        this.dialogId = false;
+      }
     },
     openForm(show) {
       this.showForm = show;

@@ -81,7 +81,7 @@ export default {
   },
   computed: {
     isHideMoreButtonOffline() {
-      return this.offlineCourses.length < this.totalOfflineCourses && !this.error;
+      return this.offlineCourses.length < this.totalOfflineCourses && !this.error && !this.showForm;
     },
   },
   methods: {
@@ -104,14 +104,20 @@ export default {
         this.offlineCourses = [...this.offlineCourses, ...response.offlineCourses];
       } else this.error = true;
     },
-    deleteCourse(id) {
-      fetch(
-        `https://nails-australia-staging.herokuapp.com/course/offline/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      this.dialogId = false;
+    async deleteCourse(id) {
+     const { deleted } = await (
+        await fetch(
+          `https://nails-australia-staging.herokuapp.com/course/offline/${id}`,
+          {
+            method: "DELETE",
+          }
+        )
+      ).json();
+      if (deleted) {
+        await this.getOfflineData();
+        this.dialogId = false;
+      }
+
     },
     validateImg (card) {
       let img = card?.photo[0]?.link

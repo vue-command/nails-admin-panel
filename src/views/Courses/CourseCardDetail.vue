@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid style="background:black;">
+  <v-container fluid style="background: black">
     <v-row>
       <v-col
         cols="12"
@@ -11,7 +11,9 @@
       >
         <v-card flat class="mb-8 transparent" dark>
           <v-card-title class="pa-0 pl-4">{{ category }}</v-card-title>
-          <v-card-text class="pa-0 pl-4 buttons--text d-flex">{{ type }} course</v-card-text>
+          <v-card-text class="pa-0 pl-4 buttons--text d-flex"
+            >{{ type }} course</v-card-text
+          >
           <v-card-title class="pa-0 pl-4">{{ nameOfCourse }}</v-card-title>
           <v-card-text class="pa-0 pl-4 d-flex">{{ subtitle }}</v-card-text>
           <v-card-title class="pa-0 pl-4 buttons--text"
@@ -21,15 +23,26 @@
         <v-card flat class="transparent d-flex flex-column align-center" dark>
           <v-card-title>This course is cuitable for:</v-card-title>
           <ul>
-            <li v-for="(item, index) in courseSuitable" :key="index">{{ item }}</li>
+            <li v-for="(item, index) in courseSuitable" :key="index">
+              {{ item }}
+            </li>
           </ul>
         </v-card>
       </v-col>
-      <v-col cols="12" xs="12" order="1" sm="6" order-sm="2" align="center" justify="center">
-        <v-img width="400px" :src="url"></v-img>
+      <v-col
+        cols="12"
+        xs="12"
+        order="1"
+        sm="6"
+        order-sm="2"
+        align="center"
+        justify="center"
+      >
+        <v-img width="400px" :src="url" @error="onError" height="250px"></v-img>
       </v-col>
       <v-col cols="12" xs="12" order="2">
-        <v-card-text class="mt-16 whitefone--text d-flex justify-center justify-sm-start"
+        <v-card-text
+          class="mt-16 whitefone--text d-flex justify-center justify-sm-start"
           >Author and instructor of the course: {{ instructor }}</v-card-text
         >
       </v-col>
@@ -47,30 +60,35 @@
 </template>
 <style scoped></style>
 <script>
-  export default {
-    props: [
-      'img',
-      'nameOfCourse',
-      'subtitle',
-      'price',
-      'author',
-      'instructor',
-      'infoBonus',
-      'courseSuitable',
-      'description',
-      'days',
-      'category',
-      'dateOfCourses',
-      'url',
-      'type',
-    ],
-     name: 'preview-course',
-    data() {
-      return {};
+export default {
+  props: [
+    "img",
+    "nameOfCourse",
+    "subtitle",
+    "price",
+    "author",
+    "instructor",
+    "infoBonus",
+    "courseSuitable",
+    "description",
+    "days",
+    "category",
+    "dateOfCourses",
+    "url",
+    "type",
+  ],
+  name: "preview-course",
+  data() {
+    return {
+      coverImageSrc: require("./assets/noImage.jpg"),
+      error: false,
+    };
+  },
+  computed: {},
+  methods: {
+    onError() {
+      this.error = true;
     },
-    computed: {},
-    methods: {
-
-    },
-  };
+  },
+};
 </script>
