@@ -56,7 +56,7 @@
                 <v-text-field
                   label="available spots"
                   v-model="availableSpots"
-                  :rules="[rules.required,rules.onlyDigits]"
+                  :rules="[rules.required, rules.onlyDigits]"
                   outlined
                   dark
                 ></v-text-field>
@@ -198,7 +198,15 @@ export default {
     CourseCardDetail,
   },
   name: "form-courses",
-  props: ["showForm", "typeCourse", "id", "methodPost","openForm", "getOnlineData", "getOfflineData"],
+  props: [
+    "showForm",
+    "typeCourse",
+    "id",
+    "methodPost",
+    "openForm",
+    "getOnlineData",
+    "getOfflineData",
+  ],
   data() {
     return {
       category: "",
@@ -339,38 +347,62 @@ export default {
       }
       if (this.typeCourse === "offline") {
         formData.append("availableSpots", this.availableSpots);
-        this.dateOfCourses.forEach((item) => {
-          formData.append("dateOfCourses[]", item);
-        });
+        this.dateOfCourses.forEach((item) => formData.append("dateOfCourses[]", item));
       }
-      this.courseSuitable.forEach((item) => {
-        formData.append("thisCourseIsSuitableFor[]", item);
-      });
-      const { newOnlineCourse:newOnlineCourse,newOfflineCourse:newOfflineCourse }  = await (await fetch(
-        this.methodPost
-          ? this.typeCourse === "offline"
-            ? offlineRequest
-            : onlineRequest
-          : this.typeCourse === "offline"
-          ? `${offlineRequest.replace(/[/]new/gi, "")}/${this.id}`
-          : `${onlineRequest.replace(/[/]new/gi, "")}/${this.id}`,
-        {
-          method: this.methodPost ? "POST" : "PUT",
-          body: formData,
-        }
-      )).json();
-      if(newOnlineCourse || newOfflineCourse) {
-        if(this.typeCourse === "offline"){
-          this.openForm(false)
-          this.getOfflineData()
-        }
-        if(this.typeCourse === "online"){
-          this.getOnlineData()
-          this.openForm(false)
-        }
-      }
-        this.resetData();
 
+      this.courseSuitable.forEach((item) =>
+        formData.append("thisCourseIsSuitableFor[]", item));
+
+      // const url = this.methodPost
+      //   ? this.typeCourse === "offline"
+      //     ? offlineRequest
+      //     : onlineRequest
+      //   : this.typeCourse === "offline"
+      //   ? `${offlineRequest.replace(/[/]new/gi, "")}/${this.id}`
+      //   : `${onlineRequest.replace(/[/]new/gi, "")}/${this.id}`;
+      let url = undefined
+
+if(this.typeCourse === "offline"){
+  url = this.methodPost ? offlineRequest : `${offlineRequest.replace(/[/]new/gi, "")}/${this.id}`
+}
+if(this.typeCourse === "online"){
+  url = this.methodPost ? onlineRequest : `${onlineRequest.replace(/[/]new/gi, "")}/${this.id}`
+}
+
+      const method = this.methodPost ? "POST" : "PUT"
+
+      const {
+        newOnlineCourse: newOnlineCourse,
+        newOfflineCourse: newOfflineCourse,
+        updatedOfflineCourse:updatedOfflineCourse,
+        updatedOnlineCourse:updatedOnlineCourse
+      } = await (
+        await fetch(url, {
+          method,
+          body: formData,
+        })
+      ).json();
+      if (newOnlineCourse || newOfflineCourse) {
+        if (this.typeCourse === "offline") {
+          this.openForm(false);
+          this.getOfflineData();
+        }
+        if (this.typeCourse === "online") {
+          this.getOnlineData();
+          this.openForm(false);
+        }
+      }
+      if(updatedOfflineCourse || updatedOnlineCourse){
+        if (this.typeCourse === "offline") {
+          this.openForm(false);
+          this.getOfflineData();
+        }
+        if (this.typeCourse === "online") {
+          this.getOnlineData();
+          this.openForm(false);
+        }
+      }
+      this.resetData();
     },
   },
 };
