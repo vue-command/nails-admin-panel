@@ -1,6 +1,6 @@
 <template>
   <v-card flat class="transparent">
-    <h2>Offline Courses</h2>
+    <h2 style="color:#fff" class="ma-8">Offline Courses</h2>
     <v-btn @click="openForm(true);methodPost = true" v-if="showAddBtn">add new offline course</v-btn>
     <v-btn @click="openForm(false);methodPost = false" v-if="showBackBtn">back</v-btn>
     <Form
@@ -9,6 +9,8 @@
       :typeCourse="type"
       :id="id"
       :methodPost="methodPost"
+      :openForm="openForm"
+      :getOfflineData="getOfflineData"
     />
     <div v-if="showSpiner" class="mt-16">
       <v-progress-circular :size="100" :width="7" color="purple" indeterminate></v-progress-circular>
@@ -24,17 +26,17 @@
         :price="card.price"
         :id="card._id"
         :editCourse="editCourse"
-        :dialogId.sync="dialogId"
+        :showDialog.sync="showDialog"
         :deleteCourseId="deleteCourseId"
       />
     </div>
-    <v-dialog v-model="dialogId" max-width="290">
+    <v-dialog v-model="showDialog" max-width="290">
       <v-card>
         <v-card-title class="headline">Are you sure you want to delete this course?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="green darken-1" text @click="dialogId = false">Disagree</v-btn>
+          <v-btn color="green darken-1" text @click="showDialog = false">Disagree</v-btn>
 
           <v-btn color="green darken-1" text @click="deleteCourse(deleteId)">Agree</v-btn>
         </v-card-actions>
@@ -65,7 +67,7 @@ export default {
       showBackBtn: false,
       type: "offline",
       id: null,
-      dialogId: false,
+      showDialog: false,
       deleteId: null,
       methodPost: false,
       showSpiner: true,
@@ -115,7 +117,7 @@ export default {
       ).json();
       if (deleted) {
         await this.getOfflineData();
-        this.dialogId = false;
+        this.showDialog = false;
       }
 
     },

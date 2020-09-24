@@ -198,7 +198,7 @@ export default {
     CourseCardDetail,
   },
   name: "form-courses",
-  props: ["showForm", "typeCourse", "id", "methodPost"],
+  props: ["showForm", "typeCourse", "id", "methodPost","openForm", "getOnlineData", "getOfflineData"],
   data() {
     return {
       category: "",
@@ -315,7 +315,7 @@ export default {
       ).json();
       this.currentCourse = await response.onlineCourse;
     },
-    sendData() {
+    async sendData() {
       const formData = new FormData();
       const offlineRequest =
         "https://nails-australia-staging.herokuapp.com/course/new/offline";
@@ -334,7 +334,6 @@ export default {
         description: this.description,
         file: this.file,
       };
-      console.log(data);
       for (const name in data) {
         formData.append(name, data[name]);
       }
@@ -347,9 +346,7 @@ export default {
       this.courseSuitable.forEach((item) => {
         formData.append("thisCourseIsSuitableFor[]", item);
       });
-
-      console.log(...formData);
-      fetch(
+      const { newOnlineCourse:newOnlineCourse,newOfflineCourse:newOfflineCourse }  = await (await fetch(
         this.methodPost
           ? this.typeCourse === "offline"
             ? offlineRequest
@@ -359,15 +356,21 @@ export default {
           : `${onlineRequest.replace(/[/]new/gi, "")}/${this.id}`,
         {
           method: this.methodPost ? "POST" : "PUT",
-          // mode: "no-cors",
-          // headers: {
-          //   'Content-Type': 'multipart/form-data',
-          // },
           body: formData,
         }
-      );
-      this.resetData();
-      this.$router.push({ name: "Home" });
+      )).json();
+      if(newOnlineCourse || newOfflineCourse) {
+        if(this.typeCourse === "offline"){
+          this.openForm(false)
+          this.getOfflineData()
+        }
+        if(this.typeCourse === "online"){
+          this.getOnlineData()
+          this.openForm(false)
+        }
+      }
+        this.resetData();
+
     },
   },
 };
