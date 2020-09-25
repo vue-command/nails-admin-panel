@@ -162,7 +162,7 @@
                 :disabled="!currentCourse"
                 min-width="90"
                 class="yellow-button mt-4"
-                @click="cancelHandler()"
+                @click="cancelHandler"
                 >cancel</v-btn
               >
             </v-col>
@@ -170,16 +170,16 @@
         </v-form>
       </v-col>
       <v-col cols="12" xs="12" sm="5">
-        <OfflineCourseCard
+        <CourseCard
           :accessDays="days"
-          :img="url"
+          :URL="url"
           :name="nameOfCourse"
           :subtitle="subtitle"
           :price="price"
           :type="typeCourse"
         />
       </v-col>
-      <OfflineCourseCardDetail
+      <CourseCardDetail
         :category="this.category"
         :days="this.days"
         :img="this.file"
@@ -200,59 +200,58 @@
 </template>
 <style scoped></style>
 <script>
-import OfflineCourseCard from "./OfflineCourseCard.vue";
-import OfflineCourseCardDetail from "./OfflineCourseCardDetail.vue";
+import CourseCard from './CourseCard.vue';
+import CourseCardDetail from './CourseCardDetail.vue';
+
 export default {
   components: {
-    OfflineCourseCard,
-    OfflineCourseCardDetail,
+    CourseCard,
+    CourseCardDetail,
   },
-  name: "form-courses",
+  name: 'courses-form',
   props: [
-    "showForm",
-    "typeCourse",
-    "id",
-    "methodPost",
-    "openForm",
-    "getOnlineData",
-    "getOfflineData",
-    "sendData",
+    // 'showForm',
+    'typeCourse',
+    'id',
+    // 'methodPost',
+    // 'openForm',
+    // 'getOnlineData',
+    // 'getOfflineData',
+    'sendData',
   ],
   data() {
     return {
-      category: "",
-      nameOfCourse: "",
-      subtitle: "",
-      days: "",
-      price: "",
-      author: "",
-      instructor: "",
-      infoBonus: "",
-      labelForSuitable: "This course is suitable for",
-      description: "",
+      category: '',
+      nameOfCourse: '',
+      subtitle: '',
+      days: '',
+      price: '',
+      author: '',
+      instructor: '',
+      infoBonus: '',
+      labelForSuitable: 'This course is suitable for',
+      description: '',
       file: [],
-      dateOfCourses: [""],
-      availableSpots: "",
-      courseSuitable: [""],
-      labelDateOfCourse: "date of the course",
+      dateOfCourses: [''],
+      availableSpots: '',
+      courseSuitable: [''],
+      labelDateOfCourse: 'date of the course',
       // labelAvailableSpots: "available spots",
       url: null,
-      type: "",
-      copyDateOfCourses:null,
+      type: '',
+      copyDateOfCourses: null,
       rules: {
-        required: (v) => !!v || "input is required",
-        minLengthName: (v) =>
-          v.length <= 15 || "the maximum number of characters entered",
-        onlyDigits: (v) =>
-          !/\D/g.test(v) || "input should consist only of digits",
+        required: (v) => !!v || 'input is required',
+        minLengthName: (v) => v.length <= 15 || 'the maximum number of characters entered',
+        onlyDigits: (v) => !/\D/g.test(v) || 'input should consist only of digits',
       },
       currentCourse: null,
     };
   },
   watch: {
-    id() {
-      if (this.id) {
-        this.editCourseOffline(this.id);
+    id(val) {
+      if (val) {
+        this.editCourse(val);
       } else {
         this.resetData();
       }
@@ -272,7 +271,7 @@ export default {
       this.description = value.description;
       this.url = value.photo[0].link;
       this.dateOfCourses = value.dateOfCourses;
-      this.copyDateOfCourses = Array.from(value.dateOfCourses)
+      this.copyDateOfCourses = Array.from(value.dateOfCourses);
       this.availableSpots = value.availableSpots;
       // this.file = value.photo[0].link;
       this.courseSuitable = value.thisCourseIsSuitableFor;
@@ -285,24 +284,24 @@ export default {
     },
     resetData() {
       [
-        "category",
-        "nameOfCourse",
-        "subtitle",
-        "days",
-        "price",
-        "author",
-        "instructor",
-        "infoBonus",
-        "description",
-        "type",
+        'category',
+        'nameOfCourse',
+        'subtitle',
+        'days',
+        'price',
+        'author',
+        'instructor',
+        'infoBonus',
+        'description',
+        'type',
       ].forEach((item) => {
-        this[item] = "";
+        this[item] = '';
       });
       this.file = [];
       this.url = null;
-      this.courseSuitable = [""];
-      this.dateOfCourses = [""];
-      this.availableSpots = "";
+      this.courseSuitable = [''];
+      this.dateOfCourses = [''];
+      this.availableSpots = '';
     },
     checkForm() {
       if (this.$refs.form.validate()) {
@@ -310,19 +309,19 @@ export default {
       }
     },
     addField(entryField) {
-      return !!entryField
-        ? this.courseSuitable.push("")
-        : this.dateOfCourses.push("");
+      return entryField
+        ? this.courseSuitable.push('')
+        : this.dateOfCourses.push('');
     },
     removeField(index, entryField) {
-      return !!entryField
+      return entryField
         ? this.courseSuitable.splice(index, 1)
         : this.dateOfCourses.splice(index, 1);
     },
-    async editCourseOffline(id) {
+    async editCourse(id) {
       const response = await (
         await fetch(
-          `https://nails-australia-staging.herokuapp.com/course/offline/${id}`
+          `https://nails-australia-staging.herokuapp.com/course/offline/${id}`,
         )
       ).json();
       this.currentCourse = await response.offlineCourse;
@@ -338,12 +337,12 @@ export default {
       this.infoBonus = this.currentCourse.infoForBonus;
       this.description = this.currentCourse.description;
       this.url = this.currentCourse.photo[0].link;
-      this.dateOfCourses = Array.from(this.copyDateOfCourses)
+      this.dateOfCourses = Array.from(this.copyDateOfCourses);
       this.availableSpots = this.currentCourse.availableSpots;
-      this.courseSuitable = Array.from(this.copyCourseSuitable)
+      this.courseSuitable = Array.from(this.copyCourseSuitable);
     },
     submitHandler() {
-      let data = {
+      const data = {
         category: this.category,
         nameOfCourse: this.nameOfCourse,
         subtitle: this.subtitle,
@@ -359,15 +358,21 @@ export default {
       // let courseSuitable = this.courseSuitable
       // let dateOfCourses = this.dateOfCourses
 
-      this.sendData(
-        data,
-        this.courseSuitable,
-        this.dateOfCourses,
-        this.methodPost,
-        this.id
-      );
-      this.openForm(false);
+      const formData = new FormData();
+
+      // for (const name in data) {
+      //   formData.append(name, data[name]);
+      // }
+
+      Object.entries(data).forEach(([name, value]) => formData.append(name, value));
+
+      this.dateOfCourses.forEach((item) => formData.append('dateOfCourses[]', item));
+
+      this.courseSuitable.forEach((item) => formData.append('thisCourseIsSuitableFor[]', item));
+
+      this.sendData(formData);
       this.resetData();
+      // this.openForm(false);
     },
   },
 };

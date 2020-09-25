@@ -14,14 +14,14 @@
 </style>
 <script>
 export default {
-  name: "courses",
+  name: 'courses',
   data() {
     return {};
   },
   methods: {
     goToCourses(courses) {
-      this.$router.push({ name: courses})
-    }
-  }
+      this.$router.push({ name: courses });
+    },
+  },
 };
 </script>

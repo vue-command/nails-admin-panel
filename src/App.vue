@@ -9,19 +9,20 @@
 </template>
 
 <script>
-import CoursesLayout from './Layouts/CoursesLayout.vue'
-import ShopLayout from './Layouts/ShopLayout.vue'
-import DefaultLayout from './Layouts/DefaultLayout.vue'
+import CoursesLayout from './Layouts/CoursesLayout.vue';
+import ShopLayout from './Layouts/ShopLayout.vue';
+import DefaultLayout from './Layouts/DefaultLayout.vue';
+
 export default {
-  name: "App",
+  name: 'App',
   components: {
     CoursesLayout,
     ShopLayout,
-    DefaultLayout
+    DefaultLayout,
   },
   computed: {
     layout() {
-      return (this.$route.meta?.layout || 'default') + '-layout'
+      return `${this.$route.meta?.layout || 'default'}-layout`;
     },
   },
 };

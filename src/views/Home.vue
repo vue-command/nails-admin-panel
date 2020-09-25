@@ -22,11 +22,11 @@ export default {
   components: {},
   methods: {
     goToShop() {
-      this.$router.push({name: "ShopEdit"})
+      this.$router.push({ name: 'ShopEdit' });
     },
     goToOfflineCourses() {
-       this.$router.push({name: "offline-courses-page"})
-    }
-  }
+      this.$router.push({ name: 'offline-courses-page' });
+    },
+  },
 };
 </script>

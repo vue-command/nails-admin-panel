@@ -71,11 +71,11 @@
   </v-card>
 </template>
 <script>
-import CourseCard from "./CourseCard.vue";
-import Form from "./Form.vue";
+import CourseCard from './CourseCard.vue';
+import Form from './Form.vue';
 
 export default {
-  name: "online-courses",
+  name: 'online-courses',
   components: {
     CourseCard,
     Form,
@@ -90,7 +90,7 @@ export default {
       showCourses: true,
       showAddBtn: true,
       showBackBtn: false,
-      type: "online",
+      type: 'online',
       showDialog: false,
       id: null,
       deleteId: null,
@@ -113,9 +113,9 @@ export default {
   computed: {
     isHideMoreButtonOnline() {
       return (
-        this.onlineCourses.length < this.totalOnlineCourses &&
-        !this.error &&
-        !this.showForm
+        this.onlineCourses.length < this.totalOnlineCourses
+        && !this.error
+        && !this.showForm
       );
     },
   },
@@ -123,7 +123,7 @@ export default {
     async getOnlineData() {
       const response = await (
         await fetch(
-          "https://nails-australia-staging.herokuapp.com/course/online"
+          'https://nails-australia-staging.herokuapp.com/course/online',
         )
       ).json();
       this.onlineCourses = response.onlineCourses;
@@ -132,7 +132,7 @@ export default {
     async getMoreOnlineCourses() {
       const response = await (
         await fetch(
-          `https://nails-australia-staging.herokuapp.com/course/online?skip=${this.onlineCourses.length}`
+          `https://nails-australia-staging.herokuapp.com/course/online?skip=${this.onlineCourses.length}`,
         )
       ).json();
 
@@ -153,8 +153,8 @@ export default {
         await fetch(
           `https://nails-australia-staging.herokuapp.com/course/online/${id}`,
           {
-            method: "DELETE",
-          }
+            method: 'DELETE',
+          },
         )
       ).json();
       if (deleted) {

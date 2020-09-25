@@ -71,22 +71,22 @@
 
 export default {
   name: 'course-card',
-  props: ['img', 'name', 'price', 'id', 'type', 'offline', 'online', 'subtitle', 'accessDays', 'editCourse','showDialog', 'deleteCourseId'],
+  props: ['img', 'name', 'price', 'id', 'type', 'offline', 'online', 'subtitle', 'accessDays', 'editCourse', 'showDialog', 'deleteCourseId'],
   data: () => ({
-    coverImageSrc: require("./assets/noImage.jpg"),
-    error: false
+    coverImageSrc: require('./assets/noImage.jpg'),
+    error: false,
   }),
   methods: {
     edit() {
-      this.editCourse(true, this.id)
+      this.editCourse(true, this.id);
     },
-     onError () {
-      this.error = true
+    onError() {
+      this.error = true;
     },
     removeCourse() {
-      this.$emit('update:showDialog', true)
-      this.deleteCourseId(this.id)
-    }
-  }
-  }
+      this.$emit('update:showDialog', true);
+      this.deleteCourseId(this.id);
+    },
+  },
+};
 </script>

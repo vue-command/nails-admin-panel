@@ -190,49 +190,48 @@
 </template>
 <style scoped></style>
 <script>
-import CourseCard from "./CourseCard.vue";
-import CourseCardDetail from "./CourseCardDetail.vue";
+import CourseCard from './CourseCard.vue';
+import CourseCardDetail from './CourseCardDetail.vue';
+
 export default {
   components: {
     CourseCard,
     CourseCardDetail,
   },
-  name: "form-courses",
+  name: 'form-courses',
   props: [
-    "showForm",
-    "typeCourse",
-    "id",
-    "methodPost",
-    "openForm",
-    "getOnlineData",
-    "getOfflineData",
+    'showForm',
+    'typeCourse',
+    'id',
+    'methodPost',
+    'openForm',
+    'getOnlineData',
+    'getOfflineData',
   ],
   data() {
     return {
-      category: "",
-      nameOfCourse: "",
-      subtitle: "",
-      days: "",
-      price: "",
-      author: "",
-      instructor: "",
-      infoBonus: "",
-      labelForSuitable: "This course is suitable for",
-      description: "",
+      category: '',
+      nameOfCourse: '',
+      subtitle: '',
+      days: '',
+      price: '',
+      author: '',
+      instructor: '',
+      infoBonus: '',
+      labelForSuitable: 'This course is suitable for',
+      description: '',
       file: [],
-      dateOfCourses: [""],
-      availableSpots: "",
-      courseSuitable: [""],
-      labelDateOfCourse: "date of the course",
+      dateOfCourses: [''],
+      availableSpots: '',
+      courseSuitable: [''],
+      labelDateOfCourse: 'date of the course',
       // labelAvailableSpots: "available spots",
       url: null,
-      type: "",
+      type: '',
       rules: {
-        required: (v) => !!v || "input is required",
-        minLengthName: (v) =>
-          v.length <= 15 || "the maximum number of characters entered",
-        onlyDigits: (v) =>
-          !/\D/g.test(v) || "input should consist only of digits",
+        required: (v) => !!v || 'input is required',
+        minLengthName: (v) => v.length <= 15 || 'the maximum number of characters entered',
+        onlyDigits: (v) => !/\D/g.test(v) || 'input should consist only of digits',
       },
       currentCourse: null,
     };
@@ -240,7 +239,7 @@ export default {
   watch: {
     id() {
       if (this.id) {
-        this.typeCourse === "offline"
+        this.typeCourse === 'offline'
           ? this.editCourseOffline(this.id)
           : this.editCourseOnline(this.id);
       } else {
@@ -273,24 +272,24 @@ export default {
     },
     resetData() {
       [
-        "category",
-        "nameOfCourse",
-        "subtitle",
-        "days",
-        "price",
-        "author",
-        "instructor",
-        "infoBonus",
-        "description",
-        "type",
+        'category',
+        'nameOfCourse',
+        'subtitle',
+        'days',
+        'price',
+        'author',
+        'instructor',
+        'infoBonus',
+        'description',
+        'type',
       ].forEach((item) => {
-        this[item] = "";
+        this[item] = '';
       });
       this.file = [];
       this.url = null;
-      this.courseSuitable = [""];
-      this.dateOfCourses = [""];
-      this.availableSpots = "";
+      this.courseSuitable = [''];
+      this.dateOfCourses = [''];
+      this.availableSpots = '';
     },
     checkForm() {
       if (this.$refs.form.validate()) {
@@ -298,19 +297,19 @@ export default {
       }
     },
     addField(entryField) {
-      return !!entryField
-        ? this.courseSuitable.push("")
-        : this.dateOfCourses.push("");
+      return entryField
+        ? this.courseSuitable.push('')
+        : this.dateOfCourses.push('');
     },
     removeField(index, entryField) {
-      return !!entryField
+      return entryField
         ? this.courseSuitable.splice(index, 1)
         : this.dateOfCourses.splice(index, 1);
     },
     async editCourseOffline(id) {
       const response = await (
         await fetch(
-          `https://nails-australia-staging.herokuapp.com/course/offline/${id}`
+          `https://nails-australia-staging.herokuapp.com/course/offline/${id}`,
         )
       ).json();
       this.currentCourse = await response.offlineCourse;
@@ -318,19 +317,17 @@ export default {
     async editCourseOnline(id) {
       const response = await (
         await fetch(
-          `https://nails-australia-staging.herokuapp.com/course/online/${id}`
+          `https://nails-australia-staging.herokuapp.com/course/online/${id}`,
         )
       ).json();
       this.currentCourse = await response.onlineCourse;
     },
     async sendData() {
       const formData = new FormData();
-      const offlineRequest =
-        "https://nails-australia-staging.herokuapp.com/course/new/offline";
-      const onlineRequest =
-        "https://nails-australia-staging.herokuapp.com/course/new/online";
+      const offlineRequest = 'https://nails-australia-staging.herokuapp.com/course/new/offline';
+      const onlineRequest = 'https://nails-australia-staging.herokuapp.com/course/new/online';
 
-      let data = {
+      const data = {
         category: this.category,
         nameOfCourse: this.nameOfCourse,
         subtitle: this.subtitle,
@@ -345,13 +342,12 @@ export default {
       for (const name in data) {
         formData.append(name, data[name]);
       }
-      if (this.typeCourse === "offline") {
-        formData.append("availableSpots", this.availableSpots);
-        this.dateOfCourses.forEach((item) => formData.append("dateOfCourses[]", item));
+      if (this.typeCourse === 'offline') {
+        formData.append('availableSpots', this.availableSpots);
+        this.dateOfCourses.forEach((item) => formData.append('dateOfCourses[]', item));
       }
 
-      this.courseSuitable.forEach((item) =>
-        formData.append("thisCourseIsSuitableFor[]", item));
+      this.courseSuitable.forEach((item) => formData.append('thisCourseIsSuitableFor[]', item));
 
       // const url = this.methodPost
       //   ? this.typeCourse === "offline"
@@ -360,22 +356,22 @@ export default {
       //   : this.typeCourse === "offline"
       //   ? `${offlineRequest.replace(/[/]new/gi, "")}/${this.id}`
       //   : `${onlineRequest.replace(/[/]new/gi, "")}/${this.id}`;
-      let url = undefined
+      let url;
 
-if(this.typeCourse === "offline"){
-  url = this.methodPost ? offlineRequest : `${offlineRequest.replace(/[/]new/gi, "")}/${this.id}`
-}
-if(this.typeCourse === "online"){
-  url = this.methodPost ? onlineRequest : `${onlineRequest.replace(/[/]new/gi, "")}/${this.id}`
-}
+      if (this.typeCourse === 'offline') {
+        url = this.methodPost ? offlineRequest : `${offlineRequest.replace(/[/]new/gi, '')}/${this.id}`;
+      }
+      if (this.typeCourse === 'online') {
+        url = this.methodPost ? onlineRequest : `${onlineRequest.replace(/[/]new/gi, '')}/${this.id}`;
+      }
 
-      const method = this.methodPost ? "POST" : "PUT"
+      const method = this.methodPost ? 'POST' : 'PUT';
 
       const {
-        newOnlineCourse: newOnlineCourse,
-        newOfflineCourse: newOfflineCourse,
-        updatedOfflineCourse:updatedOfflineCourse,
-        updatedOnlineCourse:updatedOnlineCourse
+        newOnlineCourse,
+        newOfflineCourse,
+        updatedOfflineCourse,
+        updatedOnlineCourse,
       } = await (
         await fetch(url, {
           method,
@@ -383,21 +379,21 @@ if(this.typeCourse === "online"){
         })
       ).json();
       if (newOnlineCourse || newOfflineCourse) {
-        if (this.typeCourse === "offline") {
+        if (this.typeCourse === 'offline') {
           this.openForm(false);
           this.getOfflineData();
         }
-        if (this.typeCourse === "online") {
+        if (this.typeCourse === 'online') {
           this.getOnlineData();
           this.openForm(false);
         }
       }
-      if(updatedOfflineCourse || updatedOnlineCourse){
-        if (this.typeCourse === "offline") {
+      if (updatedOfflineCourse || updatedOnlineCourse) {
+        if (this.typeCourse === 'offline') {
           this.openForm(false);
           this.getOfflineData();
         }
-        if (this.typeCourse === "online") {
+        if (this.typeCourse === 'online') {
           this.getOnlineData();
           this.openForm(false);
         }

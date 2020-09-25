@@ -46,11 +46,11 @@
   </v-card>
 </template>
 <script>
-import CourseCard from "./CourseCard.vue";
-import Form from "./Form.vue";
+import CourseCard from './CourseCard.vue';
+import Form from './Form.vue';
 
 export default {
-  name: "offline-courses",
+  name: 'offline-courses',
   components: {
     CourseCard,
     Form,
@@ -65,13 +65,13 @@ export default {
       showCourses: true,
       showAddBtn: true,
       showBackBtn: false,
-      type: "offline",
+      type: 'offline',
       id: null,
       showDialog: false,
       deleteId: null,
       methodPost: false,
       showSpiner: true,
-      coverImageSrc: require("./assets/noImage.jpg"),
+      coverImageSrc: require('./assets/noImage.jpg'),
     };
   },
   watch: {
@@ -90,7 +90,7 @@ export default {
     async getOfflineData() {
       const response = await (
         await fetch(
-          "https://nails-australia-staging.herokuapp.com/course/offline"
+          'https://nails-australia-staging.herokuapp.com/course/offline',
         )
       ).json();
       this.offlineCourses = response.offlineCourses;
@@ -99,7 +99,7 @@ export default {
     async getMoreOfflineCourses() {
       const response = await (
         await fetch(
-          `https://nails-australia-staging.herokuapp.com/course/offline?skip=${this.offlineCourses.length}`
+          `https://nails-australia-staging.herokuapp.com/course/offline?skip=${this.offlineCourses.length}`,
         )
       ).json();
       if (response.offlineCourses) {
@@ -107,26 +107,25 @@ export default {
       } else this.error = true;
     },
     async deleteCourse(id) {
-     const { deleted } = await (
+      const { deleted } = await (
         await fetch(
           `https://nails-australia-staging.herokuapp.com/course/offline/${id}`,
           {
-            method: "DELETE",
-          }
+            method: 'DELETE',
+          },
         )
       ).json();
       if (deleted) {
         await this.getOfflineData();
         this.showDialog = false;
       }
-
     },
-    validateImg (card) {
-      let img = card?.photo[0]?.link
-    if (!img) {
-      img = this.coverImageSrc
-    }
-    return img
+    validateImg(card) {
+      let img = card?.photo[0]?.link;
+      if (!img) {
+        img = this.coverImageSrc;
+      }
+      return img;
     },
     openForm(show) {
       this.showForm = show;

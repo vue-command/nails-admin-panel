@@ -8,13 +8,13 @@
 <script>
 export default {
   data: () => ({
-    homeImage: require('../views/Courses/assets/home.svg'),
-    coursesName: ['online-courses','offline-courses']
+    homeImage: '../views/Courses/assets/home.svg',
+    coursesName: ['online-courses', 'offline-courses'],
   }),
   methods: {
     goTo(namePage) {
-      this.$router.push({name:namePage})
-    }
-  }
-}
+      this.$router.push({ name: namePage });
+    },
+  },
+};
 </script>

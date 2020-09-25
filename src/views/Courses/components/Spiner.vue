@@ -8,3 +8,15 @@
     ></v-progress-circular>
   </div>
 </template>
+
+<style scoped>
+</style>
+
+<script>
+export default {
+  name: 'spiner',
+  props: [],
+  data: () => ({}),
+  methods: {},
+};
+</script>
