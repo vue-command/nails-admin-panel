@@ -17,7 +17,7 @@
       v-if="showBackBtn"
       >back</v-btn
     >
-    <OfflineCoursesForm
+    <!-- <OfflineCoursesForm
       :showForm.sync="showForm"
       :showCourses.sync="showCourses"
       :id="id"
@@ -25,15 +25,15 @@
       :openForm="openForm"
       :getOfflineData="getOfflineData"
       :sendData="sendData"
-    />
-    <div v-if="showSpiner" class="mt-16">
+    /> -->
+    <!-- <div v-if="showSpiner" class="mt-16">
       <v-progress-circular
         :size="100"
         :width="7"
         color="purple"
         indeterminate
       ></v-progress-circular>
-    </div>
+    </div> -->
     <div v-if="showCourses" class="d-flex flex-wrap justify-center">
       <OfflineCourseCard
         v-for="(card, index) in offlineCourses"

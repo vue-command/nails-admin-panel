@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid v-if="showForm">
+  <v-container fluid>
     <v-row>
       <v-col cols="12" xs="12" sm="7">
         <v-form ref="form">
