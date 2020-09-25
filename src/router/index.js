@@ -2,9 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Shop from '../views/Shop/Shop.vue'
-import Courses from '../views/Courses/Courses.vue'
-import OnlineCourses from '../views/Courses/OnlineCourses.vue'
-import OfflineCourses from '../views/Courses/OfflineCourses.vue'
+// import Courses from '../views/Courses/Courses.vue'
+// import OnlineCourses from '../views/Courses/OnlineCourses.vue'
+import OfflineCoursesPage from '../views/OfflineCourses/OfflineCoursesPage.vue'
 
 
 Vue.use(VueRouter)
@@ -21,23 +21,23 @@ const routes = [
     meta: {layout:'shop' },
     component: Shop
   },
+  // {
+  //   path: '/courses',
+  //   name: 'courses',
+  //   meta: {layout:'courses' },
+  //   component: Courses
+  // },
+  // {
+  //   path: '/online-courses',
+  //   name: 'online-courses',
+  //   meta: {layout:'courses' },
+  //   component: OnlineCourses
+  // },
   {
-    path: '/courses',
-    name: 'courses',
+    path: '/offline-courses-page',
+    name: 'offline-courses-page',
     meta: {layout:'courses' },
-    component: Courses
-  },
-  {
-    path: '/online-courses',
-    name: 'online-courses',
-    meta: {layout:'courses' },
-    component: OnlineCourses
-  },
-  {
-    path: '/offline-courses',
-    name: 'offline-courses',
-    meta: {layout:'courses' },
-    component: OfflineCourses
+    component: OfflineCoursesPage
   },
 ]
 

@@ -2,8 +2,8 @@
   <v-container >
     <v-row class="text-center">
       <v-col cols="6" lg="6">
-        <v-btn @click="goToAllCourses">
-          COURSES
+        <v-btn @click="goToOfflineCourses">
+          COURSES OffLINE
         </v-btn>
       </v-col>
       <v-col cols="6" lg="6">
@@ -24,8 +24,8 @@ export default {
     goToShop() {
       this.$router.push({name: "ShopEdit"})
     },
-    goToAllCourses() {
-       this.$router.push({name: "courses"})
+    goToOfflineCourses() {
+       this.$router.push({name: "offline-courses-page"})
     }
   }
 };
