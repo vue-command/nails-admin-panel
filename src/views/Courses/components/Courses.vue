@@ -11,7 +11,7 @@
         v-for="card in courses"
         :key="card._id"
         :accessDays="card.accessDays"
-        :URL="validateImg(card)"
+        :url="validateImg(card)"
         :name="card.nameOfCourse"
         :subtitle="card.subtitle"
         :price="card.price"

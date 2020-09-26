@@ -38,7 +38,7 @@
         align="center"
         justify="center"
       >
-        <v-img width="400px" :src="url" @error="onError" height="250px"></v-img>
+        <v-img width="400px" :src="imageUrl" @error="onError" height="250px"></v-img>
       </v-col>
       <v-col cols="12" xs="12" order="2">
         <v-card-text
@@ -62,7 +62,6 @@
 <script>
 export default {
   props: [
-    'img',
     'nameOfCourse',
     'subtitle',
     'price',
@@ -80,15 +79,27 @@ export default {
   name: 'preview-course',
   data() {
     return {
-      coverImageSrc: '../assets/noImage.jpg',
-      error: false,
+      // eslint-disable-next-line global-require
+      coverImageSrc: require('../assets/noImage.jpg'),
+      imageUrl: null,
     };
+  },
+  watch: {
+    url(val) {
+      this.checkUrl(val);
+    },
   },
   computed: {},
   methods: {
     onError() {
-      this.error = true;
+      this.imageUrl = this.coverImageSrc;
     },
+    checkUrl(url) {
+      this.imageUrl = url || this.coverImageSrc;
+    },
+  },
+  created() {
+    this.checkUrl(this.url);
   },
 };
 </script>

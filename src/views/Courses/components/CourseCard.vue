@@ -1,6 +1,6 @@
 <template>
   <v-card dark class="cardfone ma-16" width="350" min-height="360">
-    <v-img :src="error ? coverImageSrc : URL" @error="onError" height="200px" />
+    <v-img :src="imageUrl" @error="onError" height="200px" />
     <v-card-title class="buttons--text pa-0 pl-4 pt-4">
       {{ accessDays }} days | $ {{ price }}
     </v-card-title>
@@ -76,7 +76,7 @@
 export default {
   name: 'course-card',
   props: [
-    'URL',
+    'url',
     'name',
     'price',
     'id',
@@ -93,21 +93,32 @@ export default {
     'editCourse',
   ],
   data: () => ({
-    coverImageSrc: '../assets/noImage.jpg',
-    error: false, // ???
+    // eslint-disable-next-line global-require
+    coverImageSrc: require('../assets/noImage.jpg'),
+    imageUrl: null,
   }),
+  watch: {
+    url(val) {
+      this.checkUrl(val);
+    },
+  },
   methods: {
     // edit() {
     //   this.editCourse(true, this.id);
     // },
     onError() {
-      // ???
-      this.error = true;
+      this.imageUrl = this.coverImageSrc;
+    },
+    checkUrl(url) {
+      this.imageUrl = url || this.coverImageSrc;
     },
     // removeCourse() {
     //   this.$emit("update:showDialog", true);
     //   this.deleteCourseId(this.id);
     // },
+  },
+  created() {
+    this.checkUrl(this.url);
   },
 };
 </script>

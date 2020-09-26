@@ -177,7 +177,7 @@
       <v-col cols="12" xs="12" sm="5">
         <CourseCard
           :accessDays="days"
-          :URL="url"
+          :url="url"
           :name="nameOfCourse"
           :subtitle="subtitle"
           :price="price"
@@ -185,20 +185,19 @@
         />
       </v-col>
       <CourseCardDetail
-        :category="this.category"
-        :days="this.days"
-        :img="this.file"
-        :nameOfCourse="this.nameOfCourse"
-        :subtitle="this.subtitle"
-        :price="this.price"
-        :author="this.author"
-        :instructor="this.instructor"
-        :infoBonus="this.infoBonus"
-        :courseSuitable="this.courseSuitable"
-        :description="this.description"
-        :dateOfCourses="this.dateOfCourses"
-        :url="this.url"
-        :type="this.typeCourse"
+        :category="category"
+        :days="days"
+        :nameOfCourse="nameOfCourse"
+        :subtitle="subtitle"
+        :price="price"
+        :author="author"
+        :instructor="instructor"
+        :infoBonus="infoBonus"
+        :courseSuitable="courseSuitable"
+        :description="description"
+        :dateOfCourses="dateOfCourses"
+        :url="url"
+        :type="typeCourse"
       />
     </v-row>
   </v-container>
@@ -271,7 +270,7 @@ export default {
       this.instructor = value.instructor;
       this.infoBonus = value.infoForBonus;
       this.description = value.description;
-      this.url = value.photo[0].link;
+      this.url = value.photo[0]?.link;
       this.dateOfCourses = value.dateOfCourses;
       this.copyDateOfCourses = Array.from(value.dateOfCourses);
       this.availableSpots = value.availableSpots;
@@ -356,7 +355,6 @@ export default {
       };
       // let courseSuitable = this.courseSuitable
       // let dateOfCourses = this.dateOfCourses
-
       const formData = new FormData();
 
       Object.entries(data).forEach(([name, value]) => formData.append(name, value));
