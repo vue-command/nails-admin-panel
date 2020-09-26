@@ -1,39 +1,11 @@
 <template>
   <v-card flat class="transparent">
     <h2 style="color: #fff" class="ma-8">{{ this.title }}</h2>
-    <!-- <v-btn
-      @click="
-        openForm(true);
-        methodPost = true;
+    <v-btn
+      @click="addCourse
       "
-      v-if="showAddBtn"
-      >add new offline course</v-btn
-    > -->
-    <!-- <v-btn
-      @click="
-        openForm(false);
-        methodPost = false;
-      "
-      v-if="showBackBtn"
-      >back</v-btn
-    > -->
-    <!-- <OfflineCoursesForm
-      :showForm.sync="showForm"
-      :showCourses.sync="showCourses"
-      :id="id"
-      :methodPost="methodPost"
-      :openForm="openForm"
-      :getOfflineData="getOfflineData"
-      :sendData="sendData"
-    /> -->
-    <!-- <div v-if="showSpiner" class="mt-16">
-      <v-progress-circular
-        :size="100"
-        :width="7"
-        color="purple"
-        indeterminate
-      ></v-progress-circular>
-    </div> -->
+      >{{addCourseTitle}}</v-btn
+    >
     <div class="d-flex flex-wrap justify-center">
       <CourseCard
         v-for="card in courses"
@@ -48,6 +20,7 @@
         :editCourse="editCourse"
       />
     </div>
+
     <v-dialog v-model="showDialog" max-width="290">
       <v-card>
         <v-card-title class="headline"
@@ -67,9 +40,9 @@
     <v-btn v-if="showMoreButton" @click="more">more</v-btn>
   </v-card>
 </template>
+
 <script>
 import CourseCard from './CourseCard.vue';
-// import CoursesForm from "./OfflineCoursesForm.vue";
 
 export default {
   name: 'courses',
@@ -81,10 +54,11 @@ export default {
     'removeCourse',
     'editCourse',
     'more',
+    'addCourse',
+    'addCourseTitle',
   ],
   components: {
     CourseCard,
-    // CoursesForm,
   },
   data() {
     return {
@@ -99,18 +73,8 @@ export default {
       // id: null,
       showDialog: false,
       removableId: null,
-      // methodPost: false,
-      // showSpiner: true,
       coverImageSrc: '../assets/noImage.jpg',
     };
-  },
-
-  watch: {
-    // offlineCourses() {
-    //   !this.offlineCourses
-    //     ? (this.showSpiner = true)
-    //     : (this.showSpiner = false);
-    // },
   },
 
   computed: {
@@ -176,14 +140,6 @@ export default {
       }
       return img;
     },
-
-    // openForm(show) {
-    //   this.showForm = show;
-    //   this.showCourses = !show;
-    //   this.showAddBtn = !show;
-    //   this.showBackBtn = show;
-    //   this.id = show ? this.id : null;
-    // },
 
     // editCourse(show, id) {
     //   this.openForm(show);

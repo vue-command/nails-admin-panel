@@ -11,8 +11,17 @@
       :more="addCourses"
       :removeCourse="removeCourse"
       :editCourse="editCourse"
+      :addCourse="addCourse"
+      addCourseTitle="add new offline course"
     />
-    <CoursesForm v-if="showForm" :id="editeCourseID" typeCourse="offline" :sendData="sendData"/>
+    <CoursesForm
+      v-if="showForm"
+      :id="editeCourseID"
+      typeCourse="offline"
+      :getCourseID="getCourseID"
+      :sendData="sendData"
+      :back="backForm"
+    />
   </div>
 </template>
 <script>
@@ -52,17 +61,6 @@ export default {
     },
   },
   methods: {
-    // async editCourseOffline(id) {
-    //   const response = await (
-    //     await fetch(
-    //       `https://nails-australia-staging.herokuapp.com/course/offline/${id}`
-    //     )
-    //   ).json();
-    //   this.id = id
-    //   this.currentCourse = await response.offlineCourse;
-    //   console.log(currentCourse);
-    // },
-
     async getCourses() {
       const response = await (
         await fetch(
@@ -74,6 +72,15 @@ export default {
         this.totalCourses = response.total;
       }
       this.isLoading = false;
+    },
+
+    async getCourseID(id) {
+      const response = await (
+        await fetch(
+          `https://nails-australia-staging.herokuapp.com/course/offline/${id}`,
+        )
+      ).json();
+      return response.offlineCourse;
     },
 
     async addCourses() {
@@ -98,19 +105,31 @@ export default {
         )
       ).json();
       if (deleted) {
-        this.courses = this.courses.map((course) => course.id !== id);
+        // eslint-disable-next-line no-underscore-dangle
+        this.courses = this.courses.filter((course) => course._id !== id);
+        this.totalCourses -= 1;
+        this.$forceUpdate();
       }
+      console.log(this.courses);
+    },
+
+    addCourse() {
+      this.editeCourseID = null;
+      this.methodPost = true;
+      this.showForm = true;
     },
 
     editCourse(id) {
-      this.showForm = true;
       this.editeCourseID = id;
+      this.methodPost = false;
+      this.showForm = true;
     },
 
-    createCourse() {
-      console.log('createCourse');
+    backForm() {
+      this.showForm = false;
     },
 
+    // Create and update course.
     async sendData(formData) {
       const offlineRequest = 'https://nails-australia-staging.herokuapp.com/course/new/offline';
       const url = this.methodPost
@@ -127,12 +146,17 @@ export default {
       ).json();
 
       if (response?.newOfflineCourse) {
-      //   this.openForm(false);
-      //   this.getOfflineData();
+        // Baner
+        //  Course successfully created.
+        this.totalCourses += 1;
+        this.isLoading = true;
+        this.getCourses();
       }
       if (response?.updatedOfflineCourse) {
-      //   this.openForm(false);
-      //   this.getOfflineData();
+        // Baner
+        //  Course successfully updated.
+        this.isLoading = true;
+        this.getCourses();
       }
       this.showForm = false;
     },

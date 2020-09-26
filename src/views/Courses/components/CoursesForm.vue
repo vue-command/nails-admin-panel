@@ -2,6 +2,11 @@
   <v-container fluid>
     <v-row>
       <v-col cols="12" xs="12" sm="7">
+
+    <v-btn
+      @click="back"
+      >back</v-btn
+    >
         <v-form ref="form">
           <v-row>
             <v-col cols="12" xs="12" md="6">
@@ -210,14 +215,11 @@ export default {
   },
   name: 'courses-form',
   props: [
-    // 'showForm',
     'typeCourse',
     'id',
-    // 'methodPost',
-    // 'openForm',
-    // 'getOnlineData',
-    // 'getOfflineData',
+    'getCourseID',
     'sendData',
+    'back',
   ],
   data() {
     return {
@@ -318,14 +320,11 @@ export default {
         ? this.courseSuitable.splice(index, 1)
         : this.dateOfCourses.splice(index, 1);
     },
+
     async editCourse(id) {
-      const response = await (
-        await fetch(
-          `https://nails-australia-staging.herokuapp.com/course/offline/${id}`,
-        )
-      ).json();
-      this.currentCourse = await response.offlineCourse;
+      this.currentCourse = await this.getCourseID(id);
     },
+
     cancelHandler() {
       this.category = this.currentCourse.category;
       this.nameOfCourse = this.currentCourse.nameOfCourse;
@@ -360,10 +359,6 @@ export default {
 
       const formData = new FormData();
 
-      // for (const name in data) {
-      //   formData.append(name, data[name]);
-      // }
-
       Object.entries(data).forEach(([name, value]) => formData.append(name, value));
 
       this.dateOfCourses.forEach((item) => formData.append('dateOfCourses[]', item));
@@ -371,9 +366,16 @@ export default {
       this.courseSuitable.forEach((item) => formData.append('thisCourseIsSuitableFor[]', item));
 
       this.sendData(formData);
-      this.resetData();
-      // this.openForm(false);
+      // this.resetData();
     },
+  },
+
+  created() {
+    if (this.id) {
+      this.editCourse(this.id);
+    } else {
+      this.resetData();
+    }
   },
 };
 </script>
