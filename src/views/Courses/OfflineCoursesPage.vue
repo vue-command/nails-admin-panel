@@ -148,6 +148,11 @@ export default {
       if (response?.newOfflineCourse) {
         // Baner
         //  Course successfully created.
+        this.$notify({
+          group: 'foo',
+          title: 'Important message',
+          text: 'Course successfully created',
+        });
         this.totalCourses += 1;
         this.isLoading = true;
         this.getCourses();
@@ -155,6 +160,11 @@ export default {
       if (response?.updatedOfflineCourse) {
         // Baner
         //  Course successfully updated.
+        this.$notify({
+          group: 'foo',
+          title: 'Important message',
+          text: 'Course successfully updated.',
+        });
         this.isLoading = true;
         this.getCourses();
       }

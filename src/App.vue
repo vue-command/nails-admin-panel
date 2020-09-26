@@ -4,6 +4,7 @@
       <component :is="layout">
         <!-- <router-view /> -->
       </component>
+      <notifications group="foo" />
     </v-main>
   </v-app>
 </template>
