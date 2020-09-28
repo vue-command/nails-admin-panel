@@ -105,12 +105,16 @@ export default {
         )
       ).json();
       if (deleted) {
+        this.$notify({
+          group: 'foo',
+          title: 'Important message',
+          text: 'Course successfully deleted',
+        });
         // eslint-disable-next-line no-underscore-dangle
         this.courses = this.courses.filter((course) => course._id !== id);
         this.totalCourses -= 1;
         this.$forceUpdate();
       }
-      console.log(this.courses);
     },
 
     addCourse() {

@@ -249,9 +249,6 @@ export default {
         this.resetData();
       }
     },
-    // url(val) {
-    //   this.file = new Blob([val],{type: "image/png"});
-    // },
     currentCourse(value) {
       if (this.typeCourse === 'offline') {
         this.dateOfCourses = value.dateOfCourses;

@@ -62,15 +62,6 @@ export default {
   },
   data() {
     return {
-      // offlineCourses: null,
-      // showBtnMore: true,
-      // totalOfflineCourses: null,
-      // error: false,
-      // showForm: false,
-      // showCourses: true,
-      // showAddBtn: true,
-      // showBackBtn: false,
-      // id: null,
       showDialog: false,
       removableId: null,
       coverImageSrc: '../assets/noImage.jpg',
@@ -84,45 +75,6 @@ export default {
   },
 
   methods: {
-    // async getOfflineData() {
-    //   const response = await (
-    //     await fetch(
-    //       "https://nails-australia-staging.herokuapp.com/course/offline"
-    //     )
-    //   ).json();
-    //   this.offlineCourses = response.offlineCourses;
-    //   this.totalOfflineCourses = response.total;
-    // },
-
-    // async getMoreOfflineCourses() {
-    //   const response = await (
-    //     await fetch(
-    //       `https://nails-australia-staging.herokuapp.com/course/offline?skip=${this.offlineCourses.length}`
-    //     )
-    //   ).json();
-    //   if (response.offlineCourses) {
-    //     this.offlineCourses = [
-    //       ...this.offlineCourses,
-    //       ...response.offlineCourses,
-    //     ];
-    //   } else this.error = true;
-    // },
-
-    // async deleteCourse(id) {
-    //   const { deleted } = await (
-    //     await fetch(
-    //       `https://nails-australia-staging.herokuapp.com/course/offline/${id}`,
-    //       {
-    //         method: "DELETE",
-    //       }
-    //     )
-    //   ).json();
-    //   if (deleted) {
-    //     await this.getOfflineData();
-    //     this.showDialog = false;
-    //   }
-    // },
-
     deleteRequest(id) {
       this.removableId = id;
       this.showDialog = true;
@@ -140,19 +92,7 @@ export default {
       }
       return img;
     },
-
-    // editCourse(show, id) {
-    //   this.openForm(show);
-    //   this.id = id;
-    // },
-
-    // deleteCourseId(id) {
-    //   this.deleteId = id;
-    // },
   },
 
-  created() {
-    // this.getOfflineData();
-  },
 };
 </script>

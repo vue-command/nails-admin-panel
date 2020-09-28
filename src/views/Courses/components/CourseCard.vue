@@ -81,15 +81,9 @@ export default {
     'price',
     'id',
     'type',
-    // "offline",
-    // "online",
     'subtitle',
     'accessDays',
-
     'removeCourse',
-    // ,
-    // "showDialog",
-    // "deleteCourseId",
     'editCourse',
   ],
   data: () => ({
@@ -103,19 +97,12 @@ export default {
     },
   },
   methods: {
-    // edit() {
-    //   this.editCourse(true, this.id);
-    // },
     onError() {
       this.imageUrl = this.coverImageSrc;
     },
     checkUrl(url) {
       this.imageUrl = url || this.coverImageSrc;
     },
-    // removeCourse() {
-    //   this.$emit("update:showDialog", true);
-    //   this.deleteCourseId(this.id);
-    // },
   },
   created() {
     this.checkUrl(this.url);

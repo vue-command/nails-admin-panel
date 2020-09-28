@@ -4,7 +4,7 @@
       <component :is="layout">
         <!-- <router-view /> -->
       </component>
-      <notifications group="foo" />
+      <notifications group="foo" position="top center" />
     </v-main>
   </v-app>
 </template>
@@ -34,7 +34,6 @@ html,
 body,
 .v-application {
   font-family: "Archivo Narrow" !important;
-  /* background: #cbcbcb !important; */
 }
 .v-btn__content {
   justify-content: center !important;
@@ -44,7 +43,16 @@ body,
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  /* color: #2c3e50; */
-  /* margin-top: 60px; */
+}
+.vue-notification {
+  background-color:#fa0 !important;
+  padding: 5px;
+  margin: 10px 0 0 0 ;
+  font-size: 16px;
+  border-left:none;
+  text-align: center;
+  border-radius: 5px;
+  font-family: "Archivo Narrow" !important;
+  font-weight: 700;
 }
 </style>
