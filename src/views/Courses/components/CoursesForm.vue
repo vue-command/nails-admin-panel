@@ -2,11 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col cols="12" xs="12" sm="7">
-
-    <v-btn
-      @click="back"
-      >back</v-btn
-    >
+        <v-btn @click="back">back</v-btn>
         <v-form ref="form">
           <v-row>
             <v-col cols="12" xs="12" md="6">
@@ -32,38 +28,40 @@
                 outlined
                 dark
               ></v-text-field>
-              <div
-                v-for="(textField, i) in dateOfCourses"
-                :key="i"
-                class="d-flex input-container"
-              >
+              <div v-if="typeCourse === 'offline'">
+                <div
+                  v-for="(textField, i) in dateOfCourses"
+                  :key="i"
+                  class="d-flex input-container"
+                >
+                  <v-text-field
+                    :label="labelDateOfCourse"
+                    v-model="dateOfCourses[i]"
+                    :rules="[rules.required]"
+                    outlined
+                    dark
+                  ></v-text-field>
+                  <v-btn
+                    @click="removeField(i, '')"
+                    v-if="i !== 0"
+                    class="remove"
+                  >
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </div>
+                <div class="d-flex justify-end mb-8">
+                  <v-btn @click="addField('')">
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                </div>
                 <v-text-field
-                  :label="labelDateOfCourse"
-                  v-model="dateOfCourses[i]"
-                  :rules="[rules.required]"
+                  label="available spots"
+                  v-model="availableSpots"
+                  :rules="[rules.required, rules.onlyDigits]"
                   outlined
                   dark
                 ></v-text-field>
-                <v-btn
-                  @click="removeField(i, '')"
-                  v-if="i !== 0"
-                  class="remove"
-                >
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
               </div>
-              <div class="d-flex justify-end mb-8">
-                <v-btn @click="addField('')">
-                  <v-icon>mdi-plus</v-icon>
-                </v-btn>
-              </div>
-              <v-text-field
-                label="available spots"
-                v-model="availableSpots"
-                :rules="[rules.required, rules.onlyDigits]"
-                outlined
-                dark
-              ></v-text-field>
 
               <v-text-field
                 v-model="days"
@@ -213,13 +211,7 @@ export default {
     CourseCardDetail,
   },
   name: 'courses-form',
-  props: [
-    'typeCourse',
-    'id',
-    'getCourseID',
-    'sendData',
-    'back',
-  ],
+  props: ['typeCourse', 'id', 'getCourseID', 'sendData', 'back'],
   data() {
     return {
       category: '',
@@ -261,6 +253,11 @@ export default {
     //   this.file = new Blob([val],{type: "image/png"});
     // },
     currentCourse(value) {
+      if (this.typeCourse === 'offline') {
+        this.dateOfCourses = value.dateOfCourses;
+        this.copyDateOfCourses = Array.from(value.dateOfCourses);
+        this.availableSpots = value.availableSpots;
+      }
       this.category = value.category;
       this.nameOfCourse = value.nameOfCourse;
       this.subtitle = value.subtitle;
@@ -271,9 +268,9 @@ export default {
       this.infoBonus = value.infoForBonus;
       this.description = value.description;
       this.url = value.photo[0]?.link;
-      this.dateOfCourses = value.dateOfCourses;
-      this.copyDateOfCourses = Array.from(value.dateOfCourses);
-      this.availableSpots = value.availableSpots;
+      // this.dateOfCourses = value.dateOfCourses;
+      // this.copyDateOfCourses = Array.from(value.dateOfCourses);
+      // this.availableSpots = value.availableSpots;
       // this.file = value.photo[0].link;
       this.courseSuitable = value.thisCourseIsSuitableFor;
       this.copyCourseSuitable = Array.from(value.thisCourseIsSuitableFor);
@@ -325,6 +322,10 @@ export default {
     },
 
     cancelHandler() {
+      if (this.typeCourse === 'offline') {
+        this.dateOfCourses = Array.from(this.copyDateOfCourses);
+        this.availableSpots = this.currentCourse.availableSpots;
+      }
       this.category = this.currentCourse.category;
       this.nameOfCourse = this.currentCourse.nameOfCourse;
       this.subtitle = this.currentCourse.subtitle;
@@ -335,8 +336,8 @@ export default {
       this.infoBonus = this.currentCourse.infoForBonus;
       this.description = this.currentCourse.description;
       this.url = this.currentCourse.photo[0].link;
-      this.dateOfCourses = Array.from(this.copyDateOfCourses);
-      this.availableSpots = this.currentCourse.availableSpots;
+      // this.dateOfCourses = Array.from(this.copyDateOfCourses);
+      // this.availableSpots = this.currentCourse.availableSpots;
       this.courseSuitable = Array.from(this.copyCourseSuitable);
     },
     submitHandler() {
@@ -351,15 +352,15 @@ export default {
         infoForBonus: this.infoBonus,
         description: this.description,
         file: this.file,
-        availableSpots: this.availableSpots,
+        // availableSpots: this.availableSpots,
       };
-      // let courseSuitable = this.courseSuitable
-      // let dateOfCourses = this.dateOfCourses
       const formData = new FormData();
+      if (this.typeCourse === 'offline') {
+        this.dateOfCourses.forEach((item) => formData.append('dateOfCourses[]', item));
+        formData.append('availableSpots', this.availableSpots);
+      }
 
       Object.entries(data).forEach(([name, value]) => formData.append(name, value));
-
-      this.dateOfCourses.forEach((item) => formData.append('dateOfCourses[]', item));
 
       this.courseSuitable.forEach((item) => formData.append('thisCourseIsSuitableFor[]', item));
 

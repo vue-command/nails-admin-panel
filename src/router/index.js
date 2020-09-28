@@ -5,6 +5,7 @@ import Shop from '../views/Shop/Shop.vue';
 // import Courses from '../views/Courses/Courses.vue'
 // import OnlineCourses from '../views/Courses/OnlineCourses.vue'
 import OfflineCoursesPage from '../views/Courses/OfflineCoursesPage.vue';
+import OnlineCoursesPage from '../views/Courses/OnlineCoursesPage.vue';
 
 Vue.use(VueRouter);
 
@@ -26,12 +27,12 @@ const routes = [
   //   meta: {layout:'courses' },
   //   component: Courses
   // },
-  // {
-  //   path: '/online-courses',
-  //   name: 'online-courses',
-  //   meta: {layout:'courses' },
-  //   component: OnlineCourses
-  // },
+  {
+    path: '/online-courses-page',
+    name: 'online-courses-page',
+    meta: { layout: 'courses' },
+    component: OnlineCoursesPage,
+  },
   {
     path: '/offline-courses-page',
     name: 'offline-courses-page',
