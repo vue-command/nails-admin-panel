@@ -1,8 +1,10 @@
 <template>
   <div>
+    <h2 class="ma-8 text-title">ONLINE COURSES</h2>
+    <v-btn @click="addCourse">add new online course</v-btn>
     <Spiner v-if="isLoading" />
-    <div v-if="showBanerNoData">No courses data received.</div>
-    <div v-if="showBanerNoCourses">No courses have been added yet.</div>
+    <div v-if="showBanerNoData" class="text-message">No courses data received.</div>
+    <div v-if="showBanerNoCourses" class="text-message">No courses have been added yet.</div>
     <Courses
       v-if="showCourses"
       :courses="courses"
@@ -24,6 +26,15 @@
     />
   </div>
 </template>
+<style scoped>
+.text-title,.text-message{
+  color: #fff
+}
+.text-message {
+  font-size: 22px;
+  margin-top: 50px;
+}
+</style>
 <script>
 import Courses from './components/Courses.vue';
 import CoursesForm from './components/CoursesForm.vue';
