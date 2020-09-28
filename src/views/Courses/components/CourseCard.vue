@@ -7,7 +7,7 @@
     <v-card-title class="pa-0 pl-4">
       {{ name }}
     </v-card-title>
-    <v-card-text class="pa-0 pl-4 pb-4 d-flex">
+    <v-card-text class="pa-0 pl-4 pb-4 pr-4 text-start">
       {{ subtitle }}
     </v-card-text>
     <v-card v-if="type === 'online'" flat class="ml-4 mb-4 d-flex">

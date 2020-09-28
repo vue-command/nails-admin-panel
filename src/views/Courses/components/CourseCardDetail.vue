@@ -15,7 +15,7 @@
             >{{ type }} course</v-card-text
           >
           <v-card-title class="pa-0 pl-4">{{ nameOfCourse }}</v-card-title>
-          <v-card-text class="pa-0 pl-4 d-flex">{{ subtitle }}</v-card-text>
+          <v-card-text class="pa-0 pl-4 text-start ">{{ subtitle }}</v-card-text>
           <v-card-title class="pa-0 pl-4 buttons--text"
             >{{ days }} days | $ {{ price }}</v-card-title
           >
