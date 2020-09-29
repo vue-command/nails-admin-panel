@@ -202,8 +202,9 @@
 </template>
 <style scoped></style>
 <script>
-import CourseCard from './CourseCard.vue';
-import CourseCardDetail from './CourseCardDetail.vue';
+// import CourseCard from './CourseCard.vue';
+// import CourseCardDetail from './CourseCardDetail.vue';
+import { CourseCard, CourseCardDetail } from '../../../../node_modules/card-nails-test1/dist/cardLib.common';
 
 export default {
   components: {

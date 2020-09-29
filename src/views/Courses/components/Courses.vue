@@ -42,7 +42,9 @@
 </template>
 
 <script>
-import CourseCard from './CourseCard.vue';
+// import CourseCard from './CourseCard.vue';
+// eslint-disable-next-line import/no-unresolved
+import { CourseCard } from '../../../../node_modules/card-nails-test1/dist/cardLib.common';
 
 export default {
   name: 'courses',
