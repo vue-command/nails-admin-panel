@@ -202,14 +202,10 @@
 </template>
 <style scoped></style>
 <script>
-// import CourseCard from './CourseCard.vue';
-// import CourseCardDetail from './CourseCardDetail.vue';
-import { CourseCard, CourseCardDetail } from '../../../../node_modules/card-nails-test1/dist/cardLib.common';
-
 export default {
   components: {
-    CourseCard,
-    CourseCardDetail,
+    // CourseCard,
+    // CourseCardDetail,
   },
   name: 'courses-form',
   props: ['typeCourse', 'id', 'getCourseID', 'sendData', 'back'],
