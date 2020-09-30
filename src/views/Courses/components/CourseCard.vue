@@ -1,5 +1,5 @@
 <template>
-  <v-card dark class="cardfone ma-16" width="350" min-height="360">
+  <v-card dark class="ma-16" width="350">
     <v-img :src="imageUrl" @error="onError" height="200px" />
     <v-card-title class="buttons--text pa-0 pl-4 pt-4">
       {{ accessDays }} days | $ {{ price }}
@@ -7,10 +7,10 @@
     <v-card-title class="pa-0 pl-4">
       {{ name }}
     </v-card-title>
-    <v-card-text class="pa-0 pl-4 pb-4 pr-4 text-start">
+    <v-card-text class="pa-0 px-4 pb-4 text-start">
       {{ subtitle }}
     </v-card-text>
-    <v-card v-if="type === 'online'" flat class="ml-4 mb-4 d-flex">
+    <v-card-actions v-if="type === 'online'" class="pl-4 pb-4">
       <v-btn
         color="buttons"
         rounded
@@ -30,8 +30,8 @@
         class="yellow-button"
         >more</v-btn
       >
-    </v-card>
-    <v-card v-else-if="type === 'offline'" flat class="ml-4 mb-4 d-flex">
+    </v-card-actions>
+    <v-card-actions v-else-if="type === 'offline'" class="pl-4 pb-4">
       <v-btn
         color="buttons"
         rounded
@@ -42,8 +42,8 @@
         class="yellow-button"
         >more</v-btn
       >
-    </v-card>
-    <v-card v-else flat class="ml-4 mb-4 d-flex">
+    </v-card-actions>
+    <v-card-actions  v-else  class="pl-4 pb-4">
       <v-btn
         color="buttons"
         rounded
@@ -65,7 +65,7 @@
         @click="removeCourse(id)"
         >Delete</v-btn
       >
-    </v-card>
+    </v-card-actions>
   </v-card>
 </template>
 
