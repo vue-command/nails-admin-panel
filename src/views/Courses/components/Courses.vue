@@ -1,11 +1,5 @@
 <template>
   <v-card flat class="transparent">
-    <!-- <h2 style="color: #fff" class="ma-8">{{ this.title }}</h2>
-    <v-btn
-      @click="addCourse
-      "
-      >{{addCourseTitle}}</v-btn
-    > -->
     <div class="d-flex flex-wrap justify-center">
       <CourseCard
         v-for="card in courses"
