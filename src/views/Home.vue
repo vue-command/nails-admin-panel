@@ -2,7 +2,7 @@
   <v-container >
     <v-row class="text-center">
       <v-col cols="6" lg="6">
-        <v-btn @click="goToOfflineCourses('offline-courses-page')">
+        <v-btn @click="goToOfflineCourses('offline-courses-page')" class="mr-8">
           COURSES OffLINE
         </v-btn>
         <v-btn @click="goToOfflineCourses('online-courses-page')">

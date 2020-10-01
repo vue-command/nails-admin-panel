@@ -37,7 +37,7 @@
 </style>
 <script>
 import Courses from './components/Courses.vue';
-import CoursesForm from './components/CoursesForm.vue';
+// import CoursesForm from './components/CoursesForm.vue';
 import Spiner from './components/Spiner.vue';
 
 export default {
@@ -45,7 +45,7 @@ export default {
   components: {
     Courses,
     Spiner,
-    CoursesForm,
+    // CoursesForm,
   },
   data: () => ({
     courses: null,

@@ -19,6 +19,8 @@
                 label="Name of Course"
                 outlined
                 dark
+                :counter="27"
+                maxlength="27"
               ></v-text-field>
 
               <v-text-field
@@ -27,6 +29,8 @@
                 label="Subtitle"
                 outlined
                 dark
+                :counter="32"
+                maxlength="32"
               ></v-text-field>
               <div v-if="typeCourse === 'offline'">
                 <div
@@ -152,7 +156,7 @@
                 large
                 dark
                 min-width="90"
-                class="yellow-button mt-4"
+                class="yellow-button mt-4 mr-8"
                 @click="checkForm"
                 >submit</v-btn
               >
