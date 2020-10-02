@@ -16,7 +16,7 @@
     />
     <CoursesForm
       v-if="showForm"
-      :id="editeCourseID"
+      :idCourse="editeCourseID"
       typeCourse="online"
       :getCourseID="getCourseID"
       :sendData="sendData"

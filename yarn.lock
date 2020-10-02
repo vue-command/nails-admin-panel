@@ -2882,9 +2882,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001109, caniuse-lite@^1.0.30001135:
-  version "1.0.30001140"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001140.tgz#30dae27599f6ede2603a0962c82e468bca894232"
-  integrity sha512-xFtvBtfGrpjTOxTpjP5F2LmN04/ZGfYV8EQzUIC/RmKpdrmzJrjqlJ4ho7sGuAMPko2/Jl08h7x9uObCfBFaAA==
+  version "1.0.30001142"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001142.tgz#a8518fdb5fee03ad95ac9f32a9a1e5999469c250"
+  integrity sha512-pDPpn9ankEpBFZXyCv2I4lh1v/ju+bqb78QfKf+w9XgDAFWBwSYPswXqprRdrgQWK0wQnpIbfwRjNHO1HWqvoQ==
 
 capture-exit@^2.0.0:
   version "2.0.0"
@@ -2892,18 +2892,6 @@ capture-exit@^2.0.0:
   integrity sha512-PiT/hQmTonHhl/HFGN+Lx3JJUznrVYJ3+AQsnthneZbvW7x+f08Tk7yLJTLEOUvBTbduLeeBkxEaYXUOUrRq6g==
   dependencies:
     rsvp "^4.8.4"
-
-card-nails-test1@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/card-nails-test1/-/card-nails-test1-0.5.0.tgz#15e07c674e9b9d55cfdfb5c9766336d9fbc60016"
-  integrity sha512-XYG2IZOPK/VSeTHsHRJnOXP/pgyeCVr+YqQ9XwS6srPJ8aK4p/wDqA8O2yhyXwIyK7vO94BrCYRo01ETs7lzPg==
-  dependencies:
-    "@babel/polyfill" "^7.4.4"
-    "@mdi/font" "^3.6.95"
-    core-js "^3.6.5"
-    roboto-fontface "*"
-    vue "^2.6.11"
-    vuetify "^2.2.11"
 
 case-sensitive-paths-webpack-plugin@^2.3.0:
   version "2.3.0"
@@ -3596,9 +3584,9 @@ css-what@2.1:
   integrity sha512-a+EPoD+uZiNfh+5fxw2nO9QwFa6nJe2Or35fGY6Ipw1R3R4AGz1d1TEZrCegvw2YTmZ0jXirGYlzxxpYSHwpEg==
 
 css-what@^3.2.1:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/css-what/-/css-what-3.3.0.tgz#10fec696a9ece2e591ac772d759aacabac38cd39"
-  integrity sha512-pv9JPyatiPaQ6pf4OvD/dbfm0o5LviWmwxNWzblYf/1u9QZd0ihV+PMwy5jdQWQ3349kZmKEx9WXuSka2dM4cg==
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/css-what/-/css-what-3.4.1.tgz#81cb70b609e4b1351b1e54cbc90fd9c54af86e2e"
+  integrity sha512-wHOppVDKl4vTAOWzJt5Ek37Sgd9qq1Bmj/T1OjvicWbU5W7ru7Pqbn0Jdqii3Drx/h+dixHKXNhZYx7blthL7g==
 
 css@^2.1.0:
   version "2.2.4"
@@ -7590,6 +7578,44 @@ mz@^2.4.0:
     any-promise "^1.0.0"
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
+
+nails-component-card-detail@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/nails-component-card-detail/-/nails-component-card-detail-0.1.0.tgz#a1b729b9cbd4047e7175d12b512fea13451dea65"
+  integrity sha512-rSVecbl3+vKNfZLPLz3eSdkQppGFaXh6w9e/ig8GKAFHx6zaJPwWK/7egXDCSG+R6aB/ma26PZVx81A9uG/79Q==
+  dependencies:
+    "@babel/polyfill" "^7.4.4"
+    "@mdi/font" "^3.6.95"
+    core-js "^3.6.5"
+    roboto-fontface "*"
+    vue "^2.6.11"
+    vuetify "^2.2.11"
+
+nails-component-card-form@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/nails-component-card-form/-/nails-component-card-form-0.1.0.tgz#d9dcc82e1155810c184d86244a4990686d93261a"
+  integrity sha512-Su9t+/sKx5XQxMu17Ezp3a2CBcj1DP8AuYBJOJUBv1pkQuJRVb16Z19Nw3oFRTSkSH7CfEuPOFnGqdk7T42MMA==
+  dependencies:
+    "@babel/polyfill" "^7.4.4"
+    "@mdi/font" "^3.6.95"
+    core-js "^3.6.5"
+    nails-component-card "^0.1.0"
+    nails-component-card-detail "^0.1.0"
+    roboto-fontface "*"
+    vue "^2.6.11"
+    vuetify "^2.2.11"
+
+nails-component-card@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/nails-component-card/-/nails-component-card-0.1.0.tgz#2c8bd856175254e2e3eaf3ec5e1df15b5e50787b"
+  integrity sha512-TlpE1CKZEnCpt7zxedXt1f8wyKvmX9DwK1xSOCsFEgT9iZkgPZtauVhDCa8pAL9LhDFBsaBxZHhxdQjKII57Tw==
+  dependencies:
+    "@babel/polyfill" "^7.4.4"
+    "@mdi/font" "^3.6.95"
+    core-js "^3.6.5"
+    roboto-fontface "*"
+    vue "^2.6.11"
+    vuetify "^2.2.11"
 
 nan@^2.12.1, nan@^2.13.2:
   version "2.14.1"
