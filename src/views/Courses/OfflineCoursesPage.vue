@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container>
     <h2 class="ma-8 text-title">OFFLINE COURSES</h2>
     <v-btn @click="addCourse">add new offline course</v-btn>
     <Spiner v-if="isLoading" />
@@ -16,19 +16,21 @@
       :addCourse="addCourse"
       addCourseTitle="add new offline course"
     />
-    <CoursesForm
+     <CoursesForm
       v-if="showForm"
-      :idCourse="editeCourseID"
+      :idCourse="editCourseID"
       typeCourse="offline"
       :getCourseID="getCourseID"
       :sendData="sendData"
       :back="backForm"
+      :coverImageSrc="coverImageSrc"
     />
-  </div>
+  </v-container>
 </template>
 <style scoped>
-.text-title,.text-message{
-  color: #fff
+.text-title,
+.text-message {
+  color: #fff;
 }
 .text-message {
   font-size: 22px;
@@ -37,7 +39,8 @@
 </style>
 <script>
 import Courses from './components/Courses.vue';
-// import CoursesForm from './components/CoursesForm.vue';
+import 'nails-courses-admin-form';
+import 'nails-courses-admin-form/dist/nails-courses-admin-form.css';
 import Spiner from './components/Spiner.vue';
 
 export default {
@@ -45,15 +48,16 @@ export default {
   components: {
     Courses,
     Spiner,
-    // CoursesForm,
   },
   data: () => ({
     courses: null,
     totalCourses: null,
     isLoading: true,
     showForm: false,
-    editeCourseID: null,
+    editCourseID: null,
     methodPost: true,
+    // eslint-disable-next-line global-require
+    coverImageSrc: require('@/assets/noImage.jpg'),
   }),
   computed: {
     showCourses() {
@@ -129,13 +133,13 @@ export default {
     },
 
     addCourse() {
-      this.editeCourseID = null;
+      this.editCourseID = null;
       this.methodPost = true;
       this.showForm = true;
     },
 
     editCourse(id) {
-      this.editeCourseID = id;
+      this.editCourseID = id;
       this.methodPost = false;
       this.showForm = true;
     },
@@ -149,7 +153,7 @@ export default {
       const offlineRequest = 'https://nails-australia-staging.herokuapp.com/course/new/offline';
       const url = this.methodPost
         ? offlineRequest
-        : `${offlineRequest.replace(/[/]new/gi, '')}/${this.editeCourseID}`;
+        : `${offlineRequest.replace(/[/]new/gi, '')}/${this.editCourseID}`;
 
       const method = this.methodPost ? 'POST' : 'PUT';
 

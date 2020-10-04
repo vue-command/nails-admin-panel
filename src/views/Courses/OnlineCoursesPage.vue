@@ -3,8 +3,12 @@
     <h2 class="ma-8 text-title">ONLINE COURSES</h2>
     <v-btn @click="addCourse">add new online course</v-btn>
     <Spiner v-if="isLoading" />
-    <div v-if="showBanerNoData" class="text-message">No courses data received.</div>
-    <div v-if="showBanerNoCourses" class="text-message">No courses have been added yet</div>
+    <div v-if="showBanerNoData" class="text-message">
+      No courses data received.
+    </div>
+    <div v-if="showBanerNoCourses" class="text-message">
+      No courses have been added yet
+    </div>
     <Courses
       v-if="showCourses"
       :courses="courses"
@@ -14,19 +18,23 @@
       :editCourse="editCourse"
       :addCourse="addCourse"
     />
-    <CoursesForm
-      v-if="showForm"
-      :idCourse="editeCourseID"
-      typeCourse="online"
-      :getCourseID="getCourseID"
-      :sendData="sendData"
-      :back="backForm"
-    />
+    <div class="mx-12">
+      <CoursesForm
+        v-if="showForm"
+        :idCourse="editCourseID"
+        typeCourse="online"
+        :getCourseID="getCourseID"
+        :sendData="sendData"
+        :back="backForm"
+        :coverImageSrc="coverImageSrc"
+      />
+    </div>
   </div>
 </template>
 <style scoped>
-.text-title,.text-message{
-  color: #fff
+.text-title,
+.text-message {
+  color: #fff;
 }
 .text-message {
   font-size: 22px;
@@ -35,7 +43,8 @@
 </style>
 <script>
 import Courses from './components/Courses.vue';
-// import CoursesForm from './components/CoursesForm.vue';
+import 'nails-courses-admin-form';
+import 'nails-courses-admin-form/dist/nails-courses-admin-form.css';
 import Spiner from './components/Spiner.vue';
 
 export default {
@@ -43,15 +52,16 @@ export default {
   components: {
     Courses,
     Spiner,
-    // CoursesForm,
   },
   data: () => ({
     courses: null,
     totalCourses: null,
     isLoading: true,
     showForm: false,
-    editeCourseID: null,
+    editCourseID: null,
     methodPost: true,
+    // eslint-disable-next-line global-require
+    coverImageSrc: require('@/assets/noImage.jpg'),
   }),
   computed: {
     showCourses() {
@@ -127,13 +137,13 @@ export default {
     },
 
     addCourse() {
-      this.editeCourseID = null;
+      this.editCourseID = null;
       this.methodPost = true;
       this.showForm = true;
     },
 
     editCourse(id) {
-      this.editeCourseID = id;
+      this.editCourseID = id;
       this.methodPost = false;
       this.showForm = true;
     },
@@ -147,7 +157,7 @@ export default {
       const onlineRequest = 'https://nails-australia-staging.herokuapp.com/course/new/online';
       const url = this.methodPost
         ? onlineRequest
-        : `${onlineRequest.replace(/[/]new/gi, '')}/${this.editeCourseID}`;
+        : `${onlineRequest.replace(/[/]new/gi, '')}/${this.editCourseID}`;
 
       const method = this.methodPost ? 'POST' : 'PUT';
 

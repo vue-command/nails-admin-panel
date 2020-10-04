@@ -12,6 +12,7 @@
         :id="card._id"
         :removeCourse="deleteRequest"
         :editCourse="editCourse"
+        :coverImageSrc="coverImageSrc"
       />
     </div>
 
@@ -36,6 +37,9 @@
 </template>
 
 <script>
+import 'nails-courses-card';
+import 'nails-courses-card/dist/nails-courses-card.css';
+
 export default {
   name: 'courses',
   props: [
@@ -52,7 +56,8 @@ export default {
     return {
       showDialog: false,
       removableId: null,
-      coverImageSrc: '../assets/noImage.jpg',
+      // eslint-disable-next-line global-require
+      coverImageSrc: require('@/assets/noImage.jpg'),
     };
   },
 
