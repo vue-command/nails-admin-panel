@@ -8363,6 +8363,16 @@ nails-courses-card@^0.0.7:
     vue "^2.6.11"
     vuetify "^2.2.11"
 
+nails-courses-card@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/nails-courses-card/-/nails-courses-card-0.0.8.tgz#cecf20b0e259b1202870bb1bf7bd8abaea78399e"
+  integrity sha512-aiW7Xb/uqA0fca2DRWAAkNZ/AAOr9guykH2X/nN1Q3sLNljpdjg2h1GzsMns+xwYaoj5K0NoFoldutc0o4J+Sw==
+  dependencies:
+    core-js "^3.6.5"
+    nails-styles "^0.0.3"
+    vue "^2.6.11"
+    vuetify "^2.2.11"
+
 nails-styles@0.0.3, nails-styles@^0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/nails-styles/-/nails-styles-0.0.3.tgz#c723416ff08118ae370ef7aba7dd2a053a45831e"

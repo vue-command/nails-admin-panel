@@ -12,7 +12,7 @@
     "@mdi/font": "^5.5.55",
     "core-js": "^3.6.5",
     "nails-courses-admin-form": "^0.0.7",
-    "nails-courses-card": "^0.0.7",
+    "nails-courses-card": "^0.0.8",
     "vue": "^2.6.11",
     "vue-notification": "^1.3.20",
     "vue-router": "^3.2.0",
