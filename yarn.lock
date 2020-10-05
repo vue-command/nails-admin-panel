@@ -8328,22 +8328,22 @@ mz@^2.4.0:
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
 
-nails-courses-admin-form@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/nails-courses-admin-form/-/nails-courses-admin-form-0.0.6.tgz#eb1d6b314ec124936251c62b91b8644d29f41fce"
-  integrity sha512-AL7L/pqRufzBHzOjY3ed+EtyR7lc7cDdgED2x5yC970RE7L7R26QjXIqwj6lNyeTZgJGkO6BZGzOvfqB08bJVA==
+nails-courses-admin-form@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/nails-courses-admin-form/-/nails-courses-admin-form-0.0.7.tgz#f4d709f0338e5a6a4996f048b831149e60d9f11d"
+  integrity sha512-xVn/PWgugPJywi91nQvR9yUR2IgjAhpc1koijRY/bPYdVactev9zg4wzyZ7mwop4xA5uCvIFRBFl4C8M12Tssg==
   dependencies:
     core-js "^3.6.5"
     nails-courses-card "^0.0.7"
-    nails-courses-card-detail "^0.0.9"
+    nails-courses-card-detail "^0.1.2"
     nails-styles "0.0.3"
     vue "^2.6.11"
     vuetify "^2.2.11"
 
-nails-courses-card-detail@^0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/nails-courses-card-detail/-/nails-courses-card-detail-0.0.9.tgz#1cd32259b9403d681d189059a0617a5fb4b3deaf"
-  integrity sha512-Ducl3ej+2NycUxcCjDP//Pcd+NltdJrP0b0dZHrrP3SafGbUzMiiUSaGyjIxtsO9c4DSLUjaubPnVBSA3j/pyA==
+nails-courses-card-detail@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/nails-courses-card-detail/-/nails-courses-card-detail-0.1.2.tgz#0af9de6e0f812e74366cbb4f068576332dca3cab"
+  integrity sha512-3EpGZK7I+E4fJXfnOvt8xEt+lKzvJbj+0/eThlPQgrSM/k1L6K6x5oYpiZD/YVEwEER5/8RwZXqk897n8InIEw==
   dependencies:
     core-js "^3.6.5"
     nails-styles "^0.0.3"

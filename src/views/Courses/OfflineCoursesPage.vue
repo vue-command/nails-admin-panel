@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <h2 class="ma-8 text-title">OFFLINE COURSES</h2>
     <v-btn @click="addCourse">add new offline course</v-btn>
     <Spiner v-if="isLoading" />
@@ -25,7 +25,7 @@
       :back="backForm"
       :coverImageSrc="coverImageSrc"
     />
-  </v-container>
+  </div>
 </template>
 <style scoped>
 .text-title,
