@@ -5,6 +5,7 @@
         :selectCategory="selectCategory"
         :modifyHandler="modifyHandler"
         :categories="categories"
+        :selectedCategory="selectedCategory"
       />
       <v-row justify="start">
         <v-col cols="12">
@@ -25,6 +26,13 @@
     v-else
     :productId="selectedItemToModify"
     :clearHandler="clearSelectedItemToModify"
+    :createCommodity="createCommodity"
+    :updateCommodity="updateCommodity"
+    :uploadImages="uploadImages"
+    :deleteImage="deleteImage"
+    :deleteCommodity='deleteCommodity'
+    :getDataMain='getData'
+    :modifyHandler='modifyHandler'
   />
 </template>
 <style scoped>
@@ -39,6 +47,14 @@ import MainHeader from "./MainHeader.vue";
 import ModifyProduct from "./ModifyProduct.vue";
 export default {
   name: "ShopEdit",
+  props: [
+    "createCommodity",
+    "deleteCommodity",
+    "uploadImages",
+    "deleteImage",
+    "createCategory",
+    'updateCommodity'
+  ],
   data() {
     return {
       categories: [],
@@ -52,10 +68,10 @@ export default {
   },
   computed: {
     totalPages() {
-      return Math.ceil(this.totalItems / 8);
+      return Math.ceil(this.totalItems / 20);
     },
     skip() {
-      return this.currentPage * 8 - 8;
+      return this.currentPage * 20 - 20;
     },
   },
   components: { CardsList, MainHeader, ModifyProduct },
@@ -67,21 +83,22 @@ export default {
         )
       ).json();
       this.categories = await response.categories.flat();
-      if (this.categories[0] && this.categories[0]._id) {
-        this.selectedCategory = await this.categories[0]._id;
-        await this.getCards(this.selectedCategory);
+      if (this.categories[0] && this.categories[0]._id && !this.selectedCategory) {
+        this.selectedCategory =  this.categories[0]._id;
+      }
+      if(this.selectedCategory){
+        this.getCards(this.selectedCategory);
       }
     },
     async getCards(categoryId, skip) {
       const items = await (
         await fetch(
           `https://nails-australia-staging.herokuapp.com/shop/commodities/${categoryId}?skip=${
-            skip || 0
-          }`
+            skip || 0}&withHidden=withHidden`
         )
       ).json();
-      this.commodities = await items.commodities;
-      this.totalItems = await items.total;
+      this.commodities = await items.commodities || [];
+      this.totalItems = await items.total || 0;
     },
     selectCategory(categoryId) {
       this.selectedCategory = categoryId;
@@ -90,7 +107,6 @@ export default {
     },
     modifyHandler(id) {
       this.selectedItemToModify = id;
-      // this.$router.push({ name: 'ModifyProduct', params: { productId: id } });
     },
     clearSelectedItemToModify() {
       this.selectedItemToModify = null;

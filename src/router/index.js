@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
-import Shop from '../views/Shop/Shop.vue';
+import ShopPage from '../views/ShopPage.vue';
 // import Courses from '../views/Courses/Courses.vue'
 // import OnlineCourses from '../views/Courses/OnlineCourses.vue'
 import OfflineCoursesPage from '../views/Courses/OfflineCoursesPage.vue';
@@ -19,7 +19,7 @@ const routes = [
     path: '/shop',
     name: 'ShopEdit',
     meta: { layout: 'shop' },
-    component: Shop,
+    component: ShopPage,
   },
   // {
   //   path: '/courses',

@@ -1,5 +1,5 @@
 <template>
-  <v-card class="cardfone ma-8 shop-card" @click="goToItem" min-width="210">
+  <v-card class="cardfone ma-8 shop-card" @click="cardClick" min-width="210">
     <v-card flat class="px-0 pt-4 gray-background">
       <v-img :src="image" width="100%" height="220" contain />
     </v-card>
@@ -63,9 +63,10 @@
 <script>
 export default {
   name: 'Card',
-  props: ['image', 'name', 'price', 'brand', 'id'],
+  props: ['image', 'name', 'price', 'brand', 'id', 'clickHandler'],
   methods: {
-    goToItem () {
+    cardClick(){
+      if(this.clickHandler) this.clickHandler(this.id)
     }
   }
 }

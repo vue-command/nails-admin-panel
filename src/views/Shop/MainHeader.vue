@@ -18,13 +18,16 @@
                   item-text="name"
                   item-value="_id"
                   label="Category"
+                  :value="selectedCategory"
                   @change="selectCategory"
                 >Choose category</v-select>
               </v-col>
+              <!--  
               <v-col cols="12" lg="4" class="pa-5">
                 <v-text-field v-model="newCategoryName" label="New category" outlined></v-text-field>
                 <v-btn :disabled="!newCategoryName">ADD NEW CATEGORY</v-btn>
               </v-col>
+              -->
             </v-row>
             <v-row>
               <v-col cols="12" lg="12" class="align-center justify-center d-flex">
@@ -49,6 +52,6 @@ export default {
     };
   },
   name: "MainHeader",
-  props: ["modifyHandler", "selectCategory", "categories"],
+  props: ["modifyHandler", "selectCategory", "categories", "selectedCategory"],
 };
 </script>
