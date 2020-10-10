@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 class="ma-8 text-title">ONLINE COURSES</h2>
-    <v-btn @click="addCourse">add new online course</v-btn>
+    <v-btn @click="addCourse" v-if="!showForm">add new online course</v-btn>
     <Spiner v-if="isLoading" />
     <div v-if="showBanerNoData" class="text-message">
       No courses data received.
