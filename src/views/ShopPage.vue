@@ -9,18 +9,76 @@
   />
 </template>
 
-<style scoped>
+<style>
 .home {
   background: #000;
+}
+.card-active {
+  opacity: 1;
+}
+.image-row {
+  height: 430px;
+}
+.card-disabled {
+  cursor: pointer;
+  opacity: 0.4;
+}
+.viewed-block {
+  justify-content: space-around;
+}
+.speciﬁcations {
+  white-space: pre;
+}
+.caption {
+  margin-top: 50px;
+}
+.caption > h2 {
+  margin-top: 5px;
+}
+.shop-buttons {
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+}
+.add {
+  color: #333333 !important;
+  margin: 4px 0;
+}
+.buy {
+  color: white !important;
+  margin: 4px 0;
+}
+.price {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+.price > h3 {
+  margin: 25px 0;
+}
+.dark-gray-font {
+  color: #333333;
+}
+.gray-font {
+  color: #808080;
+}
+.description {
+  padding-top: 25px;
+}
+@media screen and (max-width: 320px) {
+  .caption > h2 {
+    font-size: 14px;
+  }
 }
 </style>
 
 <script>
-import Shop from './Shop/Shop.vue';
+import 'nails-shop-module';
 
 export default {
   name: 'ShopPage',
-  components: { Shop },
   methods: {
     async createCommodity(value) {
       const formData = new FormData();
