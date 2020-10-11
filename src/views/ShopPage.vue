@@ -6,79 +6,22 @@
     :deleteImage="deleteImage"
     :createCategory="createCategory"
     :deleteCommodity="deleteCommodity"
+    :noImage='noImage'
   />
 </template>
 
-<style>
-.home {
-  background: #000;
-}
-.card-active {
-  opacity: 1;
-}
-.image-row {
-  height: 430px;
-}
-.card-disabled {
-  cursor: pointer;
-  opacity: 0.4;
-}
-.viewed-block {
-  justify-content: space-around;
-}
-.speciﬁcations {
-  white-space: pre;
-}
-.caption {
-  margin-top: 50px;
-}
-.caption > h2 {
-  margin-top: 5px;
-}
-.shop-buttons {
-  width: 100px;
-  display: flex;
-  flex-direction: column;
-}
-.add {
-  color: #333333 !important;
-  margin: 4px 0;
-}
-.buy {
-  color: white !important;
-  margin: 4px 0;
-}
-.price {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-end;
-}
-.price > h3 {
-  margin: 25px 0;
-}
-.dark-gray-font {
-  color: #333333;
-}
-.gray-font {
-  color: #808080;
-}
-.description {
-  padding-top: 25px;
-}
-@media screen and (max-width: 320px) {
-  .caption > h2 {
-    font-size: 14px;
-  }
-}
-</style>
-
 <script>
 import 'nails-shop-module';
+import 'nails-shop-module/dist/nails-shop-module.css';
 
 export default {
   name: 'ShopPage',
+  data() {
+    return {
+      // eslint-disable-next-line global-require
+      noImage: require('../assets/noImage.jpg'),
+    };
+  },
   methods: {
     async createCommodity(value) {
       const formData = new FormData();
@@ -91,15 +34,28 @@ export default {
             body: formData,
           },
         );
-        const { data } = await response.json();
+        const { data, error } = await response.json();
         if (data) {
           this.$notify({
             group: 'foo',
             title: 'Commodity created',
           });
         }
+        if (error) {
+          this.$notify({
+            group: 'foo',
+            title: 'Error',
+            type: 'error',
+            text: error,
+          });
+        }
         return data;
       } catch (error) {
+        this.$notify({
+          group: 'foo',
+          title: error.message || 'Something went wrong',
+          type: 'error',
+        });
         return null;
       }
     },
@@ -115,15 +71,28 @@ export default {
           },
         );
 
-        const { data } = await response.json();
+        const { data, error } = await response.json();
         if (data) {
           this.$notify({
             group: 'foo',
             title: 'Commodity updated',
           });
         }
+        if (error) {
+          this.$notify({
+            group: 'foo',
+            title: 'Error',
+            type: 'error',
+            text: error,
+          });
+        }
         return data;
       } catch (error) {
+        this.$notify({
+          group: 'foo',
+          title: error.message || 'Something went wrong',
+          type: 'error',
+        });
         return null;
       }
     },
@@ -138,18 +107,28 @@ export default {
             body: formData,
           },
         );
-        const { updatedCommodity } = await response.json();
+        const { updatedCommodity, error } = await response.json();
         if (updatedCommodity) {
           this.$notify({
             group: 'foo',
             title: 'Images uploaded',
           });
         }
+        if (error) {
+          this.$notify({
+            group: 'foo',
+            title: 'Error',
+            type: 'error',
+            text: error,
+          });
+        }
         return updatedCommodity;
       } catch (error) {
         this.$notify({
           group: 'foo',
-          title: 'Something went wrong',
+          type: 'error',
+          title: 'Error',
+          text: error.message || 'Something went wrong',
         });
         return null;
       }
@@ -162,18 +141,28 @@ export default {
             method: 'DELETE',
           },
         );
-        const { deleted } = await response.json();
+        const { deleted, error } = await response.json();
         if (deleted) {
           this.$notify({
             group: 'foo',
             title: 'Image deleted',
           });
         }
+        if (error) {
+          this.$notify({
+            group: 'foo',
+            title: 'Error',
+            type: 'error',
+            text: error,
+          });
+        }
         return deleted;
       } catch (error) {
         this.$notify({
           group: 'foo',
-          title: 'Delete error',
+          type: 'error',
+          title: 'Error',
+          text: error.message || 'Something went wrong',
         });
         return null;
       }
@@ -201,9 +190,30 @@ export default {
             method: 'DELETE',
           },
         );
-        const { deleted } = await response.json();
+
+        const { deleted, error } = await response.json();
+        if (deleted) {
+          this.$notify({
+            group: 'foo',
+            title: 'Commodity deleted',
+          });
+        }
+        if (error) {
+          this.$notify({
+            group: 'foo',
+            title: 'Error',
+            type: 'error',
+            text: error,
+          });
+        }
         return deleted;
       } catch (error) {
+        this.$notify({
+          group: 'foo',
+          type: 'error',
+          title: 'Error',
+          text: error.message || 'Something went wrong',
+        });
         return null;
       }
     },

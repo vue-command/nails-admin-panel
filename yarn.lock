@@ -8379,10 +8379,10 @@ nails-shop-card@^0.0.4:
     vue "^2.6.11"
     vuetify "^2.2.11"
 
-nails-shop-module@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/nails-shop-module/-/nails-shop-module-0.0.3.tgz#6bba883331c5858dd3322dc3fac387f69777883e"
-  integrity sha512-vb9GK/GfqWdyVID+DjMlQSGyerLmvravpFhDpG1pImqtiXxaFrOOcvgkeJOOr/jBPe0A6JtDccXGGvI7jBm0Tw==
+nails-shop-module@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/nails-shop-module/-/nails-shop-module-0.0.4.tgz#6de6c5966a7dabdd1263333f458c226aac8be33b"
+  integrity sha512-2Q5M4p020zgaCFe6TGdxD+3oGJux9W48U4gh/O/t/m4EOXQr+L7PM+0dCYYAAbDhrrZSEcy478P/RjhjApkuew==
   dependencies:
     "@babel/polyfill" "^7.11.5"
     "@mdi/font" "^5.5.55"
