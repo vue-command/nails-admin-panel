@@ -11,7 +11,7 @@
     "@babel/polyfill": "^7.11.5",
     "@mdi/font": "^5.5.55",
     "core-js": "^3.6.5",
-    "nails-courses-admin-form": "^0.0.7",
+    "nails-courses-admin-form": "^0.0.8",
     "nails-courses-card": "^0.0.8",
     "nails-shop-module": "^0.0.6",
     "vue": "^2.6.11",

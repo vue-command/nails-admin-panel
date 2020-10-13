@@ -81,58 +81,127 @@ export default {
   },
   methods: {
     async getCourses() {
-      const response = await (
-        await fetch(
-          'https://nails-australia-staging.herokuapp.com/course/online',
-        )
-      ).json();
-      if (!response?.error) {
-        this.courses = response.onlineCourses;
-        this.totalCourses = response.total;
+      try {
+        const { onlineCourses, total, error } = await (
+          await fetch(
+            'https://nails-australia-staging.herokuapp.com/course/online',
+          )
+        ).json();
+        if (onlineCourses) {
+          this.courses = onlineCourses;
+          this.totalCourses = total;
+        }
+        if (error) {
+          this.$notify({
+            group: 'foo',
+            title: 'Error',
+            type: 'error',
+            text: error,
+          });
+        }
+        this.isLoading = false;
+      } catch (error) {
+        this.$notify({
+          group: 'foo',
+          type: 'error',
+          title: 'Error',
+          text: error.message || 'Something went wrong',
+        });
+        this.isLoading = false;
       }
-      this.isLoading = false;
     },
 
     async getCourseID(id) {
-      const response = await (
-        await fetch(
-          `https://nails-australia-staging.herokuapp.com/course/online/${id}`,
-        )
-      ).json();
-      return response.onlineCourse;
+      try {
+        const { onlineCourse, error } = await (
+          await fetch(
+            `https://nails-australia-staging.herokuapp.com/course/online/${id}`,
+          )
+        ).json();
+        if (error) {
+          this.$notify({
+            group: 'foo',
+            title: 'Error',
+            type: 'error',
+            text: error,
+          });
+        }
+        return onlineCourse;
+      } catch (error) {
+        this.$notify({
+          group: 'foo',
+          type: 'error',
+          title: 'Error',
+          text: error.message || 'Something went wrong',
+        });
+        return null;
+      }
     },
 
     async addCourses() {
-      const response = await (
-        await fetch(
-          `https://nails-australia-staging.herokuapp.com/course/online?skip=${this.courses.length}`,
-        )
-      ).json();
-      if (response.offlineCourses) {
-        this.courses = [...this.courses, ...response.onlineCourses];
+      try {
+        const { onlineCourses, error } = await (
+          await fetch(
+            `https://nails-australia-staging.herokuapp.com/course/online?skip=${this.courses.length}`,
+          )
+        ).json();
+        if (onlineCourses) {
+          this.courses = [...this.courses, ...onlineCourses];
+        }
+        if (error) {
+          this.$notify({
+            group: 'foo',
+            title: 'Error',
+            type: 'error',
+            text: error,
+          });
+        }
+      } catch (error) {
+        this.$notify({
+          group: 'foo',
+          type: 'error',
+          title: 'Error',
+          text: error.message || 'Something went wrong',
+        });
       }
-      // else this.error = true;
     },
 
     async removeCourse(id) {
-      const { deleted } = await (
-        await fetch(
-          `https://nails-australia-staging.herokuapp.com/course/online/${id}`,
-          {
-            method: 'DELETE',
-          },
-        )
-      ).json();
-      if (deleted) {
+      try {
+        const { deleted, error } = await (
+          await fetch(
+            `https://nails-australia-staging.herokuapp.com/course/online/${id}`,
+            {
+              method: 'DELETE',
+            },
+          )
+        ).json();
+        if (deleted) {
+          this.$notify({
+            group: 'foo',
+            title: 'Important message',
+            text: 'Course successfully deleted',
+          });
+          // eslint-disable-next-line no-underscore-dangle
+          this.courses = this.courses.filter((course) => course._id !== id);
+          this.totalCourses -= 1;
+          this.$forceUpdate();
+        }
+        if (error) {
+          this.$notify({
+            group: 'foo',
+            title: 'Error',
+            type: 'error',
+            text: error,
+          });
+        }
+      } catch (error) {
         this.$notify({
           group: 'foo',
-          title: 'Important message',
-          text: 'Course successfully deleted',
+          type: 'error',
+          title: 'Error',
+          text: error.message || 'Something went wrong',
         });
-        // eslint-disable-next-line no-underscore-dangle
-        this.courses = this.courses.filter((course) => course._id !== id);
-        this.totalCourses -= 1;
-        this.$forceUpdate();
       }
     },
 
@@ -160,38 +229,54 @@ export default {
         : `${onlineRequest.replace(/[/]new/gi, '')}/${this.editCourseID}`;
 
       const method = this.methodPost ? 'POST' : 'PUT';
+      try {
+        const response = await (
+          await fetch(url, {
+            method,
+            body: formData,
+          })
+        ).json();
 
-      const response = await (
-        await fetch(url, {
-          method,
-          body: formData,
-        })
-      ).json();
-
-      if (response?.newOnlineCourse) {
+        if (response?.newOnlineCourse) {
         // Baner
         //  Course successfully created.
-        this.$notify({
-          group: 'foo',
-          title: 'Important message',
-          text: 'Course successfully created',
-        });
-        this.totalCourses += 1;
-        this.isLoading = true;
-        this.getCourses();
-      }
-      if (response?.updatedOnlineCourse) {
+          this.$notify({
+            group: 'foo',
+            title: 'Important message',
+            text: 'Course successfully created',
+          });
+          this.totalCourses += 1;
+          this.isLoading = true;
+          this.getCourses();
+        }
+        if (response?.updatedOnlineCourse) {
         // Baner
         //  Course successfully updated.
+          this.$notify({
+            group: 'foo',
+            title: 'Important message',
+            text: 'Course successfully updated.',
+          });
+          this.isLoading = true;
+          this.getCourses();
+        }
+        if (response?.error) {
+          this.$notify({
+            group: 'foo',
+            title: 'Error',
+            type: 'error',
+            text: response.error,
+          });
+        }
+        this.showForm = false;
+      } catch (error) {
         this.$notify({
           group: 'foo',
-          title: 'Important message',
-          text: 'Course successfully updated.',
+          title: error.message || 'Something went wrong',
+          type: 'error',
         });
-        this.isLoading = true;
-        this.getCourses();
+        this.showForm = false;
       }
-      this.showForm = false;
     },
   },
   created() {

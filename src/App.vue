@@ -29,7 +29,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 html,
 body,
 .v-application {
@@ -54,5 +54,8 @@ body,
   border-radius: 5px;
   font-family: "Archivo Narrow" !important;
   font-weight: 700;
+   &.error {
+    background: #E54D42;
+  }
 }
 </style>
