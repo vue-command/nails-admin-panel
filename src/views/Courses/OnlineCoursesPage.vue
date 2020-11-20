@@ -1,35 +1,59 @@
 <template>
-  <div>
-    <h2 class="ma-8 text-title">ONLINE COURSES</h2>
-    <v-btn @click="addCourse" v-if="!showForm">add new online course</v-btn>
-    <Spiner v-if="isLoading" />
-    <div v-if="showBanerNoData" class="text-message">
-      No courses data received.
-    </div>
-    <div v-if="showBanerNoCourses" class="text-message">
-      No courses have been added yet
-    </div>
-    <Courses
-      v-if="showCourses"
-      :courses="courses"
-      :total="totalCourses"
-      :more="addCourses"
-      :removeCourse="removeCourse"
-      :editCourse="editCourse"
-      :addCourse="addCourse"
-    />
-    <div class="mx-12">
-      <CoursesForm
-        v-if="showForm"
-        :idCourse="editCourseID"
-        typeCourse="online"
-        :getCourseID="getCourseID"
-        :sendData="sendData"
-        :back="backForm"
-        :coverImageSrc="coverImageSrc"
-      />
-    </div>
-  </div>
+  <v-container>
+    <v-row>
+      <v-col cols="12" xs="12" class="d-flex justify-start">
+        <v-breadcrumbs :items="items">
+          <template v-slot:item="{ item }">
+            <v-breadcrumbs-item :disabled="item.disabled">
+              <router-link
+                :to="item.href"
+                :class="{ 'disabled-link': item.disabled }"
+              >
+                {{ item.text.toUpperCase() }}</router-link
+              >
+            </v-breadcrumbs-item>
+          </template>
+        </v-breadcrumbs>
+      </v-col>
+      <v-col cols="12" xs="12">
+        <h2 class="ma-4 text-title">ONLINE COURSES</h2>
+      </v-col>
+      <v-col cols="12" xs="12" v-if="isLoading">
+        <Spinner />
+      </v-col>
+      <v-col cols="12" xs="12" v-if="showBanerNoData">
+        <h2 class="text-message">No courses data received.</h2>
+      </v-col>
+      <v-col cols="12" xs="12" v-if="showBanerNoCourses">
+        <h2 class="text-message">No courses have been added yet</h2>
+      </v-col>
+      <v-col cols="12" xs="12">
+        <div class="d-flex justify-center">
+          <v-radio-group v-model="radioGroup" row>
+            <v-radio dark label="All" value="all"></v-radio>
+            <v-radio dark label="Hidden only" value="hidden"></v-radio>
+            <v-radio dark label="Published only" value="published"></v-radio>
+          </v-radio-group>
+        </div>
+      </v-col>
+      <v-col
+        cols="12"
+        xs="12"
+        sm="6"
+        md="4"
+        lg="3"
+        v-for="course in courses"
+        :key="course._id"
+      >
+        <v-card @click="goToCourse(course._id)">
+          <v-card-title class="d-flex justify-center"
+            ><h2>{{ course.nameOfCourse }}</h2></v-card-title
+          >
+          <CoverImage :url="checkUrl(course)" :height="300" />
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 <style scoped>
 .text-title,
@@ -42,35 +66,46 @@
 }
 </style>
 <script>
-import Courses from './components/Courses.vue';
-import 'nails-courses-admin-form';
-import 'nails-courses-admin-form/dist/nails-courses-admin-form.css';
-import Spiner from './components/Spiner.vue';
+// import Courses from './components/Courses.vue';
+// import 'nails-courses-admin-form';
+// import 'nails-courses-admin-form/dist/nails-courses-admin-form.css';
+import CoverImage from '@/views/Courses/components/CoverImage.vue';
+import Spinner from '@/views/Courses/components/Spinner.vue';
 
 export default {
   name: 'online-courses-page',
   components: {
-    Courses,
-    Spiner,
+    // Courses,
+    CoverImage,
+    Spinner,
   },
   data: () => ({
     courses: null,
     totalCourses: null,
     isLoading: true,
-    showForm: false,
-    editCourseID: null,
-    methodPost: true,
+    // showForm: false,
+    // editCourseID: null,
+    // methodPost: true,
+    // eslint-disable-next-line global-require
+    radioGroup: 'all',
+    items: [
+      {
+        text: 'Home',
+        disabled: false,
+        href: '/',
+      },
+      {
+        text: 'Online Courses',
+        disabled: true,
+        href: '#',
+      },
+    ],
     // eslint-disable-next-line global-require
     coverImageSrc: require('@/assets/noImage.jpg'),
   }),
   computed: {
     showCourses() {
-      return (
-        !this.isLoading
-        && this.courses !== null
-        && this.courses?.length > 0
-        && !this.showForm
-      );
+      return !this.isLoading && this.courses !== null && this.courses?.length > 0 && !this.showForm;
     },
     showBanerNoData() {
       return !this.isLoading && this.courses === null && !this.showForm;
@@ -79,13 +114,38 @@ export default {
       return !this.isLoading && this.courses?.length === 0 && !this.showForm;
     },
   },
+  watch: {
+    radioGroup(newVal) {
+      this.getCourses(newVal);
+    },
+  },
   methods: {
-    async getCourses() {
+    goToCourse(id) {
+      this.$router.push({
+        name: 'online-course-page',
+        params: {
+          courseid: id,
+        },
+      });
+    },
+    checkUrl(card) {
+      let img;
+      if (card.photo && Array.isArray(card.photo) && card.photo.length) {
+        img = card.photo[0].link;
+      }
+      if (!img) {
+        img = this.coverImageSrc;
+      }
+      return img;
+    },
+    async getCourses(string) {
       try {
+        const withHidden = '?withHidden=withHidden';
+        const onlyHidden = '?withHidden=hiddenOnly';
+        const isPublished = '';
         const { onlineCourses, total, error } = await (
-          await fetch(
-            'https://nails-australia-staging.herokuapp.com/course/online',
-          )
+          // eslint-disable-next-line no-nested-ternary
+          await fetch(`${process.env.VUE_APP_API_URL}/course/online${string === 'all' ? withHidden : string === 'hidden' ? onlyHidden : isPublished}`)
         ).json();
         if (onlineCourses) {
           this.courses = onlineCourses;
@@ -114,9 +174,7 @@ export default {
     async getCourseID(id) {
       try {
         const { onlineCourse, error } = await (
-          await fetch(
-            `https://nails-australia-staging.herokuapp.com/course/online/${id}`,
-          )
+          await fetch(`https://nails-australia-staging.herokuapp.com/course/online/${id}`)
         ).json();
         if (error) {
           this.$notify({
@@ -169,12 +227,9 @@ export default {
     async removeCourse(id) {
       try {
         const { deleted, error } = await (
-          await fetch(
-            `https://nails-australia-staging.herokuapp.com/course/online/${id}`,
-            {
-              method: 'DELETE',
-            },
-          )
+          await fetch(`https://nails-australia-staging.herokuapp.com/course/online/${id}`, {
+            method: 'DELETE',
+          })
         ).json();
         if (deleted) {
           this.$notify({
@@ -238,8 +293,8 @@ export default {
         ).json();
 
         if (response?.newOnlineCourse) {
-        // Baner
-        //  Course successfully created.
+          // Baner
+          //  Course successfully created.
           this.$notify({
             group: 'foo',
             title: 'Important message',
@@ -250,8 +305,8 @@ export default {
           this.getCourses();
         }
         if (response?.updatedOnlineCourse) {
-        // Baner
-        //  Course successfully updated.
+          // Baner
+          //  Course successfully updated.
           this.$notify({
             group: 'foo',
             title: 'Important message',
@@ -280,7 +335,7 @@ export default {
     },
   },
   created() {
-    this.getCourses();
+    this.getCourses(this.radioGroup);
   },
 };
 </script>

@@ -34,6 +34,24 @@ const routes = [
     component: OnlineCoursesPage,
   },
   {
+    path: '/online-courses-page/course/:courseid',
+    name: 'online-course-page',
+    meta: { layout: 'courses' },
+    component: () => import(/* webpackChunkName: "user-courses" */'../views/Courses/Course.vue'),
+  },
+  {
+    path: '/online-courses-page/course/:courseid/videos',
+    name: 'online-course-videos',
+    meta: { layout: 'courses' },
+    component: () => import(/* webpackChunkName: "user-courses" */'../views/Courses/CourseVideos.vue'),
+  },
+  {
+    path: '/online-courses-page/course/:courseid/videos/:videoid',
+    name: 'online-course-video',
+    meta: { layout: 'courses' },
+    component: () => import(/* webpackChunkName: "user-courses" */'../views/Courses/CourseVideoDetail.vue'),
+  },
+  {
     path: '/offline-courses-page',
     name: 'offline-courses-page',
     meta: { layout: 'courses' },

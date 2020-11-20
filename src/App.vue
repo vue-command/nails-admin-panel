@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app dark class="homefone">
     <v-main>
       <component :is="layout">
         <!-- <router-view /> -->
@@ -35,6 +35,9 @@ body,
 .v-application {
   font-family: "Archivo Narrow" !important;
 }
+a {
+  text-decoration: none;
+}
 .v-btn__content {
   justify-content: center !important;
 }
@@ -43,6 +46,9 @@ body,
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+}
+.disabled-link {
+  color: grey !important;
 }
 .vue-notification {
   background-color:#fa0 !important;

@@ -41,7 +41,7 @@
 import Courses from './components/Courses.vue';
 import 'nails-courses-admin-form';
 import 'nails-courses-admin-form/dist/nails-courses-admin-form.css';
-import Spiner from './components/Spiner.vue';
+import Spiner from './components/Spinner.vue';
 
 export default {
   name: 'offline-courses-page',
