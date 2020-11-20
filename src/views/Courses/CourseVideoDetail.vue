@@ -35,7 +35,7 @@
         <!-- <v-img :src="video.coverImg.link" contain></v-img> -->
         <!-- <v-img :src="checkUrl(video)" height="500px"></v-img> -->
         <CoverImage :url="checkUrl(video)" :height="500" />
-        <v-card flat class="d-flex justify-center mt-16">
+        <v-card v-if="video.pdfs" flat class="d-flex justify-center mt-16 transparent">
           <!-- <a
             v-for="pdf in video.pdfs"
             :key="pdf._id"
@@ -50,8 +50,9 @@
             :user="user"
           /> -->
           <a
-            v-if="video.pdf"
-            :href="video.pdf.link"
+            v-for="pdf in video.pdfs"
+            :key="pdf._id"
+            :href="pdf.link"
             target="_blank"
             class="pdf-link"
             ><v-img src="@/views/Courses/assets/pdf.svg" width="50px"

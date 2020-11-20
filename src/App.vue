@@ -1,6 +1,6 @@
 <template>
-  <v-app dark class="homefone">
-    <v-main>
+  <v-app dark>
+    <v-main class="homefone">
       <component :is="layout">
         <!-- <router-view /> -->
       </component>
