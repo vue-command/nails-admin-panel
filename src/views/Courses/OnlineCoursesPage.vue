@@ -18,39 +18,60 @@
       <v-col cols="12" xs="12">
         <h2 class="ma-4 text-title">ONLINE COURSES</h2>
       </v-col>
-      <v-col cols="12" xs="12" v-if="isLoading">
-        <Spinner />
-      </v-col>
-      <v-col cols="12" xs="12" v-if="showBanerNoData">
-        <h2 class="text-message">No courses data received.</h2>
-      </v-col>
-      <v-col cols="12" xs="12" v-if="showBanerNoCourses">
-        <h2 class="text-message">No courses have been added yet</h2>
-      </v-col>
+      <!-- <v-col cols="12" xs="12" v-if="!onlineCourses">
+        <h2 class="text-message">No courses data received</h2>
+      </v-col> -->
       <v-col cols="12" xs="12">
         <div class="d-flex justify-center">
           <v-radio-group v-model="radioGroup" row>
-            <v-radio dark label="All" value="all"></v-radio>
-            <v-radio dark label="Hidden only" value="hidden"></v-radio>
-            <v-radio dark label="Published only" value="published"></v-radio>
+            <v-radio
+              v-for="current of filterCourses"
+              :key="current.title"
+              dark
+              :label="current.title"
+            ></v-radio>
           </v-radio-group>
         </div>
       </v-col>
-      <v-col
-        cols="12"
-        xs="12"
-        sm="6"
-        md="4"
-        lg="3"
-        v-for="course in courses"
-        :key="course._id"
-      >
-        <v-card @click="goToCourse(course._id)">
-          <v-card-title class="d-flex justify-center"
-            ><h2>{{ course.nameOfCourse }}</h2></v-card-title
+      <v-col cols="12" xs="12" v-if="loading">
+        <Spinner />
+      </v-col>
+      <v-col cols="12" xs="12" v-if="emtyCourses">
+        <h2 class="text-message">No courses have been added yet</h2>
+      </v-col>
+      <v-col cols="12" xs="12" v-if="!loading && onlineCourses">
+        <v-row class="d-flex justify-center">
+          <v-col
+            cols="12"
+            xs="12"
+            sm="6"
+            md="4"
+            lg="3"
+            v-for="course in onlineCourses"
+            :key="course._id"
           >
-          <CoverImage :url="checkUrl(course)" :height="300" />
-        </v-card>
+            <v-card @click="goToCourse(course._id)">
+              <v-card-title class="d-flex justify-center"
+                ><h2>{{ course.nameOfCourse }}</h2></v-card-title
+              >
+              <CoverImage :url="checkUrl(course)" :height="300" />
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col cols="12" xs="12" v-if="!emtyCourses && isHideMoreBtn">
+        <v-btn
+          @click="
+            $store.dispatch(
+              'onlineCourses/GET_MORE_ONLINE_COURSES',
+              {
+                string: filterCourses[radioGroup].param,
+                skip: onlineCourses.length,
+              }
+            )
+          "
+          >More</v-btn
+        >
       </v-col>
     </v-row>
   </v-container>
@@ -66,11 +87,10 @@
 }
 </style>
 <script>
-// import Courses from './components/Courses.vue';
-// import 'nails-courses-admin-form';
-// import 'nails-courses-admin-form/dist/nails-courses-admin-form.css';
-import CoverImage from '@/views/Courses/components/CoverImage.vue';
-import Spinner from '@/views/Courses/components/Spinner.vue';
+import { mapState } from 'vuex';
+
+import CoverImage from '@/components/CoverImage.vue';
+import Spinner from '@/components/Spinner.vue';
 
 export default {
   name: 'online-courses-page',
@@ -82,12 +102,25 @@ export default {
   data: () => ({
     courses: null,
     totalCourses: null,
-    isLoading: true,
+    // isLoading: true,
     // showForm: false,
     // editCourseID: null,
     // methodPost: true,
-    // eslint-disable-next-line global-require
-    radioGroup: 'all',
+    radioGroup: 0,
+    filterCourses: [
+      {
+        title: 'All',
+        param: '?withHidden=withHidden',
+      },
+      {
+        title: 'Hidden only',
+        param: '?withHidden=hiddenOnly',
+      },
+      {
+        title: 'Published only',
+        param: '',
+      },
+    ],
     items: [
       {
         text: 'Home',
@@ -100,23 +133,27 @@ export default {
         href: '#',
       },
     ],
-    // eslint-disable-next-line global-require
-    coverImageSrc: require('@/assets/noImage.jpg'),
+    coverImageSrc: 'img/noImage.jpg',
   }),
   computed: {
-    showCourses() {
-      return !this.isLoading && this.courses !== null && this.courses?.length > 0 && !this.showForm;
+    // showCourses() {
+    //   return !this.isLoading && this.courses !== null && this.courses?.length
+    // > 0 && !this.showForm;
+    // },
+    // showBanerNoData() {
+    //   return !this.isLoading && this.courses === null && !this.showForm;
+    // },
+    emtyCourses() {
+      return !this.loading && !this.onlineCourses?.length;
     },
-    showBanerNoData() {
-      return !this.isLoading && this.courses === null && !this.showForm;
+    isHideMoreBtn() {
+      return this.onlineCourses.length < this.totalOnlineCourses;
     },
-    showBanerNoCourses() {
-      return !this.isLoading && this.courses?.length === 0 && !this.showForm;
-    },
+    ...mapState('onlineCourses', ['onlineCourses', 'totalOnlineCourses', 'loading']),
   },
   watch: {
     radioGroup(newVal) {
-      this.getCourses(newVal);
+      this.getCourses(this.filterCourses[newVal].param);
     },
   },
   methods: {
@@ -138,37 +175,38 @@ export default {
       }
       return img;
     },
-    async getCourses(string) {
-      try {
-        const withHidden = '?withHidden=withHidden';
-        const onlyHidden = '?withHidden=hiddenOnly';
-        const isPublished = '';
-        const { onlineCourses, total, error } = await (
-          // eslint-disable-next-line no-nested-ternary
-          await fetch(`${process.env.VUE_APP_API_URL}/course/online${string === 'all' ? withHidden : string === 'hidden' ? onlyHidden : isPublished}`)
-        ).json();
-        if (onlineCourses) {
-          this.courses = onlineCourses;
-          this.totalCourses = total;
-        }
-        if (error) {
-          this.$notify({
-            group: 'foo',
-            title: 'Error',
-            type: 'error',
-            text: error,
-          });
-        }
-        this.isLoading = false;
-      } catch (error) {
-        this.$notify({
-          group: 'foo',
-          type: 'error',
-          title: 'Error',
-          text: error.message || 'Something went wrong',
-        });
-        this.isLoading = false;
-      }
+    getCourses(string) {
+      this.$store.dispatch('onlineCourses/GET_ONLINE_COURSES', string);
+      // try {
+      //   const withHidden = '?withHidden=withHidden';
+      //   const onlyHidden = '?withHidden=hiddenOnly';
+      //   const isPublished = '';
+      //   const { onlineCourses, total, error } = await (
+      //     await fetch(`${process.env.VUE_APP_API_URL}/course/online${string
+      // === 'all' ? withHidden : string === 'hidden' ? onlyHidden : isPublished}`)
+      //   ).json();
+      //   if (onlineCourses) {
+      //     this.courses = onlineCourses;
+      //     this.totalCourses = total;
+      //   }
+      //   if (error) {
+      //     this.$notify({
+      //       group: 'foo',
+      //       title: 'Error',
+      //       type: 'error',
+      //       text: error,
+      //     });
+      //   }
+      //   this.isLoading = false;
+      // } catch (error) {
+      //   this.$notify({
+      //     group: 'foo',
+      //     type: 'error',
+      //     title: 'Error',
+      //     text: error.message || 'Something went wrong',
+      //   });
+      //   this.isLoading = false;
+      // }
     },
 
     async getCourseID(id) {
@@ -335,7 +373,7 @@ export default {
     },
   },
   created() {
-    this.getCourses(this.radioGroup);
+    this.getCourses(this.filterCourses[this.radioGroup].param);
   },
 };
 </script>

@@ -12,20 +12,21 @@
         </v-breadcrumbs-item>
       </template>
     </v-breadcrumbs>
+    <Spinner v-if="loading"/>
     <CourseCardDetail
-      v-if="ready"
-      :category="course.category"
-      :days="course.days"
-      :nameOfCourse="course.nameOfCourse"
-      :subtitle="course.subtitle"
-      :price="course.price"
-      :author="course.author"
-      :instructor="course.instructor"
-      :infoBonus="course.infoBonus"
-      :courseSuitable="course.thisCourseIsSuitableFor"
-      :description="course.description"
-      :dateOfCourses="course.dateOfCourses"
-      :url="checkUrl(course)"
+      v-if="!loading && onlineCourseById"
+      :category="onlineCourseById.category"
+      :days="onlineCourseById.accessDays"
+      :nameOfCourse="onlineCourseById.nameOfCourse"
+      :subtitle="onlineCourseById.subtitle"
+      :price="onlineCourseById.price"
+      :author="onlineCourseById.author"
+      :instructor="onlineCourseById.instructor"
+      :infoBonus="onlineCourseById.infoBonus"
+      :courseSuitable="onlineCourseById.thisCourseIsSuitableFor"
+      :description="onlineCourseById.description"
+      :dateOfCourses="onlineCourseById.dateOfCourses"
+      :url="checkUrl(onlineCourseById)"
       :type="typeCourse"
       :coverImageSrc="coverImageSrc"
       btnTitle="BUY THIS COURSE"
@@ -49,10 +50,16 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
+import Spinner from '@/components/Spinner.vue';
 import 'nails-courses-card-detail';
 import 'nails-courses-card-detail/dist/nails-courses-card-detail.css';
 
 export default {
+  components: {
+    Spinner,
+  },
   data() {
     return {
       courseId: this.$route.params.courseid,
@@ -80,7 +87,22 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapState('onlineCourses', ['onlineCourses', 'onlineCourseById', 'totalOnlineCourses', 'loading']),
+  },
+  watch: {
+    onlineCourseById() {
+      this.fillingInTheFields();
+    },
+  },
   methods: {
+    fillingInTheFields() {
+      // this.items[0].text = `${this.user.firstName} cabinet`;
+      // this.items[1].text = `${this.user.firstName} courses`;
+      if (this.onlineCourseById) {
+        this.items[2].text = `${this.onlineCourseById.nameOfCourse}`;
+      }
+    },
     checkUrl(card) {
       let img;
       if (card.photo && Array.isArray(card.photo) && card.photo.length) {
@@ -96,35 +118,37 @@ export default {
     },
     // eslint-disable-next-line consistent-return
     async getCourseID(id) {
-      try {
-        const { onlineCourse, error } = await (
-          await fetch(`${process.env.VUE_APP_API_URL}/course/online/${id}`)
-        ).json();
-        if (error) {
-          this.$notify({
-            group: 'foo',
-            title: 'Error',
-            type: 'error',
-            text: error,
-          });
-        } else {
-          this.course = onlineCourse;
-          this.items[2].text = `${onlineCourse.nameOfCourse}`;
-          this.ready = true;
-        }
-      } catch (error) {
-        this.$notify({
-          group: 'foo',
-          type: 'error',
-          title: 'Error',
-          text: error.message || 'Something went wrong',
-        });
-        return null;
-      }
+      this.$store.dispatch('onlineCourses/GET_ONLINE_COURSE_BY_ID', id);
+      // try {
+      //   const { onlineCourse, error } = await (
+      //     await fetch(`${process.env.VUE_APP_API_URL}/course/online/${id}`)
+      //   ).json();
+      //   if (error) {
+      //     this.$notify({
+      //       group: 'foo',
+      //       title: 'Error',
+      //       type: 'error',
+      //       text: error,
+      //     });
+      //   } else {
+      //     this.course = onlineCourse;
+      //     this.items[2].text = `${onlineCourse.nameOfCourse}`;
+      //     this.ready = true;
+      //   }
+      // } catch (error) {
+      //   this.$notify({
+      //     group: 'foo',
+      //     type: 'error',
+      //     title: 'Error',
+      //     text: error.message || 'Something went wrong',
+      //   });
+      //   return null;
+      // }
     },
   },
   created() {
     this.getCourseID(this.courseId);
+    // this.fillingInTheFields();
   },
 };
 </script>

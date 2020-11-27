@@ -96,8 +96,8 @@
 
 <script>
 
-import CoverImage from '@/views/Courses/components/CoverImage.vue';
-import Spinner from '@/views/Courses/components/Spinner.vue';
+import CoverImage from '@/components/CoverImage.vue';
+import Spinner from '@/components/Spinner.vue';
 
 export default {
   components: {

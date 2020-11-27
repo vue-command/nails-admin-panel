@@ -11,7 +11,7 @@ export default {
     return {
       imageUrl: this.url,
       // eslint-disable-next-line global-require
-      coverImageSrc: require('@/assets/noImage.jpg'),
+      coverImageSrc: 'img/noImage.jpg',
     };
   },
   methods: {

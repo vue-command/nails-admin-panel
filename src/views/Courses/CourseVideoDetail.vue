@@ -55,7 +55,7 @@
             :href="pdf.link"
             target="_blank"
             class="pdf-link"
-            ><v-img src="@/views/Courses/assets/pdf.svg" width="50px"
+            ><v-img src="img/pdf.svg" width="50px"
           /></a>
         </v-card>
       </v-col>
@@ -108,8 +108,8 @@
 
 <script>
 // import { mapState } from 'vuex';
-import CoverImage from '@/views/Courses/components/CoverImage.vue';
-import Spinner from '@/views/Courses/components/Spinner.vue';
+import CoverImage from '@/components/CoverImage.vue';
+import Spinner from '@/components/Spinner.vue';
 
 // import VideoPdfs from '@/components/Courses/VideoPdfs.vue';
 
