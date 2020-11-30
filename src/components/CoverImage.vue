@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-img :src="imageUrl" :height="height" @error="onError"></v-img>
+    <v-img :src="imgUrl" :height="height" @error="onError"></v-img>
   </div>
 </template>
 
@@ -9,14 +9,27 @@ export default {
   props: ['url', 'height'],
   data() {
     return {
-      imageUrl: this.url,
+      // imageUrl: this.url,
+      error: false,
       // eslint-disable-next-line global-require
-      coverImageSrc: 'img/noImage.jpg',
+      coverImageSrc: require('@/assets/noImage.jpg'),
+      // coverImageSrc: 'img/noImage.jpg',
     };
+  },
+  computed: {
+    imgUrl() {
+      return this.error ? this.coverImageSrc : this.url;
+    },
+  },
+  watch: {
+    url(val) {
+      if (!val) return;
+      this.error = false;
+    },
   },
   methods: {
     onError() {
-      this.imageUrl = this.coverImageSrc;
+      this.error = true;
     },
   },
 };

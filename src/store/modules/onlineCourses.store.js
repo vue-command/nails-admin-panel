@@ -3,15 +3,16 @@
 /* eslint-disable no-shadow */
 const state = {
   onlineCourses: [],
-  onlineCourseById: {},
-  onlineCourseByIdImg: '',
+  onlineCourseById: null,
+  currentVideo: null,
   totalOnlineCourses: 0,
   loading: false,
   onlineError: null,
 };
 
 const getters = {
-  onlineCoursesEndpoint: (state, getters, rootState) => `${rootState.host}/course/online`,
+  onlineCoursesEndpoint: (state, getters, rootState) => `${rootState.host}/course/online/`,
+  videoCourseEndpoint: (state, getters, rootState) => `${rootState.host}/course/online/findvideo/`,
 };
 
 const mutations = {
@@ -26,12 +27,11 @@ const mutations = {
   ONLINE_COURSE_BY_ID: (state, { onlineCourse }) => {
     state.onlineCourseById = onlineCourse;
   },
-  // ONLINE_COURSE_BY_ID_IMG: (state, { onlineCourse }) => {
-  //   state.onlineCourseByIdImg = onlineCourse;
-  // },
+  ONLINE_COURSE_VIDEO_BY_ID: (state, { video }) => {
+    state.currentVideo = video;
+  },
   ONLINE_COURSE_BY_ID_CLEAR: (state) => {
-    state.onlineCourseById = {};
-    state.onlineCourseByIdImg = '';
+    state.onlineCourseById = null;
   },
   ERROR: (state, payload) => {
     state.onlineError = payload;
@@ -69,14 +69,7 @@ const actions = {
   async GET_ONLINE_COURSE_BY_ID({ state, getters, commit }, id) {
     commit('LOADING', true);
     commit('ERROR', null);
-    const { onlineCourse, error } = await (await fetch(`${getters.onlineCoursesEndpoint}/${id}`)).json();
-    // let img;
-    // if (onlineCourse.photo && Array.isArray(onlineCourse.photo) && onlineCourse.photo.length) {
-    //   img = onlineCourse.photo[0].link;
-    // }
-    // if (!img) {
-    //   img = 'img/noImage.jpg';
-    // }
+    const { onlineCourse, error } = await (await fetch(`${getters.onlineCoursesEndpoint}${id}`)).json();
     if (!error) {
       commit('ONLINE_COURSE_BY_ID', { onlineCourse });
       commit('LOADING', false);
@@ -84,8 +77,18 @@ const actions = {
       commit('LOADING', false);
       commit('ERROR', error);
     }
-
-    // commit('ONLINE_COURSE_BY_ID_IMG', img);
+  },
+  async GET_ONLINE_COURSE_VIDEO_BY_ID({ state, getters, commit }, id) {
+    commit('LOADING', true);
+    commit('ERROR', null);
+    const { video, error } = await (await fetch(`${getters.videoCourseEndpoint}${id}`)).json();
+    if (!error) {
+      commit('ONLINE_COURSE_VIDEO_BY_ID', { video });
+      commit('LOADING', false);
+    } else {
+      commit('LOADING', false);
+      commit('ERROR', error);
+    }
   },
   async CLEAR_ONLINE_COURSE_BY_ID({ commit }) {
     commit('ONLINE_COURSE_BY_ID_CLEAR');

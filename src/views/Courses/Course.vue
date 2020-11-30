@@ -117,37 +117,10 @@ export default {
       if (this.$route.name !== 'online-course-videos') { this.$router.push({ name: 'online-course-videos' }); }
     },
     // eslint-disable-next-line consistent-return
-    async getCourseID(id) {
-      this.$store.dispatch('onlineCourses/GET_ONLINE_COURSE_BY_ID', id);
-      // try {
-      //   const { onlineCourse, error } = await (
-      //     await fetch(`${process.env.VUE_APP_API_URL}/course/online/${id}`)
-      //   ).json();
-      //   if (error) {
-      //     this.$notify({
-      //       group: 'foo',
-      //       title: 'Error',
-      //       type: 'error',
-      //       text: error,
-      //     });
-      //   } else {
-      //     this.course = onlineCourse;
-      //     this.items[2].text = `${onlineCourse.nameOfCourse}`;
-      //     this.ready = true;
-      //   }
-      // } catch (error) {
-      //   this.$notify({
-      //     group: 'foo',
-      //     type: 'error',
-      //     title: 'Error',
-      //     text: error.message || 'Something went wrong',
-      //   });
-      //   return null;
-      // }
-    },
+
   },
   created() {
-    this.getCourseID(this.courseId);
+    this.$store.dispatch('onlineCourses/GET_ONLINE_COURSE_BY_ID', this.courseId);
     // this.fillingInTheFields();
   },
 };
