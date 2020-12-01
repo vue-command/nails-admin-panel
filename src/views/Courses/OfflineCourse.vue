@@ -12,38 +12,47 @@
         </v-breadcrumbs-item>
       </template>
     </v-breadcrumbs>
-    <Spinner v-if="loading"/>
+    <Spinner v-if="loading" />
     <CourseCardDetail
-      v-if="!loading && onlineCourseById"
-      :category="onlineCourseById.category"
-      :days="onlineCourseById.accessDays"
-      :nameOfCourse="onlineCourseById.nameOfCourse"
-      :subtitle="onlineCourseById.subtitle"
-      :price="onlineCourseById.price"
-      :author="onlineCourseById.author"
-      :instructor="onlineCourseById.instructor"
-      :infoBonus="onlineCourseById.infoBonus"
-      :courseSuitable="onlineCourseById.thisCourseIsSuitableFor"
-      :description="onlineCourseById.description"
-      :dateOfCourses="onlineCourseById.dateOfCourses"
-      :url="checkUrl(onlineCourseById)"
+      v-if="!loading && offlineCourseById && !showForm"
+      :category="offlineCourseById.category"
+      :days="offlineCourseById.accessDays"
+      :nameOfCourse="offlineCourseById.nameOfCourse"
+      :subtitle="offlineCourseById.subtitle"
+      :price="offlineCourseById.price"
+      :author="offlineCourseById.author"
+      :instructor="offlineCourseById.instructor"
+      :infoBonus="offlineCourseById.infoBonus"
+      :courseSuitable="offlineCourseById.thisCourseIsSuitableFor"
+      :description="offlineCourseById.description"
+      :dateOfCourses="offlineCourseById.dateOfCourses"
+      :url="checkUrl(offlineCourseById)"
       :type="typeCourse"
       :coverImageSrc="coverImageSrc"
       btnTitle="BUY THIS COURSE"
       :btnCallBack="null"
     />
+    <EditCourseForm
+      v-if="showForm"
+      :editCourseById="editCourseById"
+      :typeCourse="typeCourse"
+      :course="offlineCourseById"
+      :back="backForm"
+      :coverImageSrc="coverImageSrc"
+    />
     <div
       class="d-flex flex-column align-center flex-sm-row justify-sm-center mt-8"
     >
       <v-btn
-        @click="goToVideos"
+        v-if="!showForm"
+        @click="showForm = true"
         color="buttons"
         rounded
         large
         dark
         min-width="160"
         class="yellow-button"
-        >Videos</v-btn
+        >Edit</v-btn
       >
     </div>
   </div>
@@ -53,20 +62,23 @@
 import { mapState } from 'vuex';
 
 import Spinner from '@/components/Spinner.vue';
+import EditCourseForm from '@/components/Courses/EditCourseForm.vue';
 import 'nails-courses-card-detail';
 import 'nails-courses-card-detail/dist/nails-courses-card-detail.css';
 
 export default {
-  name: 'online-course-page',
+  name: 'offline-course-page',
   components: {
     Spinner,
+    EditCourseForm,
   },
   data() {
     return {
       courseId: this.$route.params.courseid,
-      course: null,
-      ready: false,
-      typeCourse: 'online',
+      // course: null,
+      // ready: false,
+      showForm: false,
+      typeCourse: 'offline',
       // eslint-disable-next-line global-require
       coverImageSrc: require('@/assets/noImage.jpg'),
       items: [
@@ -76,9 +88,9 @@ export default {
           href: '/',
         },
         {
-          text: 'Online Courses',
+          text: 'offline Courses',
           disabled: false,
-          href: '/online-courses-page',
+          href: '/offline-courses-page',
         },
         {
           text: '',
@@ -89,10 +101,15 @@ export default {
     };
   },
   computed: {
-    ...mapState('onlineCourses', ['onlineCourses', 'onlineCourseById', 'totalOnlineCourses', 'loading']),
+    ...mapState('offlineCourses', [
+      'offlineCourses',
+      'offlineCourseById',
+      'totalOfflineCourses',
+      'loading',
+    ]),
   },
   watch: {
-    onlineCourseById() {
+    offlineCourseById() {
       this.fillingInTheFields();
     },
   },
@@ -100,8 +117,8 @@ export default {
     fillingInTheFields() {
       // this.items[0].text = `${this.user.firstName} cabinet`;
       // this.items[1].text = `${this.user.firstName} courses`;
-      if (this.onlineCourseById) {
-        this.items[2].text = `${this.onlineCourseById.nameOfCourse}`;
+      if (this.offlineCourseById) {
+        this.items[2].text = `${this.offlineCourseById.nameOfCourse}`;
       }
     },
     checkUrl(card) {
@@ -114,14 +131,23 @@ export default {
       }
       return img;
     },
-    goToVideos() {
-      if (this.$route.name !== 'online-course-videos') { this.$router.push({ name: 'online-course-videos' }); }
+    editCourseById(data) {
+      this.$store.dispatch('userCourses/PUT_USER_COURSE_ID', {
+        data,
+        id: this.courseId,
+      });
     },
+    backForm() {
+      this.showForm = false;
+    },
+    // goToVideos() {
+    //   if (this.$route.name !== 'offline-course-videos')
+    // { this.$router.push({ name: 'online-course-videos' }); }
+    // },
     // eslint-disable-next-line consistent-return
-
   },
   created() {
-    this.$store.dispatch('onlineCourses/GET_ONLINE_COURSE_BY_ID', this.courseId);
+    this.$store.dispatch('offlineCourses/GET_OFFLINE_COURSE_BY_ID', this.courseId);
     // this.fillingInTheFields();
   },
 };

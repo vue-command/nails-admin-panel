@@ -100,8 +100,8 @@ export default {
     Spinner,
   },
   data: () => ({
-    courses: null,
-    totalCourses: null,
+    // courses: null,
+    // totalCourses: null,
     // isLoading: true,
     // showForm: false,
     // editCourseID: null,
@@ -136,20 +136,14 @@ export default {
     coverImageSrc: 'img/noImage.jpg',
   }),
   computed: {
-    // showCourses() {
-    //   return !this.isLoading && this.courses !== null && this.courses?.length
-    // > 0 && !this.showForm;
-    // },
-    // showBanerNoData() {
-    //   return !this.isLoading && this.courses === null && !this.showForm;
-    // },
+    ...mapState('onlineCourses', ['onlineCourses', 'totalOnlineCourses', 'loading']),
     emtyCourses() {
       return !this.loading && !this.onlineCourses?.length;
     },
     isHideMoreBtn() {
       return this.onlineCourses.length < this.totalOnlineCourses;
     },
-    ...mapState('onlineCourses', ['onlineCourses', 'totalOnlineCourses', 'loading']),
+
   },
   watch: {
     radioGroup(newVal) {

@@ -50,6 +50,18 @@ const routes = [{
   meta: { layout: 'courses' },
   component: () => import(/* webpackChunkName: "offline-courses-page" */ '@/views/Courses/OfflineCoursesPage.vue'),
 },
+{
+  path: '/offline-courses-page/create-offline-course',
+  name: 'create-offline-course',
+  meta: { layout: 'courses' },
+  component: () => import(/* webpackChunkName: "offline-courses-page" */ '@/views/Courses/CreateOfflineCourseForm.vue'),
+},
+{
+  path: '/offline-courses-page/course/:courseid',
+  name: 'offline-course-page',
+  meta: { layout: 'courses' },
+  component: () => import(/* webpackChunkName: "online-course-page" */ '@/views/Courses/OfflineCourse.vue'),
+},
 { path: '/admin/:hash', redirect: '/' },
 {
   path: '*',
