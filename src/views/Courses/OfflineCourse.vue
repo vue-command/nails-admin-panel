@@ -14,19 +14,19 @@
     </v-breadcrumbs>
     <Spinner v-if="loading" />
     <CourseCardDetail
-      v-if="!loading && offlineCourseById && !showForm"
-      :category="offlineCourseById.category"
-      :days="offlineCourseById.accessDays"
-      :nameOfCourse="offlineCourseById.nameOfCourse"
-      :subtitle="offlineCourseById.subtitle"
-      :price="offlineCourseById.price"
-      :author="offlineCourseById.author"
-      :instructor="offlineCourseById.instructor"
-      :infoBonus="offlineCourseById.infoBonus"
-      :courseSuitable="offlineCourseById.thisCourseIsSuitableFor"
-      :description="offlineCourseById.description"
-      :dateOfCourses="offlineCourseById.dateOfCourses"
-      :url="checkUrl(offlineCourseById)"
+      v-if="!loading && course && !showForm"
+      :category="course.category"
+      :days="course.accessDays"
+      :nameOfCourse="course.nameOfCourse"
+      :subtitle="course.subtitle"
+      :price="course.price"
+      :author="course.author"
+      :instructor="course.instructor"
+      :infoBonus="course.infoBonus"
+      :courseSuitable="course.thisCourseIsSuitableFor"
+      :description="course.description"
+      :dateOfCourses="course.dateOfCourses"
+      :url="checkUrl(course)"
       :type="typeCourse"
       :coverImageSrc="coverImageSrc"
       btnTitle="BUY THIS COURSE"
@@ -36,9 +36,10 @@
       v-if="showForm"
       :editCourseById="editCourseById"
       :typeCourse="typeCourse"
-      :course="offlineCourseById"
+      :course="course"
       :back="backForm"
       :coverImageSrc="coverImageSrc"
+      :courseId="courseId"
     />
     <div
       class="d-flex flex-column align-center flex-sm-row justify-sm-center mt-8"
@@ -75,7 +76,7 @@ export default {
   data() {
     return {
       courseId: this.$route.params.courseid,
-      // course: null,
+      course: null,
       // ready: false,
       showForm: false,
       typeCourse: 'offline',
@@ -109,17 +110,18 @@ export default {
     ]),
   },
   watch: {
-    offlineCourseById() {
+    offlineCourseById(val) {
+      if (!val) return;
       this.fillingInTheFields();
+      this.course = val;
+      this.showForm = false;
     },
   },
   methods: {
     fillingInTheFields() {
       // this.items[0].text = `${this.user.firstName} cabinet`;
       // this.items[1].text = `${this.user.firstName} courses`;
-      if (this.offlineCourseById) {
-        this.items[2].text = `${this.offlineCourseById.nameOfCourse}`;
-      }
+      this.items[2].text = this.offlineCourseById.nameOfCourse;
     },
     checkUrl(card) {
       let img;
@@ -147,8 +149,17 @@ export default {
     // eslint-disable-next-line consistent-return
   },
   created() {
-    this.$store.dispatch('offlineCourses/GET_OFFLINE_COURSE_BY_ID', this.courseId);
     // this.fillingInTheFields();
+    if (!this.offlineCourseById) {
+      this.$store.dispatch('offlineCourses/GET_OFFLINE_COURSE_BY_ID', this.courseId);
+    } else {
+      this.items[2].text = this.offlineCourseById.nameOfCourse;
+      this.course = this.offlineCourseById;
+      // this.ready = true
+    }
+  },
+  beforeDestroy() {
+    this.$store.dispatch('offlineCourses/CLEAR_OFFLINE_COURSE_BY_ID');
   },
 };
 </script>

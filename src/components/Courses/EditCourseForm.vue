@@ -249,7 +249,7 @@ export default {
     // VIcon,
   },
   name: 'course-form',
-  props: ['typeCourse', 'course', 'back', 'coverImageSrc', 'editCourseById'],
+  props: ['typeCourse', 'course', 'back', 'coverImageSrc', 'editCourseById', 'courseId'],
   data() {
     return {
       category: '',
@@ -320,7 +320,10 @@ export default {
       this.dateOfCourses.forEach((item) => formData.append('dateOfCourses[]', item));
       formData.append('availableSpots', this.availableSpots);
       this.courseSuitable.forEach((item) => formData.append('thisCourseIsSuitableFor[]', item));
-      this.editCourseById(formData);
+      this.$store.dispatch('offlineCourses/EDIT_OFFLINE_COURSE', {
+        data: formData,
+        id: this.courseId,
+      });
       // this.resetData();
     },
   },

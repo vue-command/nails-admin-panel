@@ -161,6 +161,7 @@
                 outlined
                 dark
                 @change="Preview_image"
+                :rules="[rules.imageRule]"
                 :show-size="1000"
               ></v-file-input>
               <v-btn
@@ -296,6 +297,7 @@ export default {
         required: (v) => !!v || 'input is required',
         minLengthName: (v) => v.length <= 15 || 'the maximum number of characters entered',
         onlyDigits: (v) => !/\D/g.test(v) || 'input should consist only of digits',
+        imageRule: (v) => !v || v.size < 2000000 || 'Image size should be less than 2 MB!',
       },
       items: [
         {

@@ -14,6 +14,7 @@ const state = {
 const getters = {
   offlineCoursesEndpoint: (state, getters, rootState) => `${rootState.host}/course/offline/`,
   createOfflineCourseEndpoint: (state, getters, rootState) => `${rootState.host}/course/new/offline/`,
+  editOfflineCourseEndpoint: (state, getters, rootState) => `${rootState.host}/course/offline/`,
 };
 
 const mutations = {
@@ -31,8 +32,12 @@ const mutations = {
   OFFLINE_COURSE_BY_ID: (state, { offlineCourse }) => {
     state.offlineCourseById = offlineCourse;
   },
+  UPDATE_OFFLINE_COURSE: (state, { updatedOfflineCourse }) => {
+    state.offlineCourseById = updatedOfflineCourse;
+  },
   OFFLINE_COURSE_BY_ID_CLEAR: (state) => {
     state.offlineCourseById = null;
+    state.newOfflineCourse = null;
   },
   ERROR: (state, payload) => {
     state.offlineError = payload;
@@ -95,8 +100,42 @@ const actions = {
       commit('ERROR', error);
     }
   },
-  async CLEAR_ONLINE_COURSE_BY_ID({ commit }) {
-    commit('ONLINE_COURSE_BY_ID_CLEAR');
+  async EDIT_OFFLINE_COURSE({
+    state, getters, commit, dispatch,
+  }, { data, id }) {
+    commit('LOADING', true);
+    commit('ERROR', null);
+    const { updatedOfflineCourse, error } = await (await fetch(`${getters.editOfflineCourseEndpoint}${id}`, {
+      method: 'PUT',
+      body: data,
+    })).json();
+    if (!error) {
+      commit('UPDATE_OFFLINE_COURSE', { updatedOfflineCourse });
+      commit('LOADING', false);
+    } else {
+      commit('LOADING', false);
+      commit('ERROR', error);
+    }
+  },
+  async REMOVE_OFFLINE_COURSE({
+    state, getters, commit, dispatch,
+  }, id) {
+    commit('LOADING', true);
+    commit('ERROR', null);
+    const { deleted, error } = await (await fetch(`${getters.editOfflineCourseEndpoint}${id}`, {
+      method: 'DELETE',
+    })).json();
+    if (!error) {
+      // commit('UPDATE_OFFLINE_COURSE', { updatedOfflineCourse });
+      dispatch('GET_OFFLINE_COURSES');
+      commit('LOADING', false);
+    } else {
+      commit('LOADING', false);
+      commit('ERROR', error);
+    }
+  },
+  async CLEAR_OFFLINE_COURSE_BY_ID({ commit }) {
+    commit('OFFLINE_COURSE_BY_ID_CLEAR');
   },
 };
 
