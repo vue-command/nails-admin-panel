@@ -14,19 +14,19 @@
     </v-breadcrumbs>
     <Spinner v-if="loading" />
     <CourseCardDetail
-      v-if="!loading && course && !showForm"
-      :category="course.category"
-      :days="course.accessDays"
-      :nameOfCourse="course.nameOfCourse"
-      :subtitle="course.subtitle"
-      :price="course.price"
-      :author="course.author"
-      :instructor="course.instructor"
-      :infoBonus="course.infoBonus"
-      :courseSuitable="course.thisCourseIsSuitableFor"
-      :description="course.description"
-      :dateOfCourses="course.dateOfCourses"
-      :url="checkUrl(course)"
+      v-if="!loading && currentOfflineCourse && !showForm"
+      :category="currentOfflineCourse.category"
+      :days="currentOfflineCourse.accessDays"
+      :nameOfCourse="currentOfflineCourse.nameOfCourse"
+      :subtitle="currentOfflineCourse.subtitle"
+      :price="currentOfflineCourse.price"
+      :author="currentOfflineCourse.author"
+      :instructor="currentOfflineCourse.instructor"
+      :infoBonus="currentOfflineCourse.infoBonus"
+      :courseSuitable="currentOfflineCourse.thisCourseIsSuitableFor"
+      :description="currentOfflineCourse.description"
+      :dateOfCourses="currentOfflineCourse.dateOfCourses"
+      :url="checkUrl(currentOfflineCourse)"
       :type="typeCourse"
       :coverImageSrc="coverImageSrc"
       btnTitle="BUY THIS COURSE"
@@ -36,7 +36,7 @@
       v-if="showForm"
       :editCourseById="editCourseById"
       :typeCourse="typeCourse"
-      :course="course"
+      :course="currentOfflineCourse"
       :back="backForm"
       :coverImageSrc="coverImageSrc"
       :courseId="courseId"
@@ -76,7 +76,7 @@ export default {
   data() {
     return {
       courseId: this.$route.params.courseid,
-      course: null,
+      // course: null,
       // ready: false,
       showForm: false,
       typeCourse: 'offline',
@@ -104,24 +104,24 @@ export default {
   computed: {
     ...mapState('offlineCourses', [
       'offlineCourses',
-      'offlineCourseById',
+      'currentOfflineCourse',
       'totalOfflineCourses',
       'loading',
     ]),
   },
   watch: {
-    offlineCourseById(val) {
+    currentOfflineCourse(val) {
       if (!val) return;
-      this.fillingInTheFields();
-      this.course = val;
       this.showForm = false;
+      this.fillingInTheFields();
+      // this.course = val;
     },
   },
   methods: {
     fillingInTheFields() {
       // this.items[0].text = `${this.user.firstName} cabinet`;
       // this.items[1].text = `${this.user.firstName} courses`;
-      this.items[2].text = this.offlineCourseById.nameOfCourse;
+      this.items[2].text = this.currentOfflineCourse.nameOfCourse;
     },
     checkUrl(card) {
       let img;
@@ -142,19 +142,14 @@ export default {
     backForm() {
       this.showForm = false;
     },
-    // goToVideos() {
-    //   if (this.$route.name !== 'offline-course-videos')
-    // { this.$router.push({ name: 'online-course-videos' }); }
-    // },
-    // eslint-disable-next-line consistent-return
   },
   created() {
     // this.fillingInTheFields();
-    if (!this.offlineCourseById) {
+    if (!this.currentOfflineCourse) {
       this.$store.dispatch('offlineCourses/GET_OFFLINE_COURSE_BY_ID', this.courseId);
     } else {
-      this.items[2].text = this.offlineCourseById.nameOfCourse;
-      this.course = this.offlineCourseById;
+      this.items[2].text = this.currentOfflineCourse.nameOfCourse;
+      // this.course = this.currentOfflineCourse;
       // this.ready = true
     }
   },

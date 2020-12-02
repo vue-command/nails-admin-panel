@@ -3,7 +3,7 @@
 /* eslint-disable no-shadow */
 const state = {
   offlineCourses: [],
-  offlineCourseById: null,
+  currentOfflineCourse: null,
   // currentVideo: null,
   totalOfflineCourses: 0,
   newOfflineCourse: null,
@@ -30,13 +30,13 @@ const mutations = {
     state.totalOfflineCourses = total;
   },
   OFFLINE_COURSE_BY_ID: (state, { offlineCourse }) => {
-    state.offlineCourseById = offlineCourse;
+    state.currentOfflineCourse = offlineCourse;
   },
   UPDATE_OFFLINE_COURSE: (state, { updatedOfflineCourse }) => {
-    state.offlineCourseById = updatedOfflineCourse;
+    state.currentOfflineCourse = updatedOfflineCourse;
   },
   OFFLINE_COURSE_BY_ID_CLEAR: (state) => {
-    state.offlineCourseById = null;
+    state.currentOfflineCourse = null;
     state.newOfflineCourse = null;
   },
   ERROR: (state, payload) => {

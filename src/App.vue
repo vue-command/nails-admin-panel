@@ -4,18 +4,28 @@
       <component :is="layout">
         <!-- <router-view /> -->
       </component>
-      <notifications group="foo" position="top center" />
+      <!-- <notifications group="foo" position="top center" /> -->
     </v-main>
   </v-app>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import CoursesLayout from './Layouts/CoursesLayout.vue';
 import ShopLayout from './Layouts/ShopLayout.vue';
 import DefaultLayout from './Layouts/DefaultLayout.vue';
 
 export default {
   name: 'App',
+  data() {
+    return {
+      snackbar: false,
+      text: '',
+      timeout: 8000,
+      color: 'green',
+    };
+  },
   components: {
     CoursesLayout,
     ShopLayout,
@@ -24,6 +34,22 @@ export default {
   computed: {
     layout() {
       return `${this.$route.meta?.layout || 'default'}-layout`;
+    },
+    ...mapState('offlineCourses', ['offlineError']),
+    ...mapState('onlineCourses', ['onlineError']),
+  },
+  watch: {
+    offlineError(val) {
+      if (!val) return;
+      this.snackbar = true;
+      this.text = val;
+      this.color = 'red';
+    },
+    onlineError(val) {
+      if (!val) return;
+      this.snackbar = true;
+      this.text = val;
+      this.color = 'red';
     },
   },
 };
