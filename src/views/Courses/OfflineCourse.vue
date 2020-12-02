@@ -31,6 +31,8 @@
       :coverImageSrc="coverImageSrc"
       btnTitle="BUY THIS COURSE"
       :btnCallBack="null"
+      :isPaid="true"
+      :isPublished="true"
     />
     <EditCourseForm
       v-if="showForm"

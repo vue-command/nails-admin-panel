@@ -33,8 +33,8 @@
                 label="Name of Course"
                 outlined
                 dark
-                :counter="27"
-                maxlength="27"
+                :counter="40"
+                maxlength="40"
               ></v-text-field>
 
               <v-text-field
@@ -43,8 +43,8 @@
                 label="Subtitle"
                 outlined
                 dark
-                :counter="32"
-                maxlength="32"
+                :counter="40"
+                maxlength="40"
               ></v-text-field>
               <!-- <div v-if="typeCourse === 'offline'"> -->
               <div
