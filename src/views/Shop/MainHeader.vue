@@ -1,15 +1,9 @@
 <template>
   <v-row>
     <v-col>
-      <v-row>
-        <v-col cols="12">
-          <h1>SHOP MANAGEMENT</h1>
-        </v-col>
-      </v-row>
-
       <v-row class="pa-5">
         <v-col cols="12">
-          <v-card v-if='categories'>
+          <v-card v-if='categories' flat>
             <v-row>
               <v-col cols="12" lg="6" class="pa-5">
                 <v-select
@@ -18,31 +12,31 @@
                   item-text="name"
                   item-value="_id"
                   label="Category"
-                  :value="selectedCategory"
-                  @change="selectCategory"
+                  @change="setSelectCategory"
                   >Choose category</v-select
                 >
               </v-col>
-              <v-col cols="12" lg="6" class="pa-5" v-if='selectedCategory'>
+              <v-col cols="12" lg="6" class="pa-5" v-if='activeCategory'>
                 <v-select
-                  :disabled='!selectedCategory'
+                  v-model="activeSubcategory"
+                  :disabled='!activeCategory'
                   outlined
-                  :items="selectedCategory.subcategories"
+                  
+                  :items="[{ name: 'Show all', _id: activeCategory._id }, ...activeCategory.subcategories ]"
                   item-text="name"
                   item-value="_id"
                   label="Subcategory"
-                  :value="selectedCategory"
-                  @change="selectCategory"
+                  @change="setSelectSubCategory"
                   >Choose subcategory</v-select
                 >
               </v-col>
             </v-row>
-            <v-row>
               <v-col>
                 <v-radio-group
                   :value="showCommodities"
                   @change="changeValue"
                   row
+                  justify-center
                 >
                   <v-radio label="All" value="withHidden"></v-radio>
                   <v-radio label="Hidden only" value="hiddenOnly"></v-radio>
@@ -50,13 +44,6 @@
                 </v-radio-group>
                 <hr />
               </v-col>
-              </v-row>
-              <!--
-              <v-col cols="12" lg="4" class="pa-5">
-                <v-text-field v-model="newCategoryName" label="New category" outlined></v-text-field>
-                <v-btn :disabled="!newCategoryName">ADD NEW CATEGORY</v-btn>
-              </v-col>
-              -->
             <v-row>
               <v-col
                 cols="12"
@@ -71,9 +58,6 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-col cols="12">
-        <v-row></v-row>
-      </v-col>
     </v-col>
   </v-row>
 </template>
@@ -85,30 +69,35 @@ export default {
   data() {
     return {
       newCategoryName: '',
+      activeCategory: null,
+      activeSubcategory: null
     };
   },
   name: 'MainHeader',
   props: [
-    'modifyHandler',
     'selectCategory',
-    'selectedCategory',
     'showCommodities',
     'setCommoditiesToShowValue',
+    'modifyHandler'
   ],
   computed: {
     ...mapState('shop', [
-      'categories',
+      'fullListOfCategories',
       'commodities',
       'totalCommodities',
-      'activeCategory',
+      'categories',
     ]),
-    showValue() {
-      return this.showCommodities;
-    },
   },
   methods: {
+    setSelectCategory (val){
+      this.activeCategory = this.fullListOfCategories.find(el => el._id === val)
+      this.activeSubcategory = null
+      this.selectCategory(val)
+    },
+    setSelectSubCategory(val) {
+      this.selectCategory(val)
+    },
     changeValue(val) {
-      this.$store.dispatch('shop/SET_ACTIVE_CATEGORY', val)
       this.setCommoditiesToShowValue(val);
     },
   },

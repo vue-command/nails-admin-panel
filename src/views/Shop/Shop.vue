@@ -1,6 +1,6 @@
 <template>
-  <v-container v-if="!selectedItemToModify">
-    <v-card>
+  <v-container>
+    <v-card min-height='850px' height='100%'>
       <MainHeader
         :selectCategory="selectCategory"
         :modifyHandler="modifyHandler"
@@ -15,7 +15,7 @@
             v-if="!isLoading"
             :cardClickHandler="modifyHandler"
             :commodities="commodities"
-            :getCards="getCards"
+            :showCommodities="showCommodities"
             :selectedCategory="selectedCategory"
             :totalPages="totalPages"
             :currentPage="currentPage"
@@ -26,19 +26,6 @@
       </v-row>
     </v-card>
   </v-container>
-  <ModifyProduct
-    v-else
-    :productId="selectedItemToModify"
-    :clearHandler="clearSelectedItemToModify"
-    :createCommodity="createCommodity"
-    :updateCommodity="updateCommodity"
-    :uploadImages="uploadImages"
-    :deleteImage="deleteImage"
-    :deleteCommodity="deleteCommodity"
-    :getDataMain="getData"
-    :modifyHandler="modifyHandler"
-    :noImage="noImage"
-  />
 </template>
 <style scoped>
 .home {
@@ -59,28 +46,20 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'ShopEdit',
-  props: [
-    'createCommodity',
-    'deleteCommodity',
-    'uploadImages',
-    'deleteImage',
-    'createCategory',
-    'updateCommodity',
-    'noImage',
-  ],
   data() {
     return {
       selectedCategory: null,
-      totalItems: 0,
-      selectedItemToModify: null,
       showCommodities: 'all',
       currentPage: 1,
       isLoading: false,
     };
   },
   watch: {
-    showCommodities(newVal) {
-      this.getData();
+    async showCommodities(newVal) {
+      if( !this.selectedCategory) return
+      this.isLoading = true;
+      await this.$store.dispatch('shop/GET_SHOP_COMMODITIES', { categoryId: this.selectedCategory, skip: this.skip, show: this.showCommodities });
+      this.isLoading = false;
     },
   },
   computed: {
@@ -91,7 +70,7 @@ export default {
       'activeCategory',
     ]),
     totalPages() {
-      return Math.ceil(this.totalItems / 20);
+      return Math.ceil(this.totalCommodities / 20);
     },
     skip() {
       return this.currentPage * 20 - 20;
@@ -100,38 +79,34 @@ export default {
   components: { CardsList, MainHeader, ModifyProduct, Spiner },
   methods: {
     async getData() {
+      this.isLoading = true;
       !this.categories &&
         (await this.$store.dispatch('shop/GET_SHOP_CATEGORIES'));
       if (this.categories) {
-        console.log('here');
         !this.activeCategory &&
-          this.$store.dispatch('shop/SET_NEW_CATEGORY', {
+          await this.$store.dispatch('shop/SET_NEW_CATEGORY', {
             category: this.categories[0],
           });
       }
+      this.isLoading = false
     },
     async getCards(categoryId, skip) {
       this.isLoading = true;
-      const items = await (
-        await fetch(
-          `https://nails-australia-staging.herokuapp.com/shop/commodities/${categoryId}?skip=${skip ||
-            0}&withHidden=${this.showCommodities}`,
-        )
-      ).json();
-      this.commodities = (await items.commodities) || [];
-      this.totalItems = (await items.total) || 0;
+      await this.$store.dispatch('shop/GET_SHOP_COMMODITIES', { categoryId: categoryId, skip: skip || this.skip, show: this.showCommodities });
       this.isLoading = await false;
     },
     selectCategory(categoryId) {
       this.selectedCategory = categoryId;
       this.currentPage = 1;
-      this.getCards(categoryId);
+      this.$store.dispatch('shop/GET_SHOP_COMMODITIES', {categoryId, skip: 0, show: this.showCommodities});
     },
     modifyHandler(id) {
-      this.selectedItemToModify = id;
-    },
-    clearSelectedItemToModify() {
-      this.selectedItemToModify = null;
+      this.$router.push({
+        name: 'CommodityEdit',
+        params: {
+        commodityId: id
+        }
+      })
     },
     setPage(page) {
       this.currentPage = page;
@@ -144,5 +119,8 @@ export default {
   created() {
     this.getData();
   },
+  beforeDestroy() {
+    // this.$store.commit('shop/CLEAR_COMMODITIES')
+  }
 };
 </script>

@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <v-row class="justify-end">
-          <v-btn class="ma-2" color="red darken-2" dark @click="clearHandler">
+          <v-btn class="ma-2" color="red darken-2" dark @click="goBack()">
             <v-icon dark left>mdi-close</v-icon>Close
           </v-btn>
         </v-row>
@@ -79,7 +79,6 @@
                         placeholder="Select your file"
                         prepend-icon="mdi-paperclip"
                         outlined
-
                         :show-size="1000"
                         :clearable="false"
                       ></v-file-input>
@@ -159,29 +158,29 @@
             </v-col>
           </v-row>
 
-          <v-col cols="12" >
-          <v-row justify="space-around">
-            <v-btn
-              color="buttons"
-              outlined
-              large
-              min-width="90"
-              class="yellow-button mt-4"
-              @click="publishHandler"
-              :disabled="!currentProduct"
-              >{{
-                this.isPublished ? 'Hide commodity' : 'Publish commodity'
-              }}</v-btn
-            >
-            <v-btn
-              color="error"
-              large
-              min-width="90"
-              class="mt-4"
-              @click="showDialog = true"
-              :disabled="!currentProduct"
-              >DELETE COMMODITY</v-btn
-            >
+          <v-col cols="12">
+            <v-row justify="space-around">
+              <v-btn
+                color="buttons"
+                outlined
+                large
+                min-width="90"
+                class="yellow-button mt-4"
+                @click="publishHandler"
+                :disabled="!currentProduct"
+                >{{
+                  this.isPublished ? 'Hide commodity' : 'Publish commodity'
+                }}</v-btn
+              >
+              <v-btn
+                color="error"
+                large
+                min-width="90"
+                class="mt-4"
+                @click="showDialog = true"
+                :disabled="!currentProduct"
+                >DELETE COMMODITY</v-btn
+              >
             </v-row>
           </v-col>
         </v-row>
@@ -232,11 +231,12 @@
             <v-col cols="2" md="0"></v-col>
 
             <v-col cols="12" sm="12" md="5" xl="4" lg="4" class="px-0">
-              <v-col cols="12" class="gray-font px-0 text-start" >
+              <v-col cols="12" class="gray-font px-0 text-start">
                 <h2 class="dark-gray-font">{{ name || 'Name' }}</h2>
                 <h4>{{ brand }}</h4>
                 <div class="caption">
-                  <h2 class="speciﬁcations">{{speciﬁcations.trim() || 'Specification'}}
+                  <h2 class="speciﬁcations">
+                    {{ speciﬁcations.trim() || 'Specification' }}
                   </h2>
                 </div>
                 <div class="price">
@@ -338,14 +338,13 @@
 </style>
 
 <script>
-import 'nails-shop-card'
-import 'nails-shop-card/dist/nails-shop-card.css'
+import 'nails-shop-card';
+import 'nails-shop-card/dist/nails-shop-card.css';
+import { mapState } from 'vuex';
 
 export default {
   name: 'ModifyProduct',
   props: [
-    'productId',
-    'clearHandler',
     'createCommodity',
     'Handler',
     'uploadImages',
@@ -353,11 +352,10 @@ export default {
     'createCategory',
     'updateCommodity',
     'getDataMain',
-    'modifyHandler',
     'deleteCommodity',
-    'noImage'
+    'noImage',
   ],
-  data () {
+  data() {
     return {
       showDialog: false,
       valid: true,
@@ -369,83 +367,74 @@ export default {
       isPublished: false,
       price: 0,
       photos: [],
-      categories: [],
       currentProduct: null,
       rules: {
-        required: (v) => !!v || 'input is required'
+        required: (v) => !!v || 'input is required',
       },
       images: [],
       previewFile: null,
       previewImageLink: this.noImage,
-      activeCard: this.noImage
-    }
+      activeCard: this.noImage,
+      productId: this.$route.params.commodityId
+    };
   },
   watch: {
-    previewFile (newVal) {
+    previewFile(newVal) {
       if (newVal) {
-        this.previewImageLink = URL.createObjectURL(newVal)
+        this.previewImageLink = URL.createObjectURL(newVal);
       }
     },
-    currentProduct (newVal) {
-      this.category = newVal.categoryId
-      this.brand = newVal.brand
-      this.name = newVal.name
-      this.speciﬁcations = newVal.speciﬁcations
-      this.codeOfProduct = newVal.codeOfProduct
-      this.price = newVal.price
-      this.images = newVal.images
-      this.isPublished = newVal.isPublished
-      this.previewImageLink = newVal.previewImage[0].link
-      this.previewImage = newVal.previewImage
+    commodity(newVal) {
+      this.category = newVal.categoryId;
+      this.brand = newVal.brand;
+      this.name = newVal.name;
+      this.speciﬁcations = newVal.speciﬁcations;
+      this.codeOfProduct = newVal.codeOfProduct;
+      this.price = newVal.price;
+      this.images = newVal.images;
+      this.isPublished = newVal.isPublished;
+      this.previewImageLink = newVal.previewImage[0].link;
+      this.previewImage = newVal.previewImage;
       this.activeCard =
-        (newVal.images[0] && newVal.images[0].link) ||
-        this.noImage
-      if (newVal._id) {
-        this.modifyHandler(newVal._id)
-      }
-    }
+        (newVal.images[0] && newVal.images[0].link) || this.noImage;
+    },
   },
   methods: {
-    async publishHandler () {
+    goBack() {
+      this.$router.go(-1)
+    },
+    async publishHandler() {
       try {
-        const commodityToUpdate = this.currentProduct
-        delete commodityToUpdate.images
+        const commodityToUpdate = this.currentProduct;
+        delete commodityToUpdate.images;
         const updatedCommodity = await this.updateCommodity(this.productId, {
           ...commodityToUpdate,
-          isPublished: !this.isPublished
-        })
+          isPublished: !this.isPublished,
+        });
         if (updatedCommodity) {
-          this.currentProduct = updatedCommodity
-          this.getDataMain()
+          this.currentProduct = updatedCommodity;
+          this.getDataMain();
         }
       } catch (e) {
         this.$notify({
           group: 'foo',
-          text: 'Publishing error'
-        })
+          text: 'Publishing error',
+        });
       }
     },
-    async getData () {
-      const response = await (
-        await fetch(
-          'https://nails-australia-staging.herokuapp.com/shop/categories?subbs=true&withId=true'
-        )
-      ).json()
-      this.categories = await response.categories.flat()
+    async getData() {
+      if(!this.categories) await this.$store.dispatch('shop/GET_SHOP_CATEGORIES')
     },
-    async getCommodity (id) {
-      const response = await (
-        await fetch(
-          `https://nails-australia-staging.herokuapp.com/shop/commodity/${id}`
-        )
-      ).json()
-      this.currentProduct = await response.commodity[0]
+    async getCommodity(id) {
+      this.$store.dispatch('shop/GET_COMMODITY', {
+        commodityId: id
+      })
     },
-    setPhoto (val, toggle) {
-      toggle()
-      this.activeCard = val.link
+    setPhoto(val, toggle) {
+      toggle();
+      this.activeCard = val.link;
     },
-    async submitHandler () {
+    async submitHandler() {
       const data = {
         categoryId: this.category,
         name: this.name,
@@ -453,92 +442,100 @@ export default {
         price: Number(this.price).toFixed(2),
         codeOfProduct: this.codeOfProduct,
         brand: this.brand,
-        isPublished: this.isPublished
-      }
+        isPublished: this.isPublished,
+      };
       if (!this.isEditMode) {
-        data.previewFile = this.previewFile
-        const createdCommodity = await this.createCommodity(data)
+        data.previewFile = this.previewFile;
+        const createdCommodity = await this.createCommodity(data);
         if (createdCommodity) {
-          this.currentProduct = createdCommodity
-          this.getDataMain()
+          this.currentProduct = createdCommodity;
         }
       } else {
         if (this.previewFile) {
-          data.previewFile = this.previewFile
+          data.previewFile = this.previewFile;
         } else {
-          data.previewImage = this.previewImage
+          data.previewImage = this.previewImage;
         }
-        const updatedCommodity = await this.updateCommodity(this.productId, data)
+        const updatedCommodity = await this.updateCommodity(
+          this.productId,
+          data,
+        );
         if (updatedCommodity) {
-          this.currentProduct = updatedCommodity
-          this.getDataMain()
+          this.currentProduct = updatedCommodity;
         }
       }
     },
-    cancelHandler () {
-      this.previewFile = null
-      if (!this.currentProduct) return
-      this.category = this.currentProduct.categoryId
-      this.brand = this.currentProduct.brand
-      this.name = this.currentProduct.name
-      this.speciﬁcations = this.currentProduct.speciﬁcations
-      this.codeOfProduct = this.currentProduct.codeOfProduct
-      this.price = this.currentProduct.price
-      this.images = this.currentProduct.images
-      this.previewImageLink = this.currentProduct.previewImage[0].link
-      this.previewImage = this.currentProduct.previewImage
-      this.isPublished = this.currentProduct.isPublished
+    cancelHandler() {
+      this.previewFile = null;
+      if (!this.commodity) return;
+      this.category = this.commodity.categoryId;
+      this.brand = this.commodity.brand;
+      this.name = this.commodity.name;
+      this.speciﬁcations = this.commodity.speciﬁcations;
+      this.codeOfProduct = this.commodity.codeOfProduct;
+      this.price = this.commodity.price;
+      this.images = this.commodity.images;
+      this.previewImageLink = this.commodity.previewImage[0].link;
+      this.previewImage = this.commodity.previewImage;
+      this.isPublished = this.commodity.isPublished;
       this.activeCard =
-        (this.currentProduct.images[0] && this.currentProduct.images[0].link) ||
-        this.noImage
+        (this.commodity.images[0] && this.commodity.images[0].link) ||
+        this.noImage;
     },
-    async previewFilesHandler (e) {
+    async previewFilesHandler(e) {
       const updatedCommodity = await this.uploadImages(
         this.productId,
-        e.target.files
-      )
+        e.target.files,
+      );
       if (updatedCommodity) {
-        this.currentProduct = updatedCommodity
+        this.currentProduct = updatedCommodity;
       }
     },
-    async deleteImageHandler (img) {
-      const isDeleted = await this.deleteImage(img._id)
+    async deleteImageHandler(img) {
+      const isDeleted = await this.deleteImage(img._id);
       if (isDeleted) {
-        this.images = this.images.filter((el) => el._id !== img._id)
+        this.images = this.images.filter((el) => el._id !== img._id);
       }
     },
-    async deleteCommodityHandler () {
-      const isDeleted = await this.deleteCommodity(this.productId)
+    async deleteCommodityHandler() {
+      const isDeleted = await this.deleteCommodity(this.productId);
       if (isDeleted) {
-        this.getDataMain()
-        this.clearHandler()
+        this.getDataMain();
+        this.clearHandler();
       }
-    }
+    },
   },
   computed: {
-    isEditMode () {
-      return this.productId !== 'new'
+    ...mapState('shop', [
+      'fullListOfCategories',
+      'commodity',
+      'totalCommodities',
+      'categories',
+    ]),
+    isEditMode() {
+      return this.productId !== 'new';
     },
-    isSaveDisabled () {
-      let isDisabled = true
-      if (this.isEditMode) isDisabled = Boolean(!this.valid)
+    isSaveDisabled() {
+      let isDisabled = true;
+      if (this.isEditMode) isDisabled = Boolean(!this.valid);
       else {
         if (this.valid) {
-          isDisabled = !this.previewFile
+          isDisabled = !this.previewFile;
         }
       }
-      return isDisabled
-    }
+      return isDisabled;
+    },
   },
-  created () {
-    this.getData()
+  created() {
+    this.getData();
     if (this.isEditMode) {
-      this.getCommodity(this.productId)
+      this.getCommodity(this.productId);
     }
-    window.onbeforeunload = () => 'Are you sure you want to leave?'
+    window.onbeforeunload = () => 'Are you sure you want to leave?';
   },
-  beforeDestroy () {
-    window.onbeforeunload = () => null
-  }
-}
+  beforeDestroy() {
+    this.$store.commit('shop/CLEAR_COMMODITY')
+    window.onbeforeunload = () => null;
+  },
+};
 </script>
