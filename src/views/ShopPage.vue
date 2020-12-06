@@ -11,11 +11,11 @@
 </template>
 
 <script>
-import 'nails-shop-module';
-import 'nails-shop-module/dist/nails-shop-module.css';
+import Shop from './Shop/Shop.vue';
 
 export default {
   name: 'ShopPage',
+  components: { Shop },
   data() {
     return {
       // eslint-disable-next-line global-require

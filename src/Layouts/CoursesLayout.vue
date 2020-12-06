@@ -1,18 +1,16 @@
 <template>
-  <div>
-    <!-- <v-btn
+  <!-- <v-btn
       v-if="coursesName.includes(this.$route.name)"
       @click="goTo('Home')"
       class="ma-8"
       ><v-img src="img/home.svg"
     /></v-btn> -->
-    <!-- <v-btn
+  <!-- <v-btn
       v-if="coursesName.includes(this.$route.name)"
       @click="goTo('courses')"
       >Courses</v-btn
     > -->
-    <router-view />
-  </div>
+  <router-view />
 </template>
 <script>
 export default {
@@ -21,7 +19,7 @@ export default {
   }),
   methods: {
     goTo(namePage) {
-      this.$router.push({ name: namePage });
+      if (this.$route.name !== namePage) this.$router.push({ name: namePage });
     },
   },
   beforeCreate() {
