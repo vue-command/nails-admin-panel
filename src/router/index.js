@@ -84,13 +84,14 @@ const routes = [
       /* webpackChunkName: "online-course-page" */ '@/views/Courses/OfflineCourse.vue'
     ),
   },
-  { path: '/admin/:hash', redirect: '/' },
+  // { path: '/admin/:hash', redirect: '/' },
   {
     path: '*',
-    name: 'page-not-found',
-    component: () => import(
-      /* webpackChunkName: "page-not-found" */ '@/views/PageNotFound.vue'
-    ),
+    redirect: '/',
+    // name: 'page-not-found',
+    // component: () => import(
+    //   /* webpackChunkName: "page-not-found" */ '@/views/PageNotFound.vue'
+    // ),
   },
 ];
 
