@@ -12,7 +12,7 @@
         </v-breadcrumbs-item>
       </template>
     </v-breadcrumbs>
-    <Spinner v-if="loading"/>
+    <Spinner v-if="loading" />
     <CourseCardDetail
       v-if="!loading && onlineCourseById"
       :category="onlineCourseById.category"
@@ -31,8 +31,11 @@
       :coverImageSrc="coverImageSrc"
       btnTitle="BUY THIS COURSE"
       :btnCallBack="null"
+      :isPaid="onlineCourseById.isPaid"
+      :isPublished="onlineCourseById.isPublished"
     />
     <div
+      v-if="!loading && onlineCourseById"
       class="d-flex flex-column align-center flex-sm-row justify-sm-center mt-8"
     >
       <v-btn
@@ -42,8 +45,19 @@
         large
         dark
         min-width="160"
-        class="yellow-button"
+        class="yellow-button mb-4 mb-sm-0 mr-0 mr-sm-4"
         >Videos</v-btn
+      >
+      <v-btn
+        @click="$store.dispatch('onlineCourses/PUBLISH', courseId)"
+        :disabled="!onlineCourseById.isPaid || onlineCourseById.isPublished"
+        color="buttons"
+        rounded
+        large
+        dark
+        min-width="160"
+        class="yellow-button"
+        >publish</v-btn
       >
     </div>
   </div>
@@ -89,7 +103,12 @@ export default {
     };
   },
   computed: {
-    ...mapState('onlineCourses', ['onlineCourses', 'onlineCourseById', 'totalOnlineCourses', 'loading']),
+    ...mapState('onlineCourses', [
+      'onlineCourses',
+      'onlineCourseById',
+      'totalOnlineCourses',
+      'loading',
+    ]),
   },
   watch: {
     onlineCourseById() {
@@ -115,10 +134,11 @@ export default {
       return img;
     },
     goToVideos() {
-      if (this.$route.name !== 'online-course-videos') { this.$router.push({ name: 'online-course-videos' }); }
+      if (this.$route.name !== 'online-course-videos') {
+        this.$router.push({ name: 'online-course-videos' });
+      }
     },
     // eslint-disable-next-line consistent-return
-
   },
   created() {
     this.$store.dispatch('onlineCourses/GET_ONLINE_COURSE_BY_ID', this.courseId);

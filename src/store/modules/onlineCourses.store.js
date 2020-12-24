@@ -1,6 +1,6 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
+const { getData, patchData } = require('@/helpers').default;
+
 const state = {
   onlineCourses: [],
   onlineCourseById: null,
@@ -11,8 +11,6 @@ const state = {
 };
 
 const getters = {
-  onlineCoursesEndpoint: (state, getters, rootState) => `${rootState.host}/course/online/`,
-  videoCourseEndpoint: (state, getters, rootState) => `${rootState.host}/course/online/findvideo/`,
 };
 
 const mutations = {
@@ -42,52 +40,80 @@ const mutations = {
 };
 
 const actions = {
-  async GET_ONLINE_COURSES({ state, getters, commit }, string) {
+  async GET_ONLINE_COURSES({ commit }, string) {
     commit('LOADING', true);
-    commit('ERROR', null);
-    const { onlineCourses, total, error } = await (await fetch(`${getters.onlineCoursesEndpoint}${string}`)).json();
+    const { onlineCourses, total, error } = await getData(`course/online/${string}`);
     if (!error) {
-      commit('ONLINE_COURSES', { onlineCourses, total });
-      commit('LOADING', false);
+      commit('ONLINE_COURSES', { onlineCourses: onlineCourses ?? [], total });
     } else {
-      commit('LOADING', false);
-      commit('ERROR', error);
+      commit('ERROR', {
+        error: true,
+        errorType: 'Get online courses',
+        errorMessage: 'Process failed. Data was not received',
+      }, { root: true });
     }
+    commit('LOADING', false);
   },
-  async GET_MORE_ONLINE_COURSES({ state, getters, commit }, { string, skip }) {
-    // commit('LOADING', true);
-    commit('ERROR', null);
-    const { onlineCourses, total, error } = await (await fetch(`${getters.onlineCoursesEndpoint}${string}&skip=${skip}`)).json();
+  async GET_MORE_ONLINE_COURSES({ commit }, { string, skip }) {
+    commit('LOADING', true);
+    const { onlineCourses, total, error } = await getData(`course/online/${string}&skip=${skip}`);
     if (!error) {
-      // commit('LOADING', false);
       commit('MORE_ONLINE_COURSES', { onlineCourses, total });
     } else {
-      // commit('LOADING', false);
-      commit('ERROR', error);
+      commit('ERROR', {
+        error: true,
+        errorType: 'Get online courses',
+        errorMessage: 'Process failed. Data was not received',
+      }, { root: true });
     }
+    commit('LOADING', false);
   },
-  async GET_ONLINE_COURSE_BY_ID({ state, getters, commit }, id) {
+  async GET_ONLINE_COURSE_BY_ID({ commit }, id) {
     commit('LOADING', true);
-    commit('ERROR', null);
-    const { onlineCourse, error } = await (await fetch(`${getters.onlineCoursesEndpoint}${id}`)).json();
+    const { onlineCourse, error } = await getData(`course/online/${id}`);
     if (!error) {
       commit('ONLINE_COURSE_BY_ID', { onlineCourse });
-      commit('LOADING', false);
     } else {
-      commit('LOADING', false);
-      commit('ERROR', error);
+      commit('ERROR', {
+        error: true,
+        errorType: 'Get online course',
+        errorMessage: 'Process failed. Data was not received',
+      }, { root: true });
     }
+    commit('LOADING', false);
   },
-  async GET_ONLINE_COURSE_VIDEO_BY_ID({ state, getters, commit }, id) {
+  async GET_ONLINE_COURSE_VIDEO_BY_ID({ commit }, id) {
     commit('LOADING', true);
-    commit('ERROR', null);
-    const { video, error } = await (await fetch(`${getters.videoCourseEndpoint}${id}`)).json();
+    const { video, error } = await getData(`course/online/findvideo/${id}`);
     if (!error) {
       commit('ONLINE_COURSE_VIDEO_BY_ID', { video });
-      commit('LOADING', false);
     } else {
-      commit('LOADING', false);
-      commit('ERROR', error);
+      commit('ERROR', {
+        error: true,
+        errorType: 'Get online course video',
+        errorMessage: 'Process failed. Data was not received',
+      }, { root: true });
+    }
+    commit('LOADING', false);
+  },
+  async PUBLISH({ commit, dispatch }, id) {
+    const data = {
+      isPublished: true,
+    };
+    const response = await patchData(`course/online/set-published/${id}`, data);
+    if (!response.error) {
+      commit('MESSAGE', {
+        message: true,
+        messageType: 'Publish course',
+        messageText: 'Publishing course successfully',
+      }, { root: true });
+      dispatch('GET_ONLINE_COURSE_BY_ID', id);
+    } else {
+      commit('ERROR', {
+        error: true,
+        errorType: 'Publish course',
+        errorMessage: 'Publishing course error',
+      }, { root: true });
     }
   },
   async CLEAR_ONLINE_COURSE_BY_ID({ commit }) {

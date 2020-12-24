@@ -19,7 +19,7 @@
             <v-list-item-title>Home</v-list-item-title>
           </v-list-item>
 
-          <v-list-item   @click="goTo('offline-courses-page')">
+          <v-list-item @click="goTo('offline-courses-page')">
             <v-list-item-icon>
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
@@ -54,6 +54,8 @@
         <!-- <notifications group="foo" position="top center" /> -->
       </v-container>
     </v-main>
+    <error-message />
+    <simple-message />
   </v-app>
 </template>
 
@@ -68,10 +70,6 @@ export default {
   name: 'App',
   data() {
     return {
-      snackbar: false,
-      text: '',
-      timeout: 8000,
-      color: 'green',
       drawer: false,
       group: null,
     };
@@ -97,27 +95,15 @@ export default {
     group() {
       this.drawer = false;
     },
-    offlineError(val) {
-      if (!val) return;
-      this.snackbar = true;
-      this.text = val;
-      this.color = 'red';
-    },
-    onlineError(val) {
-      if (!val) return;
-      this.snackbar = true;
-      this.text = val;
-      this.color = 'red';
-    },
   },
 };
 </script>
 
-<style lang="scss">
+<style>
 html,
 body,
 .v-application {
-  font-family: 'Archivo Narrow' !important;
+  font-family: "Archivo Narrow" !important;
 }
 .main-content {
   min-height: calc(100vh - 64px);
@@ -139,18 +125,7 @@ a {
 .disabled-link {
   color: grey !important;
 }
-.vue-notification {
-  background-color: #fa0 !important;
-  padding: 5px;
-  margin: 10px 0 0 0;
-  font-size: 16px;
-  border-left: none;
-  text-align: center;
-  border-radius: 5px;
-  font-family: 'Archivo Narrow' !important;
-  font-weight: 700;
-  &.error {
-    background: #e54d42;
-  }
+.v-snack__content {
+  text-align: center !important;
 }
 </style>

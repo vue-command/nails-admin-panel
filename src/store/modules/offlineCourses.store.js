@@ -1,6 +1,10 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
+const {
+  getData, postData, putData, deleteData,
+} = require('@/helpers').default;
+
 const state = {
   offlineCourses: [],
   currentOfflineCourse: null,
@@ -8,13 +12,13 @@ const state = {
   totalOfflineCourses: 0,
   newOfflineCourse: null,
   loading: false,
-  offlineError: null,
 };
 
 const getters = {
-  offlineCoursesEndpoint: (state, getters, rootState) => `${rootState.host}/course/offline/`,
-  createOfflineCourseEndpoint: (state, getters, rootState) => `${rootState.host}/course/new/offline/`,
-  editOfflineCourseEndpoint: (state, getters, rootState) => `${rootState.host}/course/offline/`,
+  // offlineCoursesEndpoint: (state, getters, rootState) => `${rootState.host}/course/offline/`,
+  // createOfflineCourseEndpoint: (state, getters, rootState)
+  // => `${rootState.host}/course/new/offline/`,
+  // editOfflineCourseEndpoint: (state, getters, rootState) => `${rootState.host}/course/offline/`,
 };
 
 const mutations = {
@@ -39,100 +43,120 @@ const mutations = {
     state.currentOfflineCourse = null;
     state.newOfflineCourse = null;
   },
-  ERROR: (state, payload) => {
-    state.offlineError = payload;
-  },
   LOADING: (state, payload) => {
     state.loading = payload;
   },
 };
 
 const actions = {
-  async GET_OFFLINE_COURSES({ state, getters, commit }) {
+  async GET_OFFLINE_COURSES({ commit }) {
     commit('LOADING', true);
-    commit('ERROR', null);
-    const { offlineCourses, total, error } = await (await fetch(getters.offlineCoursesEndpoint))
-      .json();
+    // const { offlineCourses, total, error } = await (await fetch(getters.offlineCoursesEndpoint))
+    //   .json();
+    const { offlineCourses, total, error } = await getData('course/offline');
     if (!error) {
-      commit('OFFLINE_COURSES', { offlineCourses, total });
-      commit('LOADING', false);
+      commit('OFFLINE_COURSES', { offlineCourses: offlineCourses ?? [], total });
     } else {
-      commit('LOADING', false);
-      commit('ERROR', error);
+      commit('ERROR', {
+        error: true,
+        errorType: 'Get offline courses',
+        errorMessage: 'Process failed. Data was not received',
+      }, { root: true });
     }
+    commit('LOADING', false);
   },
   async GET_MORE_OFFLINE_COURSES({ state, getters, commit }, { skip }) {
-    // commit('LOADING', true);
-    commit('ERROR', null);
-    const { offlineCourses, total, error } = await (await fetch(`${getters.offlineCoursesEndpoint}?skip=${skip}`)).json();
+    commit('LOADING', true);
+    const { offlineCourses, total, error } = await getData(`course/offline?skip=${skip}`);
     if (!error) {
-      // commit('LOADING', false);
       commit('MORE_OFFLINE_COURSES', { offlineCourses, total });
     } else {
-      // commit('LOADING', false);
-      commit('ERROR', error);
+      commit('ERROR', {
+        error: true,
+        errorType: 'Get more offline courses',
+        errorMessage: 'Process failed. Data was not received',
+      }, { root: true });
     }
+    commit('LOADING', false);
   },
-  async GET_OFFLINE_COURSE_BY_ID({ state, getters, commit }, id) {
+  async GET_OFFLINE_COURSE_BY_ID({ commit }, id) {
     commit('LOADING', true);
-    commit('ERROR', null);
-    const { offlineCourse, error } = await (await fetch(`${getters.offlineCoursesEndpoint}${id}`)).json();
+    const { offlineCourse, error } = await getData(`course/offline/${id}`);
     if (!error) {
       commit('OFFLINE_COURSE_BY_ID', { offlineCourse });
-      commit('LOADING', false);
     } else {
-      commit('LOADING', false);
-      commit('ERROR', error);
+      commit('ERROR', {
+        error: true,
+        errorType: 'Get more offline courses',
+        errorMessage: 'Process failed. Data was not received',
+      }, { root: true });
     }
+    commit('LOADING', false);
   },
-  async CREATE_OFFLINE_COURSE({ state, getters, commit }, data) {
+  async CREATE_OFFLINE_COURSE({ getters, commit }, data) {
     commit('LOADING', true);
-    commit('ERROR', null);
-    const { newOfflineCourse, error } = await (await fetch(getters.createOfflineCourseEndpoint, {
-      method: 'POST',
-      body: data,
-    })).json();
+    const { newOfflineCourse, error } = await postData('course/new/offline', data);
     if (!error) {
       commit('NEW_OFFLINE_COURSE', { newOfflineCourse });
-      commit('LOADING', false);
+      commit('MESSAGE', {
+        message: true,
+        messageType: 'Creating course',
+        messageText: 'Creating offline course successfully',
+      }, { root: true });
     } else {
-      commit('LOADING', false);
-      commit('ERROR', error);
+      commit('ERROR', {
+        error: true,
+        errorType: 'Create offline course',
+        errorMessage: 'Process failed. Data was not received',
+      }, { root: true });
     }
+    commit('LOADING', false);
   },
   async EDIT_OFFLINE_COURSE({
     state, getters, commit, dispatch,
   }, { data, id }) {
     commit('LOADING', true);
-    commit('ERROR', null);
-    const { updatedOfflineCourse, error } = await (await fetch(`${getters.editOfflineCourseEndpoint}${id}`, {
-      method: 'PUT',
-      body: data,
-    })).json();
+    const { updatedOfflineCourse, error } = await putData(`course/offline/${id}`, data);
     if (!error) {
       commit('UPDATE_OFFLINE_COURSE', { updatedOfflineCourse });
-      commit('LOADING', false);
+      commit('MESSAGE', {
+        message: true,
+        messageType: 'Update course',
+        messageText: 'Updating offline course successfully',
+      }, { root: true });
     } else {
-      commit('LOADING', false);
-      commit('ERROR', error);
+      commit('ERROR', {
+        error: true,
+        errorType: 'Create offline course',
+        errorMessage: 'Process failed. Data was not received',
+      }, { root: true });
     }
+    commit('LOADING', false);
   },
   async REMOVE_OFFLINE_COURSE({
     state, getters, commit, dispatch,
   }, id) {
     commit('LOADING', true);
-    commit('ERROR', null);
-    const { deleted, error } = await (await fetch(`${getters.editOfflineCourseEndpoint}${id}`, {
-      method: 'DELETE',
-    })).json();
+    // const { deleted, error } = await (await fetch(`${getters.editOfflineCourseEndpoint}${id}`, {
+    //   method: 'DELETE',
+    // })).json();
+    const { deleted, error } = await deleteData(`course/offline/${id}`);
     if (!error) {
       // commit('UPDATE_OFFLINE_COURSE', { updatedOfflineCourse });
+      commit('MESSAGE', {
+        message: true,
+        messageType: 'Delete offline course',
+        messageText: 'Deleted offline course successfully',
+      }, { root: true });
       dispatch('GET_OFFLINE_COURSES');
-      commit('LOADING', false);
     } else {
-      commit('LOADING', false);
-      commit('ERROR', error);
+      commit('ERROR', {
+        error: true,
+        errorType: 'Delete offline course',
+        errorMessage: 'Process failed....',
+      }, { root: true });
     }
+    commit('LOADING', false);
   },
   async CLEAR_OFFLINE_COURSE_BY_ID({ commit }) {
     commit('OFFLINE_COURSE_BY_ID_CLEAR');

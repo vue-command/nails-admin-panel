@@ -14,7 +14,7 @@
     </v-breadcrumbs>
     <Spinner v-if="loading" />
     <CourseCardDetail
-      v-if="!loading && currentOfflineCourse && !showForm"
+      v-if="noEmptyCourse"
       :category="currentOfflineCourse.category"
       :days="currentOfflineCourse.accessDays"
       :nameOfCourse="currentOfflineCourse.nameOfCourse"
@@ -43,11 +43,11 @@
       :coverImageSrc="coverImageSrc"
       :courseId="courseId"
     />
-    <div
+    <div v-if="noEmptyCourse"
       class="d-flex flex-column align-center flex-sm-row justify-sm-center mt-8"
     >
       <v-btn
-        v-if="!showForm"
+
         @click="showForm = true"
         color="buttons"
         rounded
@@ -110,6 +110,9 @@ export default {
       'totalOfflineCourses',
       'loading',
     ]),
+    noEmptyCourse() {
+      return !this.loading && this.currentOfflineCourse && !this.showForm;
+    },
   },
   watch: {
     currentOfflineCourse(val) {

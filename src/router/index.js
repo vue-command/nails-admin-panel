@@ -88,10 +88,6 @@ const routes = [
   {
     path: '*',
     redirect: '/',
-    // name: 'page-not-found',
-    // component: () => import(
-    //   /* webpackChunkName: "page-not-found" */ '@/views/PageNotFound.vue'
-    // ),
   },
 ];
 

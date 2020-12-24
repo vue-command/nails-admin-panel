@@ -7,9 +7,38 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     // host: process.env.VUE_APP_API_URL,
-    host: 'https://nails-australia-staging.herokuapp.com',
+    // host: 'https://nails-australia-staging.herokuapp.com',
+    error: null,
+    errorMessage: '',
+    errorType: '',
+    message: null,
+    messageType: '',
+    messageText: '',
   },
-  mutations: {},
+  mutations: {
+    ERROR(state, payload) {
+      if (!payload) {
+        state.error = false;
+        state.errorType = '';
+        state.errorMessage = '';
+      } else {
+        state.error = payload.error;
+        state.errorType = payload.errorType;
+        state.errorMessage = payload.errorMessage;
+      }
+    },
+    MESSAGE(state, payload) {
+      if (!payload) {
+        state.message = false;
+        state.messageType = '';
+        state.messageText = '';
+      } else {
+        state.message = payload.message;
+        state.messageType = payload.messageType;
+        state.messageText = payload.messageText;
+      }
+    },
+  },
   actions: {},
   modules,
 });

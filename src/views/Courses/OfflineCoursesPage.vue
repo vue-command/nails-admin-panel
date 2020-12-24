@@ -31,7 +31,7 @@
       <v-col cols="12" xs="12" v-if="emtyCourses">
         <div class="text-message">No courses have been added yet.</div>
       </v-col>
-      <v-col cols="12" xs="12" v-if="!loading && offlineCourses">
+      <v-col cols="12" xs="12" v-if="!emtyCourses">
         <v-row class="d-flex justify-center">
           <v-col
             cols="12"
@@ -49,11 +49,9 @@
               <CoverImage :url="checkUrl(course)" :height="300" />
               <v-card-actions>
                 <v-btn
-                  @click="
-                    $store.dispatch(
-                      'offlineCourses/REMOVE_OFFLINE_COURSE',
-                      course._id
-                    )
+                  @click.stop="
+                    dialog = true;
+                    deleteId = course._id;
                   "
                   >delete</v-btn
                 >
@@ -73,6 +71,7 @@
         >
       </v-col>
     </v-row>
+    <confirmDelete :dialog.sync="dialog" :confirmDelete="confirmDelete"/>
   </v-container>
 </template>
 <style scoped>
@@ -88,11 +87,9 @@
 <script>
 import { mapState } from 'vuex';
 
-// import Courses from '@/components/Courses/Courses.vue';
-// import 'nails-courses-admin-form';
-// import 'nails-courses-admin-form/dist/nails-courses-admin-form.css';
 import Spiner from '@/components/Spinner.vue';
 import CoverImage from '@/components/CoverImage.vue';
+import confirmDelete from '@/components/popups/confirmDelete.vue';
 
 export default {
   name: 'offline-courses-page',
@@ -100,10 +97,13 @@ export default {
     // Courses,
     Spiner,
     CoverImage,
+    confirmDelete,
   },
   data: () => ({
     // eslint-disable-next-line global-require
     coverImageSrc: require('@/assets/noImage.jpg'),
+    dialog: false,
+    deleteId: null,
     items: [
       {
         text: 'Home',
@@ -133,6 +133,13 @@ export default {
     // },
   },
   methods: {
+    confirmDelete() {
+      this.$store.dispatch(
+        'offlineCourses/REMOVE_OFFLINE_COURSE',
+        this.deleteId,
+      );
+      this.dialog = false;
+    },
     goToCourse(id) {
       this.$router.push({
         name: 'offline-course-page',
