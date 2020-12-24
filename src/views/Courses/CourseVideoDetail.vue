@@ -1,20 +1,6 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col cols="12" xs="12">
-        <v-breadcrumbs :items="items">
-          <template v-slot:item="{ item }">
-            <v-breadcrumbs-item :disabled="item.disabled">
-              <router-link
-                :to="item.href"
-                :class="{ 'disabled-link': item.disabled }"
-              >
-                {{ item.text.toUpperCase() }}</router-link
-              >
-            </v-breadcrumbs-item>
-          </template>
-        </v-breadcrumbs>
-      </v-col>
       <v-col cols="12" xs="12" v-if="loading">
         <Spinner />
       </v-col>
@@ -33,11 +19,7 @@
       </v-col>
       <v-col cols="12" xs="12" offset-md="2" md="8" v-if="!loading && video">
         <CoverImage :url="checkUrl(video)" :height="500" />
-        <v-card
-          v-if="video.pdfs"
-          flat
-          class="d-flex justify-center mt-16 transparent"
-        >
+        <v-card v-if="video.pdfs" flat class="d-flex justify-center mt-16 transparent">
           <a
             v-for="pdf in video.pdfs"
             :key="pdf._id"
@@ -74,33 +56,7 @@ export default {
       showForm: false,
       // eslint-disable-next-line global-require
       coverImageSrc: require('@/assets/noImage.jpg'),
-      items: [
-        {
-          text: 'Home',
-          disabled: false,
-          href: '/',
-        },
-        {
-          text: 'Online Courses',
-          disabled: false,
-          href: '/online-courses-page',
-        },
-        {
-          text: '',
-          disabled: false,
-          href: `/online-courses-page/course/${this.$route.params.courseid}`,
-        },
-        {
-          text: 'videos',
-          disabled: false,
-          href: `/online-courses-page/course/${this.$route.params.courseid}/videos`,
-        },
-        {
-          text: '',
-          disabled: true,
-          href: '#',
-        },
-      ],
+
       nameOfVideo: '',
       description: '',
       imgFile: null,
@@ -110,13 +66,8 @@ export default {
     ...mapState('onlineCourses', ['onlineCourseById', 'loading', 'currentVideo']),
   },
   watch: {
-    onlineCourseById(val) {
-      if (!val) return;
-      this.items[2].text = val.nameOfCourse;
-    },
     currentVideo(val) {
       if (!val) return;
-      this.items[4].text = val.name;
       this.video = val;
     },
   },
@@ -140,8 +91,6 @@ export default {
       this.$store.dispatch('onlineCourses/GET_ONLINE_COURSE_VIDEO_BY_ID', this.videoId);
     }
     if (this.onlineCourseById && this.currentVideo) {
-      this.items[2].text = this.onlineCourseById.nameOfCourse;
-      this.items[4].text = this.currentVideo.name;
       this.video = this.currentVideo;
     }
   },

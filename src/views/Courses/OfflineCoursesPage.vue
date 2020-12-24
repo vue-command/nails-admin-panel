@@ -1,36 +1,24 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" xs="12" class="d-flex justify-start">
-        <v-breadcrumbs :items="items">
-          <template v-slot:item="{ item }">
-            <v-breadcrumbs-item :disabled="item.disabled">
-              <router-link
-                :to="item.href"
-                :class="{ 'disabled-link': item.disabled }"
-              >
-                {{ item.text.toUpperCase() }}</router-link
-              >
-            </v-breadcrumbs-item>
-          </template>
-        </v-breadcrumbs>
-      </v-col>
       <v-col cols="12" xs="12">
         <h2 class="ma-4 text-title">OFFLINE COURSES</h2>
       </v-col>
+
       <v-col cols="12" xs="12">
         <v-btn @click="$router.push({ name: 'create-offline-course' })"
           >add new offline course</v-btn
         >
       </v-col>
+
       <v-col cols="12" xs="12" v-if="loading">
         <Spiner />
       </v-col>
 
-      <!-- <div v-if="showBanerNoData" class="text-message">No courses data received.</div> -->
       <v-col cols="12" xs="12" v-if="emtyCourses">
         <div class="text-message">No courses have been added yet.</div>
       </v-col>
+
       <v-col cols="12" xs="12" v-if="!emtyCourses">
         <v-row class="d-flex justify-center">
           <v-col
@@ -47,6 +35,7 @@
                 ><h2>{{ course.nameOfCourse }}</h2></v-card-title
               >
               <CoverImage :url="checkUrl(course)" :height="300" />
+
               <v-card-actions>
                 <v-btn
                   @click.stop="
@@ -71,7 +60,7 @@
         >
       </v-col>
     </v-row>
-    <confirmDelete :dialog.sync="dialog" :confirmDelete="confirmDelete"/>
+    <confirmDelete :dialog.sync="dialog" :confirmDelete="confirmDelete" />
   </v-container>
 </template>
 <style scoped>
@@ -92,7 +81,7 @@ import CoverImage from '@/components/CoverImage.vue';
 import confirmDelete from '@/components/popups/confirmDelete.vue';
 
 export default {
-  name: 'offline-courses-page',
+  name: 'offline-courses',
   components: {
     // Courses,
     Spiner,
@@ -104,18 +93,6 @@ export default {
     coverImageSrc: require('@/assets/noImage.jpg'),
     dialog: false,
     deleteId: null,
-    items: [
-      {
-        text: 'Home',
-        disabled: false,
-        href: '/',
-      },
-      {
-        text: 'offline Courses',
-        disabled: true,
-        href: '#',
-      },
-    ],
   }),
   computed: {
     ...mapState('offlineCourses', ['offlineCourses', 'totalOfflineCourses', 'loading']),
@@ -126,23 +103,15 @@ export default {
       return this.offlineCourses.length < this.totalOfflineCourses;
     },
   },
-  watch: {
-    // offlineCourses(val) {
-    //   // eslint-disable-next-line no-useless-return
-    //   if (!val) return;
-    // },
-  },
+  watch: {},
   methods: {
     confirmDelete() {
-      this.$store.dispatch(
-        'offlineCourses/REMOVE_OFFLINE_COURSE',
-        this.deleteId,
-      );
+      this.$store.dispatch('offlineCourses/REMOVE_OFFLINE_COURSE', this.deleteId);
       this.dialog = false;
     },
     goToCourse(id) {
       this.$router.push({
-        name: 'offline-course-page',
+        name: 'offline-course',
         params: {
           courseid: id,
         },

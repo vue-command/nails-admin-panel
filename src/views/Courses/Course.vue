@@ -1,17 +1,5 @@
 <template>
   <div>
-    <v-breadcrumbs :items="items">
-      <template v-slot:item="{ item }">
-        <v-breadcrumbs-item :disabled="item.disabled">
-          <router-link
-            :to="item.href"
-            :class="{ 'disabled-link': item.disabled }"
-          >
-            {{ item.text.toUpperCase() }}</router-link
-          >
-        </v-breadcrumbs-item>
-      </template>
-    </v-breadcrumbs>
     <Spinner v-if="loading" />
     <CourseCardDetail
       v-if="!loading && onlineCourseById"
@@ -71,7 +59,7 @@ import 'nails-courses-card-detail';
 import 'nails-courses-card-detail/dist/nails-courses-card-detail.css';
 
 export default {
-  name: 'online-course-page',
+  name: 'online-course',
   components: {
     Spinner,
   },
@@ -83,23 +71,6 @@ export default {
       typeCourse: 'online',
       // eslint-disable-next-line global-require
       coverImageSrc: require('@/assets/noImage.jpg'),
-      items: [
-        {
-          text: 'Home',
-          disabled: false,
-          href: '/',
-        },
-        {
-          text: 'Online Courses',
-          disabled: false,
-          href: '/online-courses-page',
-        },
-        {
-          text: '',
-          disabled: true,
-          href: '#',
-        },
-      ],
     };
   },
   computed: {
@@ -110,19 +81,8 @@ export default {
       'loading',
     ]),
   },
-  watch: {
-    onlineCourseById() {
-      this.fillingInTheFields();
-    },
-  },
+  watch: {},
   methods: {
-    fillingInTheFields() {
-      // this.items[0].text = `${this.user.firstName} cabinet`;
-      // this.items[1].text = `${this.user.firstName} courses`;
-      if (this.onlineCourseById) {
-        this.items[2].text = `${this.onlineCourseById.nameOfCourse}`;
-      }
-    },
     checkUrl(card) {
       let img;
       if (card.photo && Array.isArray(card.photo) && card.photo.length) {
@@ -138,14 +98,11 @@ export default {
         this.$router.push({ name: 'online-course-videos' });
       }
     },
-    // eslint-disable-next-line consistent-return
   },
   created() {
     this.$store.dispatch('onlineCourses/GET_ONLINE_COURSE_BY_ID', this.courseId);
-    // this.fillingInTheFields();
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>

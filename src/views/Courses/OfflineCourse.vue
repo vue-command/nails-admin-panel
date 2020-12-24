@@ -1,17 +1,5 @@
 <template>
   <div>
-    <v-breadcrumbs :items="items">
-      <template v-slot:item="{ item }">
-        <v-breadcrumbs-item :disabled="item.disabled">
-          <router-link
-            :to="item.href"
-            :class="{ 'disabled-link': item.disabled }"
-          >
-            {{ item.text.toUpperCase() }}</router-link
-          >
-        </v-breadcrumbs-item>
-      </template>
-    </v-breadcrumbs>
     <Spinner v-if="loading" />
     <CourseCardDetail
       v-if="noEmptyCourse"
@@ -43,11 +31,11 @@
       :coverImageSrc="coverImageSrc"
       :courseId="courseId"
     />
-    <div v-if="noEmptyCourse"
+    <div
+      v-if="noEmptyCourse"
       class="d-flex flex-column align-center flex-sm-row justify-sm-center mt-8"
     >
       <v-btn
-
         @click="showForm = true"
         color="buttons"
         rounded
@@ -70,7 +58,7 @@ import 'nails-courses-card-detail';
 import 'nails-courses-card-detail/dist/nails-courses-card-detail.css';
 
 export default {
-  name: 'offline-course-page',
+  name: 'offline-course',
   components: {
     Spinner,
     EditCourseForm,
@@ -78,29 +66,10 @@ export default {
   data() {
     return {
       courseId: this.$route.params.courseid,
-      // course: null,
-      // ready: false,
       showForm: false,
       typeCourse: 'offline',
       // eslint-disable-next-line global-require
       coverImageSrc: require('@/assets/noImage.jpg'),
-      items: [
-        {
-          text: 'Home',
-          disabled: false,
-          href: '/',
-        },
-        {
-          text: 'offline Courses',
-          disabled: false,
-          href: '/offline-courses-page',
-        },
-        {
-          text: '',
-          disabled: true,
-          href: '#',
-        },
-      ],
     };
   },
   computed: {
@@ -118,16 +87,9 @@ export default {
     currentOfflineCourse(val) {
       if (!val) return;
       this.showForm = false;
-      this.fillingInTheFields();
-      // this.course = val;
     },
   },
   methods: {
-    fillingInTheFields() {
-      // this.items[0].text = `${this.user.firstName} cabinet`;
-      // this.items[1].text = `${this.user.firstName} courses`;
-      this.items[2].text = this.currentOfflineCourse.nameOfCourse;
-    },
     checkUrl(card) {
       let img;
       if (card.photo && Array.isArray(card.photo) && card.photo.length) {
@@ -149,13 +111,8 @@ export default {
     },
   },
   created() {
-    // this.fillingInTheFields();
     if (!this.currentOfflineCourse) {
       this.$store.dispatch('offlineCourses/GET_OFFLINE_COURSE_BY_ID', this.courseId);
-    } else {
-      this.items[2].text = this.currentOfflineCourse.nameOfCourse;
-      // this.course = this.currentOfflineCourse;
-      // this.ready = true
     }
   },
   beforeDestroy() {
@@ -164,5 +121,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

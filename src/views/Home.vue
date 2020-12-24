@@ -6,7 +6,7 @@
           class="mx-auto ma-5"
           max-width="344"
           outlined
-          @click="goToOfflineCourses('offline-courses-page')"
+          @click="goToOfflineCourses('offline-courses')"
         >
           <v-list-item three-line>
             <v-list-item-content>
@@ -15,13 +15,12 @@
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-
         </v-card>
         <v-card
           class="mx-auto ma-5"
           max-width="344"
           outlined
-          @click="goToOfflineCourses('online-courses-page')"
+          @click="goToOfflineCourses('online-courses')"
         >
           <v-list-item three-line>
             <v-list-item-content>
@@ -30,7 +29,6 @@
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-
         </v-card>
       </v-col>
       <v-col cols="6" lg="6">
@@ -42,7 +40,6 @@
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-
         </v-card>
         <v-card class="mx-auto ma-5" max-width="344" outlined @click="goToShop">
           <v-list-item three-line>
@@ -52,7 +49,6 @@
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-
         </v-card>
       </v-col>
     </v-row>

@@ -1,20 +1,6 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" xs="12" class="d-flex justify-start">
-        <v-breadcrumbs :items="items">
-          <template v-slot:item="{ item }">
-            <v-breadcrumbs-item :disabled="item.disabled">
-              <router-link
-                :to="item.href"
-                :class="{ 'disabled-link': item.disabled }"
-              >
-                {{ item.text.toUpperCase() }}</router-link
-              >
-            </v-breadcrumbs-item>
-          </template>
-        </v-breadcrumbs>
-      </v-col>
       <v-col cols="12" xs="12" md="7">
         <!-- <v-btn @click="back">back</v-btn> -->
         <v-form ref="form">
@@ -47,11 +33,7 @@
                 maxlength="40"
               ></v-text-field>
               <!-- <div v-if="typeCourse === 'offline'"> -->
-              <div
-                v-for="(textField, i) in dateOfCourses"
-                :key="i"
-                class="d-flex input-container"
-              >
+              <div v-for="(textField, i) in dateOfCourses" :key="i" class="d-flex input-container">
                 <v-text-field
                   :label="labelDateOfCourse"
                   v-model="dateOfCourses[i]"
@@ -59,11 +41,7 @@
                   outlined
                   dark
                 ></v-text-field>
-                <v-btn
-                  @click="removeField(i, '')"
-                  v-if="i !== 0"
-                  class="remove"
-                >
+                <v-btn @click="removeField(i, '')" v-if="i !== 0" class="remove">
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </div>
@@ -118,11 +96,7 @@
                 outlined
                 dark
               ></v-text-field>
-              <div
-                v-for="(textField, i) in courseSuitable"
-                :key="i"
-                class="d-flex input-container"
-              >
+              <div v-for="(textField, i) in courseSuitable" :key="i" class="d-flex input-container">
                 <v-text-field
                   :label="labelForSuitable"
                   v-model="courseSuitable[i]"
@@ -130,11 +104,7 @@
                   outlined
                   dark
                 ></v-text-field>
-                <v-btn
-                  @click="removeField(i, 'suitable')"
-                  v-if="i !== 0"
-                  class="remove"
-                >
+                <v-btn @click="removeField(i, 'suitable')" v-if="i !== 0" class="remove">
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </div>
@@ -192,12 +162,7 @@
           </v-row>
         </v-form>
       </v-col>
-      <v-col
-        cols="12"
-        xs="12"
-        md="5"
-        class="d-flex flex-column justify-space-between align-center"
-      >
+      <v-col cols="12" xs="12" md="5" class="d-flex flex-column justify-space-between align-center">
         <!-- <v-col
         cols="12"
         xs="12"
@@ -299,23 +264,6 @@ export default {
         onlyDigits: (v) => !/\D/g.test(v) || 'input should consist only of digits',
         imageRule: (v) => !v || v.size < 2000000 || 'Image size should be less than 2 MB!',
       },
-      items: [
-        {
-          text: 'Home',
-          disabled: false,
-          href: '/',
-        },
-        {
-          text: 'offline Courses',
-          disabled: false,
-          href: '/offline-courses-page',
-        },
-        {
-          text: 'create Offline Course',
-          disabled: true,
-          href: '#',
-        },
-      ],
       // currentCourse: null,
     };
   },
@@ -326,7 +274,7 @@ export default {
     newOfflineCourse(val) {
       if (!val) return;
       this.$router.push({
-        name: 'offline-course-page',
+        name: 'offline-course',
         params: {
           // eslint-disable-next-line no-underscore-dangle
           courseid: val._id,

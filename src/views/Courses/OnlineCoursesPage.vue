@@ -1,26 +1,9 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" xs="12" class="d-flex justify-start">
-        <v-breadcrumbs :items="items">
-          <template v-slot:item="{ item }">
-            <v-breadcrumbs-item :disabled="item.disabled">
-              <router-link
-                :to="item.href"
-                :class="{ 'disabled-link': item.disabled }"
-              >
-                {{ item.text.toUpperCase() }}</router-link
-              >
-            </v-breadcrumbs-item>
-          </template>
-        </v-breadcrumbs>
-      </v-col>
       <v-col cols="12" xs="12">
         <h2 class="ma-4 text-title">ONLINE COURSES</h2>
       </v-col>
-      <!-- <v-col cols="12" xs="12" v-if="!onlineCourses">
-        <h2 class="text-message">No courses data received</h2>
-      </v-col> -->
       <v-col cols="12" xs="12">
         <div class="d-flex justify-center">
           <v-radio-group v-model="radioGroup" row>
@@ -90,7 +73,7 @@ import CoverImage from '@/components/CoverImage.vue';
 import Spinner from '@/components/Spinner.vue';
 
 export default {
-  name: 'online-courses-page',
+  name: 'online-courses',
   components: {
     CoverImage,
     Spinner,
@@ -109,18 +92,6 @@ export default {
       {
         title: 'Published only',
         param: '',
-      },
-    ],
-    items: [
-      {
-        text: 'Home',
-        disabled: false,
-        href: '/',
-      },
-      {
-        text: 'Online Courses',
-        disabled: true,
-        href: '#',
       },
     ],
     coverImageSrc: 'img/noImage.jpg',
@@ -142,7 +113,7 @@ export default {
   methods: {
     goToCourse(id) {
       this.$router.push({
-        name: 'online-course-page',
+        name: 'online-course',
         params: {
           courseid: id,
         },
