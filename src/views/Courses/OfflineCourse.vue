@@ -1,35 +1,18 @@
 <template>
   <div>
     <Spinner v-if="loading" />
-    <CourseCardDetail
+    <CourseDetail
       v-if="noEmptyCourse"
-      :category="currentOfflineCourse.category"
-      :days="currentOfflineCourse.accessDays"
-      :nameOfCourse="currentOfflineCourse.nameOfCourse"
-      :subtitle="currentOfflineCourse.subtitle"
-      :price="currentOfflineCourse.price"
-      :author="currentOfflineCourse.author"
-      :instructor="currentOfflineCourse.instructor"
-      :infoBonus="currentOfflineCourse.infoBonus"
-      :courseSuitable="currentOfflineCourse.thisCourseIsSuitableFor"
-      :description="currentOfflineCourse.description"
-      :dateOfCourses="currentOfflineCourse.dateOfCourses"
-      :url="checkUrl(currentOfflineCourse)"
+      :course="currentOfflineCourse"
       :type="typeCourse"
-      :coverImageSrc="coverImageSrc"
       btnTitle="BUY THIS COURSE"
       :btnCallBack="null"
-      :isPaid="true"
-      :isPublished="true"
     />
     <EditCourseForm
       v-if="showForm"
-      :editCourseById="editCourseById"
       :typeCourse="typeCourse"
       :course="currentOfflineCourse"
       :back="backForm"
-      :coverImageSrc="coverImageSrc"
-      :courseId="courseId"
     />
     <div
       v-if="noEmptyCourse"
@@ -53,14 +36,14 @@
 import { mapState } from 'vuex';
 
 import Spinner from '@/components/Spinner.vue';
-import EditCourseForm from '@/components/Courses/EditCourseForm.vue';
-import 'nails-courses-card-detail';
-import 'nails-courses-card-detail/dist/nails-courses-card-detail.css';
+import CourseDetail from '@/components/courses/CourseDetail.vue';
+import EditCourseForm from '@/components/courses/EditCourseForm.vue';
 
 export default {
   name: 'offline-course',
   components: {
     Spinner,
+    CourseDetail,
     EditCourseForm,
   },
   data() {
@@ -90,16 +73,6 @@ export default {
     },
   },
   methods: {
-    checkUrl(card) {
-      let img;
-      if (card.photo && Array.isArray(card.photo) && card.photo.length) {
-        img = card.photo[0].link;
-      }
-      if (!img) {
-        img = this.coverImageSrc;
-      }
-      return img;
-    },
     editCourseById(data) {
       this.$store.dispatch('userCourses/PUT_USER_COURSE_ID', {
         data,

@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import Notifications from 'vue-notification';
 import VueCoreVideoPlayer from 'vue-core-video-player';
 import ErrorMessage from '@/components/popups/error.vue';
 import Message from '@/components/popups/message.vue';
@@ -12,7 +11,6 @@ import vuetify from './plugins/vuetify';
 import '@/css/fonts.scss';
 
 Vue.config.productionTip = false;
-Vue.use(Notifications);
 Vue.use(VueCoreVideoPlayer);
 
 Vue.component('error-message', ErrorMessage);

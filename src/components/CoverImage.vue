@@ -1,19 +1,17 @@
 <template>
   <div>
-    <v-img :src="imgUrl" :height="height" @error="onError"></v-img>
+    <v-img :src="imgUrl" :width="width" :height="height" @error="onError"></v-img>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['url', 'height'],
+  props: ['url', 'height', 'width'],
   data() {
     return {
-      // imageUrl: this.url,
       error: false,
       // eslint-disable-next-line global-require
       coverImageSrc: require('@/assets/noImage.jpg'),
-      // coverImageSrc: 'img/noImage.jpg',
     };
   },
   computed: {

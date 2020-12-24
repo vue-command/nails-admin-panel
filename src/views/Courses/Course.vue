@@ -1,26 +1,12 @@
 <template>
   <div>
     <Spinner v-if="loading" />
-    <CourseCardDetail
+    <CourseDetail
       v-if="!loading && onlineCourseById"
-      :category="onlineCourseById.category"
-      :days="onlineCourseById.accessDays"
-      :nameOfCourse="onlineCourseById.nameOfCourse"
-      :subtitle="onlineCourseById.subtitle"
-      :price="onlineCourseById.price"
-      :author="onlineCourseById.author"
-      :instructor="onlineCourseById.instructor"
-      :infoBonus="onlineCourseById.infoBonus"
-      :courseSuitable="onlineCourseById.thisCourseIsSuitableFor"
-      :description="onlineCourseById.description"
-      :dateOfCourses="onlineCourseById.dateOfCourses"
-      :url="checkUrl(onlineCourseById)"
+      :course="onlineCourseById"
       :type="typeCourse"
-      :coverImageSrc="coverImageSrc"
       btnTitle="BUY THIS COURSE"
       :btnCallBack="null"
-      :isPaid="onlineCourseById.isPaid"
-      :isPublished="onlineCourseById.isPublished"
     />
     <div
       v-if="!loading && onlineCourseById"
@@ -54,14 +40,14 @@
 <script>
 import { mapState } from 'vuex';
 
+import CourseDetail from '@/components/courses/CourseDetail.vue';
 import Spinner from '@/components/Spinner.vue';
-import 'nails-courses-card-detail';
-import 'nails-courses-card-detail/dist/nails-courses-card-detail.css';
 
 export default {
   name: 'online-course',
   components: {
     Spinner,
+    CourseDetail,
   },
   data() {
     return {
@@ -69,8 +55,6 @@ export default {
       course: null,
       ready: false,
       typeCourse: 'online',
-      // eslint-disable-next-line global-require
-      coverImageSrc: require('@/assets/noImage.jpg'),
     };
   },
   computed: {
@@ -83,16 +67,6 @@ export default {
   },
   watch: {},
   methods: {
-    checkUrl(card) {
-      let img;
-      if (card.photo && Array.isArray(card.photo) && card.photo.length) {
-        img = card.photo[0].link;
-      }
-      if (!img) {
-        img = this.coverImageSrc;
-      }
-      return img;
-    },
     goToVideos() {
       if (this.$route.name !== 'online-course-videos') {
         this.$router.push({ name: 'online-course-videos' });
