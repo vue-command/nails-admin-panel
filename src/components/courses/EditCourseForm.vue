@@ -194,6 +194,7 @@
 <script>
 import CourseCard from '@/components/courses/CourseCard.vue';
 import CourseDetail from '@/components/courses/CourseDetail.vue';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -226,6 +227,10 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState(['error']),
+    ...mapState('offlineCourses', ['newOfflineCourse']),
+  },
   watch: {},
   methods: {
     checkForm() {
@@ -234,12 +239,12 @@ export default {
       }
     },
     addField(entryField) {
-      return entryField ? this.courseSuitable.push('') : this.dateOfCourses.push('');
+      return entryField ? this.courseData.thisCourseIsSuitableFor.push('') : this.courseData.dateOfCourses.push('');
     },
     removeField(index, entryField) {
       return entryField
-        ? this.courseSuitable.splice(index, 1)
-        : this.dateOfCourses.splice(index, 1);
+        ? this.courseData.thisCourseIsSuitableFor.splice(index, 1)
+        : this.courseData.dateOfCourses.splice(index, 1);
     },
     cancelHandler() {
       this.back();
@@ -251,13 +256,13 @@ export default {
         });
       }
     },
-    submitHandler() {
+    async submitHandler() {
       const { dateOfCourses, thisCourseIsSuitableFor, ...rest } = this.courseData;
       const fd = new FormData();
       Object.entries(rest).forEach(([name, value]) => {
         if (value) {
           if (value instanceof File) fd.append('file', value);
-          else fd.append(name, value);
+          else if (typeof value !== 'object') fd.append(name, value);
         }
       });
       dateOfCourses.forEach((str) => {
@@ -270,11 +275,24 @@ export default {
           fd.append('thisCourseIsSuitableFor[]', str);
         }
       });
-      this.$store.dispatch('offlineCourses/EDIT_OFFLINE_COURSE', {
-        data: fd,
-        // eslint-disable-next-line no-underscore-dangle
-        id: this.course._id,
-      });
+      if (!this.course) {
+        await this.$store.dispatch('offlineCourses/CREATE_OFFLINE_COURSE', fd);
+        if (!this.error) {
+          this.$router.push({
+            name: 'offline-course',
+            params: {
+              // eslint-disable-next-line no-underscore-dangle
+              courseid: this.newOfflineCourse._id,
+            },
+          });
+        }
+      } else {
+        await this.$store.dispatch('offlineCourses/EDIT_OFFLINE_COURSE', {
+          data: fd,
+          // eslint-disable-next-line no-underscore-dangle
+          id: this.course._id,
+        });
+      }
     },
   },
   mounted() {

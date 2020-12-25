@@ -10,18 +10,18 @@
         offset-md="2"
         md="8"
         class="player-container"
-        v-if="!loading && video"
+        v-if="!loading && currentVideo"
       >
-        <vue-core-video-player :src="video.link" />
+        <vue-core-video-player :src="currentVideo.link" />
       </v-col>
-      <v-col cols="12" xs="12" offset-md="2" md="8" v-if="!loading && video">
-        <v-card-title>{{ video.description }}</v-card-title>
+      <v-col cols="12" xs="12" offset-md="2" md="8" v-if="!loading && currentVideo">
+        <v-card-title>{{ currentVideo.description }}</v-card-title>
       </v-col>
-      <v-col cols="12" xs="12" offset-md="2" md="8" v-if="!loading && video">
-        <CoverImage :url="checkUrl(video)" :height="500" />
-        <v-card v-if="video.pdfs" flat class="d-flex justify-center mt-16 transparent">
+      <v-col cols="12" xs="12" offset-md="2" md="8" v-if="!loading && currentVideo">
+        <CoverImage :url="checkUrl(currentVideo)" :height="500" />
+        <v-card v-if="currentVideo.pdfs" flat class="d-flex justify-center mt-16 transparent">
           <a
-            v-for="pdf in video.pdfs"
+            v-for="pdf in currentVideo.pdfs"
             :key="pdf._id"
             :href="pdf.link"
             target="_blank"
@@ -49,27 +49,16 @@ export default {
     return {
       courseId: this.$route.params.courseid,
       videoId: this.$route.params.videoid,
-      video: null,
-      videos: null,
-      course: null,
       volume: 0,
       showForm: false,
       // eslint-disable-next-line global-require
       coverImageSrc: require('@/assets/noImage.jpg'),
-
-      nameOfVideo: '',
-      description: '',
-      imgFile: null,
     };
   },
   computed: {
     ...mapState('onlineCourses', ['onlineCourseById', 'loading', 'currentVideo']),
   },
   watch: {
-    currentVideo(val) {
-      if (!val) return;
-      this.video = val;
-    },
   },
   methods: {
     checkUrl(card) {
@@ -84,15 +73,8 @@ export default {
     },
   },
   created() {
-    if (!this.onlineCourseById) {
-      this.$store.dispatch('onlineCourses/GET_ONLINE_COURSE_BY_ID', this.courseId);
-    }
-    if (!this.currentVideo) {
-      this.$store.dispatch('onlineCourses/GET_ONLINE_COURSE_VIDEO_BY_ID', this.videoId);
-    }
-    if (this.onlineCourseById && this.currentVideo) {
-      this.video = this.currentVideo;
-    }
+    this.$store.dispatch('onlineCourses/GET_ONLINE_COURSE_VIDEO_BY_ID', this.videoId);
+    this.$store.dispatch('onlineCourses/GET_ONLINE_COURSE_BY_ID', this.courseId);
   },
 };
 </script>

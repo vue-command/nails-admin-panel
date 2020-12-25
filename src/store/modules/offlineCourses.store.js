@@ -5,6 +5,10 @@ const {
   getData, postData, putData, deleteData,
 } = require('@/helpers').default;
 
+const endpoints = require('@/config/endpoints').default.offline;
+const errors = require('@/config/errors').default.offline;
+const messages = require('@/config/messages').default.offline;
+
 const state = {
   offlineCourses: [],
   currentOfflineCourse: null,
@@ -15,10 +19,6 @@ const state = {
 };
 
 const getters = {
-  // offlineCoursesEndpoint: (state, getters, rootState) => `${rootState.host}/course/offline/`,
-  // createOfflineCourseEndpoint: (state, getters, rootState)
-  // => `${rootState.host}/course/new/offline/`,
-  // editOfflineCourseEndpoint: (state, getters, rootState) => `${rootState.host}/course/offline/`,
 };
 
 const mutations = {
@@ -51,64 +51,42 @@ const mutations = {
 const actions = {
   async GET_OFFLINE_COURSES({ commit }) {
     commit('LOADING', true);
-    // const { offlineCourses, total, error } = await (await fetch(getters.offlineCoursesEndpoint))
-    //   .json();
-    const { offlineCourses, total, error } = await getData('course/offline');
+    const { offlineCourses, total, error } = await getData(endpoints.get);
     if (!error) {
       commit('OFFLINE_COURSES', { offlineCourses: offlineCourses ?? [], total });
     } else {
-      commit('ERROR', {
-        error: true,
-        errorType: 'Get offline courses',
-        errorMessage: 'Process failed. Data was not received',
-      }, { root: true });
+      commit('ERROR', errors.get, { root: true });
     }
     commit('LOADING', false);
   },
   async GET_MORE_OFFLINE_COURSES({ state, getters, commit }, { skip }) {
     commit('LOADING', true);
-    const { offlineCourses, total, error } = await getData(`course/offline?skip=${skip}`);
+    const { offlineCourses, total, error } = await getData(`${endpoints.get}?skip=${skip}`);
     if (!error) {
       commit('MORE_OFFLINE_COURSES', { offlineCourses, total });
     } else {
-      commit('ERROR', {
-        error: true,
-        errorType: 'Get more offline courses',
-        errorMessage: 'Process failed. Data was not received',
-      }, { root: true });
+      commit('ERROR', errors.get, { root: true });
     }
     commit('LOADING', false);
   },
   async GET_OFFLINE_COURSE_BY_ID({ commit }, id) {
     commit('LOADING', true);
-    const { offlineCourse, error } = await getData(`course/offline/${id}`);
+    const { offlineCourse, error } = await getData(`${endpoints.get}/${id}`);
     if (!error) {
       commit('OFFLINE_COURSE_BY_ID', { offlineCourse });
     } else {
-      commit('ERROR', {
-        error: true,
-        errorType: 'Get more offline courses',
-        errorMessage: 'Process failed. Data was not received',
-      }, { root: true });
+      commit('ERROR', errors.get_by_id, { root: true });
     }
     commit('LOADING', false);
   },
   async CREATE_OFFLINE_COURSE({ getters, commit }, data) {
     commit('LOADING', true);
-    const { newOfflineCourse, error } = await postData('course/new/offline', data);
+    const { newOfflineCourse, error } = await postData(endpoints.post, data);
     if (!error) {
       commit('NEW_OFFLINE_COURSE', { newOfflineCourse });
-      commit('MESSAGE', {
-        message: true,
-        messageType: 'Creating course',
-        messageText: 'Creating offline course successfully',
-      }, { root: true });
+      commit('MESSAGE', messages.post, { root: true });
     } else {
-      commit('ERROR', {
-        error: true,
-        errorType: 'Create offline course',
-        errorMessage: 'Process failed. Data was not received',
-      }, { root: true });
+      commit('ERROR', errors.post, { root: true });
     }
     commit('LOADING', false);
   },
@@ -116,20 +94,12 @@ const actions = {
     state, getters, commit, dispatch,
   }, { data, id }) {
     commit('LOADING', true);
-    const { updatedOfflineCourse, error } = await putData(`course/offline/${id}`, data);
+    const { updatedOfflineCourse, error } = await putData(`${endpoints.put}/${id}`, data);
     if (!error) {
       commit('UPDATE_OFFLINE_COURSE', { updatedOfflineCourse });
-      commit('MESSAGE', {
-        message: true,
-        messageType: 'Update course',
-        messageText: 'Updating offline course successfully',
-      }, { root: true });
+      commit('MESSAGE', messages.put, { root: true });
     } else {
-      commit('ERROR', {
-        error: true,
-        errorType: 'Create offline course',
-        errorMessage: 'Process failed. Data was not received',
-      }, { root: true });
+      commit('ERROR', errors.put, { root: true });
     }
     commit('LOADING', false);
   },
@@ -137,24 +107,12 @@ const actions = {
     state, getters, commit, dispatch,
   }, id) {
     commit('LOADING', true);
-    // const { deleted, error } = await (await fetch(`${getters.editOfflineCourseEndpoint}${id}`, {
-    //   method: 'DELETE',
-    // })).json();
-    const { deleted, error } = await deleteData(`course/offline/${id}`);
+    const { deleted, error } = await deleteData(`${endpoints.delete}/${id}`);
     if (!error) {
-      // commit('UPDATE_OFFLINE_COURSE', { updatedOfflineCourse });
-      commit('MESSAGE', {
-        message: true,
-        messageType: 'Delete offline course',
-        messageText: 'Deleted offline course successfully',
-      }, { root: true });
+      commit('MESSAGE', messages.delete, { root: true });
       dispatch('GET_OFFLINE_COURSES');
     } else {
-      commit('ERROR', {
-        error: true,
-        errorType: 'Delete offline course',
-        errorMessage: 'Process failed....',
-      }, { root: true });
+      commit('ERROR', errors.delete, { root: true });
     }
     commit('LOADING', false);
   },

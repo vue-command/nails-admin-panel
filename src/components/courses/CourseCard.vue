@@ -128,8 +128,8 @@ export default {
   methods: {
     checkUrl(card) {
       let img;
-      if (card instanceof File) {
-        img = URL.createObjectURL(card);
+      if (card.photo instanceof File) {
+        img = URL.createObjectURL(card.photo);
         return img;
       }
 

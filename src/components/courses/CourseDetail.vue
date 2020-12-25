@@ -14,24 +14,46 @@
           <v-card-text class="pa-0 pl-4 buttons--text d-flex"
             >{{ type }} course</v-card-text
           >
-          <v-card-title class="pa-0 pl-4">{{ course.nameOfCourse }}</v-card-title>
-          <v-card-text class="pa-0 pl-4 text-start">{{ course.subtitle }}</v-card-text>
+          <v-card-title class="pa-0 pl-4">{{
+            course.nameOfCourse
+          }}</v-card-title>
+          <v-card-text class="pa-0 pl-4 text-start">{{
+            course.subtitle
+          }}</v-card-text>
           <v-card-title class="pa-0 pl-4 buttons--text"
             >{{ course.accessDays }} days | $ {{ course.price }}</v-card-title
           >
         </v-card>
         <v-card flat class="transparent" dark v-if="type === 'online'">
-          <v-card-text v-if="!course.isPaid" class="pa-0 pl-4 pb-4 d-flex notPaidAndPublised--text"
+          <v-card-text
+            v-if="!course.isPaid"
+            class="pa-0 pl-4 pb-4 d-flex notPaidAndPublised--text"
             ><h3>this course has not been paid for yet</h3></v-card-text
           >
-          <v-card-text v-if="!course.isPublished" class="pa-0 pl-4 d-flex notPaidAndPublised--text"
+          <v-card-text
+            v-if="!course.isPublished"
+            class="pa-0 pl-4 d-flex notPaidAndPublised--text"
             ><h3>this course has not been published yet</h3></v-card-text
           >
         </v-card>
         <v-card flat class="transparent d-flex flex-column align-center" dark>
+          <v-card-title>Date of courses:</v-card-title>
+          <ul>
+            <li
+              v-for="(item, index) in course.dateOfCourses"
+              :key="index"
+            >
+              {{ item }}
+            </li>
+          </ul>
+        </v-card>
+        <v-card flat class="transparent d-flex flex-column align-center" dark>
           <v-card-title>This course is cuitable for:</v-card-title>
           <ul>
-            <li v-for="(item, index) in course.thisCourseIsSuitableFor" :key="index">
+            <li
+              v-for="(item, index) in course.thisCourseIsSuitableFor"
+              :key="index"
+            >
               {{ item }}
             </li>
           </ul>
@@ -52,12 +74,13 @@
           @error="onError"
           height="250px"
         ></v-img> -->
-        <CoverImage :url="checkUrl(course)" :height="400"/>
+        <CoverImage :url="checkUrl(course)" :height="400" />
       </v-col>
       <v-col cols="12" xs="12" order="2">
         <v-card-text
           class="mt-16 whitefone--text d-flex justify-center justify-sm-start"
-          >Author and instructor of the course: {{ course.instructor }}</v-card-text
+          >Author and instructor of the course:
+          {{ course.instructor }}</v-card-text
         >
       </v-col>
       <v-col cols="12" xs="12" order="2">
@@ -95,12 +118,7 @@
 import CoverImage from '@/components/CoverImage.vue';
 
 export default {
-  props: [
-    'course',
-    'type',
-    'btnCallBack',
-    'btnTitle',
-  ],
+  props: ['course', 'type', 'btnTitle'],
   components: {
     CoverImage,
   },
@@ -111,15 +129,13 @@ export default {
       coverImageSrc: require('@/assets/noImage.jpg'),
     };
   },
-  watch: {
-  },
-  computed: {
-  },
+  watch: {},
+  computed: {},
   methods: {
     checkUrl(card) {
       let img;
-      if (card instanceof File) {
-        img = URL.createObjectURL(card);
+      if (card.photo instanceof File) {
+        img = URL.createObjectURL(card.photo);
         return img;
       }
 
@@ -132,7 +148,6 @@ export default {
       return img;
     },
     btnHandler() {
-      if (this.btnCallBack) this.btnCallBack();
     },
   },
 };

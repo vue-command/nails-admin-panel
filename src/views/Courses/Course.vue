@@ -6,7 +6,6 @@
       :course="onlineCourseById"
       :type="typeCourse"
       btnTitle="BUY THIS COURSE"
-      :btnCallBack="null"
     />
     <div
       v-if="!loading && onlineCourseById"
