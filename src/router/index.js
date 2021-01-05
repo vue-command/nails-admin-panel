@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
-import ShopPage from '../views/ShopPage.vue';
-import ModifyProduct from '../views/Shop/ModifyProduct.vue';
 // import Courses from '../views/Courses/Courses.vue'
 // import OnlineCourses from '../views/Courses/OnlineCourses.vue'
 // import OfflineCoursesPage from '../views/Courses/OfflineCoursesPage.vue';
@@ -18,19 +16,25 @@ const routes = [
   },
   {
     path: '/shop',
-    name: 'ShopEdit',
+    name: 'shop',
     meta: {
       layout: 'shop',
     },
-    component: ShopPage,
+    component: () => import(
+      /* webpackChunkName: "shop" */
+      '@/views/Shop/Shop.vue'
+    ),
   },
   {
     path: '/shop/commodity/:commodityId',
-    name: 'CommodityEdit',
+    name: 'commodity-edit',
     meta: {
       layout: 'shop',
     },
-    component: ModifyProduct,
+    component: () => import(
+      /* webpackChunkName: "shop" */
+      '@/views/Shop/ModifyProduct.vue'
+    ),
   },
   {
     path: '/online-courses',

@@ -8,7 +8,10 @@
 
     <v-navigation-drawer v-model="drawer" absolute temporary>
       <v-list nav dense>
-        <v-list-item-group v-model="group" active-class="red--text text--accent-4">
+        <v-list-item-group
+          v-model="group"
+          active-class="red--text text--accent-4"
+        >
           <v-list-item @click="goTo('Home')">
             <v-list-item-icon>
               <v-icon>mdi-home</v-icon>
@@ -28,7 +31,7 @@
             </v-list-item-icon>
             <v-list-item-title>Online courses</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="goTo('ShopEdit')">
+          <v-list-item @click="goTo('shop')">
             <v-list-item-icon>
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
@@ -76,6 +79,9 @@ export default {
     ShopLayout,
     DefaultLayout,
   },
+  created() {
+    this.$store.dispatch('shop/STORE_INIT');
+  },
   computed: {
     layout() {
       return `${this.$route.meta?.layout || 'default'}-layout`;
@@ -100,7 +106,7 @@ export default {
 html,
 body,
 .v-application {
-  font-family: 'Archivo Narrow' !important;
+  font-family: "Archivo Narrow" !important;
 }
 .main-content {
   min-height: calc(100vh - 64px);

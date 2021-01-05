@@ -61,7 +61,7 @@ export default {
   components: {},
   methods: {
     goToShop() {
-      this.$router.push({ name: 'ShopEdit' });
+      this.$router.push({ name: 'shop' });
     },
     goToOfflineCourses(nameCourses) {
       this.$router.push({ name: nameCourses });

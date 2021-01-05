@@ -4,18 +4,35 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
+const {
+  getData,
+  postData,
+  putData,
+  deleteData,
+  getFormData,
+} = require('@/helpers').default;
+
+const categoriesEndpoints = require('@/config/endpoints').default.categories;
+const commoditiesEndpoints = require('@/config/endpoints').default.commodities;
+const errors = require('@/config/errors').default.shop;
+const messages = require('@/config/messages').default.online;
 
 const state = {
-  categories: null,
+  isShopLoading: true,
+  categories: [],
+  fullListOfCategories: [],
   commodities: [],
   selectedSectionName: '',
-  totalCommodities: 0,
   commodity: null,
   activeCategory: null,
-  fullListOfCategories: [],
+  activeSubcategory: null,
   skip: 0,
+  totalCommodities: 0,
+  searchParams: '',
+  filterShow: 'all',
 };
 
+// TODO: REMOVE
 const getters = {
   categoriesEndpoint: (state, getters, rootState) => `${rootState.host}/shop/categories`,
   commoditiesEndpoint: (state, getters, rootState) => `${rootState.host}/shop/commodities`,
@@ -24,28 +41,30 @@ const getters = {
 };
 
 const mutations = {
-  SHOP_CATEGORIES: (state, payload) => {
-    state.fullListOfCategories = payload.reduce((prev, curr) => {
+  SHOP_CATEGORIES: (state, {
+    categories,
+  }) => {
+    state.fullListOfCategories = categories.reduce((prev, curr) => {
       prev.push(curr);
       if (Array.isArray(curr.subcategories) && curr.subcategories.length) {
         prev = prev.concat(curr.subcategories);
       }
       return prev;
     }, []);
-    state.categories = payload;
+    state.categories = categories;
   },
-  SHOP_COMMODITIES: (state, payload) => {
-    state.commodities = payload.commodities;
-    state.skip = payload.commodities.length;
-    state.totalCommodities = payload.total;
+  SHOP_COMMODITIES: (state, {
+    commodities,
+    total,
+  }) => {
+    state.commodities = commodities;
+    state.skip = state.commodities.length;
+    state.totalCommodities = total;
   },
-  SHOP_MORE_COMMODITIES: (state, payload) => {
-    state.commodities = state.commodities.concat(payload.commodities);
-    state.totalCommodities = payload.total;
-    state.skip = payload.totalCommodities.length;
-  },
-  SHOP_COMMODITY: (state, payload) => {
-    state.commodity = payload.commodity[0];
+  SHOP_COMMODITY: (state, {
+    commodities,
+  }) => {
+    state.commodity = commodities[0];
   },
   CLEAR_COMMODITY: (state) => {
     state.commodity = null;
@@ -53,150 +72,253 @@ const mutations = {
   CLEAR_COMMODITIES: (state) => {
     state.commodities = [];
   },
-  SET_ACTIVE_CATEGORY: (state, payload) => {
-    const fullName = payload.parentName
-      ? `${payload.parentName} > ${payload.name}`
-      : `${payload.name} > View all`;
-    state.activeCategory = { ...payload, fullName };
+  ADD_NEW_COMMODITY: (state, {
+    commodity,
+  }) => {
+    state.commodities = [commodity, ...state.commodities];
   },
-  ADD_NEW_COMMODITY: (state, payload) => {
-    console.log('add new commodity payload', payload);
+  REPLACE_COMMODITY: (state, {
+    commodity,
+  }) => {
+    const index = state.commodities.indexOf((el) => el._id === commodity._id);
+    state.commodities[index] = commodity;
+  },
+  LOADING: (state, payload) => {
+    state.isShopLoading = payload;
   },
 };
 
 const actions = {
-  async GET_SHOP_CATEGORIES({ state, getters, commit }) {
-    const response = (
-      await (await fetch(`${getters.categoriesEndpoint}`)).json()
-    ).categories;
-    commit('SHOP_CATEGORIES', response);
+  async STORE_INIT({
+    state,
+    commit,
+    dispatch,
+  }) {
+    await dispatch('GET_SHOP_CATEGORIES');
+    const categoryId = state.categories[0]._id;
+    if (categoryId) {
+      await dispatch('SET_CATEGORY', { categoryId });
+    }
+  },
+  async GET_SHOP_CATEGORIES({
+    state,
+    commit,
+  }) {
+    const {
+      categories,
+      error,
+    } = await getData(categoriesEndpoints.categories);
+    if (!error) {
+      commit('SHOP_CATEGORIES', {
+        categories,
+      });
+    } else {
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
+    }
     return state.categories;
   },
   async SEARCH_COMMODITIES({ state, getters, commit }, { search, skip }) {
-    const response = await (
-      await fetch(`${getters.searchEndpoint}/?query=${search}&skip=${skip}`)
-    ).json();
-    commit('SHOP_COMMODITIES', response);
+    const {
+      commodities,
+      total,
+      error,
+    } = await getData(categoriesEndpoints.categories);
+    if (!error) {
+      commit('SHOP_COMMODITIES', { commodities, total });
+    } else {
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
+    }
     return state.comodities;
   },
-  async GET_SHOP_COMMODITIES(
-    { state, getters, commit },
-    { categoryId, skip, show },
-  ) {
+  async GET_SHOP_COMMODITIES({
+    state,
+    commit,
+  }, {
+    categoryId,
+  }) {
+    commit('LOADING', true);
     state.skip = 0;
-    const response = await (
-      await fetch(
-        `${getters.commoditiesEndpoint}/${categoryId}?skip=${skip}&withHidden=${show}`,
-      )
-    ).json();
-    commit('SHOP_COMMODITIES', response);
-    return state.comodities;
+    const {
+      commodities,
+      total,
+      error,
+    } = await getData(
+      `${commoditiesEndpoints.commodities}/${categoryId}`,
+    );
+    if (!error) {
+      commit('SHOP_COMMODITIES', {
+        commodities,
+        total,
+      });
+    } else {
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
+    }
+    commit('LOADING', false);
   },
-  async GET_MORE_SHOP_COMMODITIES(
-    { state, getters, commit },
-    { categoryId, skip, show },
-  ) {
-    const response = await (
-      await fetch(
-        `${getters.commoditiesEndpoint}/${categoryId}?skip=${state.skip}&withHidden=${show}`,
-      )
-    ).json();
-    commit('SHOP_MORE_COMMODITIES', response);
-    return state.comodities;
+  async GET_MORE_SHOP_COMMODITIES({
+    state,
+    commit,
+  }) {
+    const {
+      commodities,
+      total,
+      error,
+    } = await getData(
+      `${commoditiesEndpoints.commodities}/${state.activeCategory._id}`,
+    );
+    if (!error) {
+      commit('SHOP_COMMODITIES', {
+        commodities: [...state.commodities, commodities],
+        total,
+      });
+    } else {
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
+    }
   },
-  async GET_COMMODITY({ state, getters, commit }, { commodityId }) {
+  SET_CATEGORY({
+    state,
+    commit,
+    dispatch,
+  }, {
+    categoryId,
+  }) {
+    state.activeCategory = state.fullListOfCategories.find(
+      (cat) => cat._id === categoryId,
+    );
+    state.activeSubcategory = null;
+    dispatch('GET_SHOP_COMMODITIES', {
+      categoryId,
+    });
+  },
+  SET_SUBCATEGORY({
+    state,
+    commit,
+    dispatch,
+  }, {
+    categoryId,
+  }) {
+    state.activeCategory = state.fullListOfCategories.find(
+      (cat) => cat._id === categoryId,
+    );
+    dispatch('GET_SHOP_COMMODITIES', {
+      categoryId,
+    });
+  },
+  SET_FILTER_SHOW({
+    state,
+    dispatch,
+  }, {
+    value,
+  }) {
+    state.filterShow = value;
+    dispatch('GET_SHOP_COMMODITIES', {
+      categoryId: state.activeCategory._id,
+    });
+  },
+  async GET_COMMODITY({
+    state,
+    getters,
+    commit,
+  }, {
+    commodityId,
+  }) {
+    const {
+      commodities,
+      error,
+    } = await getData(
+      `${commoditiesEndpoints.commodity}/${commodityId}`,
+    );
+    if (!error) {
+      commit('SHOP_COMMODITY', {
+        commodities,
+      });
+    } else {
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
+    }
     const response = await (
       await fetch(`${getters.commodityEndpoint}/${commodityId}`)
     ).json();
-    commit('SHOP_COMMODITY', response);
-    return state.commodity;
   },
-  async CREATE_COMMODITY({ state, getters, commit }, { data }) {
-    const formData = new FormData();
-    Object.keys(data).map((key) => formData.append(key, data[key]));
-    try {
-      const response = await fetch(
-        'https://nails-australia-staging.herokuapp.com/shop/new/commodity',
-        {
-          method: 'POST',
-          body: formData,
-        },
-      );
-      const { data, error } = await response.json();
-      if (data) {
-        this.$notify({
-          group: 'foo',
-          title: 'Commodity created',
-        });
-      }
-      if (error) {
-        this.$notify({
-          group: 'foo',
-          title: 'Error',
-          type: 'error',
-          text: error,
-        });
-      }
-      commit('ADD_NEW_COMMODITY', response);
-      return data;
-    } catch (error) {
-      this.$notify({
-        group: 'foo',
-        title: error.message || 'Something went wrong',
-        type: 'error',
+  async CREATE_COMMODITY({
+    commit,
+  }, {
+    data,
+  }) {
+    const formData = getFormData(data);
+    const {
+      commodity,
+      error,
+    } = await postData(
+      commoditiesEndpoints.newCommodity,
+      formData,
+    );
+    if (!error) {
+      commit('ADD_NEW_COMMODITY', {
+        commodity,
       });
-      return null;
+    } else {
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
     }
   },
-  async UPDATE_COMMODITY({ state, getters, commit }, { data, id }) {
-    const formData = new FormData();
-    Object.keys(data).map((item) => formData.append(item, data[item]));
-    try {
-      const response = await fetch(
-        `https://nails-australia-staging.herokuapp.com/shop/commodity/${id}`,
-        {
-          method: 'PUT',
-          body: formData,
-        },
-      );
-
-      const { data, error } = await response.json();
-      if (data) {
-        this.$notify({
-          group: 'foo',
-          title: 'Commodity updated',
-        });
-      }
-      if (error) {
-        this.$notify({
-          group: 'foo',
-          title: 'Error',
-          type: 'error',
-          text: error,
-        });
-      }
-      return data;
-    } catch (error) {
-      this.$notify({
-        group: 'foo',
-        title: error.message || 'Something went wrong',
-        type: 'error',
+  async UPDATE_COMMODITY({
+    state,
+    getters,
+    commit,
+  }, {
+    data,
+    id,
+  }) {
+    const formData = getFormData(data);
+    const {
+      commodity,
+      error,
+    } = await putData(
+      `${commoditiesEndpoints.newCommodity}/${id}`,
+      formData,
+    );
+    if (!error) {
+      commit('REPLACE_COMMODITY', {
+        commodity,
       });
-      return null;
+    } else {
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
     }
   },
-  async UPLOAD_IMAGES({ state, getters, commit }, { data, id }) {
+  async UPLOAD_IMAGES({
+    state,
+    getters,
+    commit,
+  }, {
+    data,
+    id,
+  }) {
     const formData = new FormData();
     [...data].map((item) => formData.append('files', item));
     try {
       const response = await fetch(
-        `https://nails-australia-staging.herokuapp.com/shop/commodity/files/${id}`,
-        {
+        `https://nails-australia-staging.herokuapp.com/shop/commodity/files/${id}`, {
           method: 'POST',
           body: formData,
         },
       );
-      const { updatedCommodity, error } = await response.json();
+      const {
+        updatedCommodity,
+        error,
+      } = await response.json();
       if (updatedCommodity) {
         this.$notify({
           group: 'foo',
@@ -222,15 +344,23 @@ const actions = {
       return null;
     }
   },
-  async DELETE_IMAGE({ state, getters, commit }, { id }) {
+  async DELETE_IMAGE({
+    state,
+    getters,
+    commit,
+  }, {
+    id,
+  }) {
     try {
       const response = await fetch(
-        `https://nails-australia-staging.herokuapp.com/shop/file/${id}`,
-        {
+        `https://nails-australia-staging.herokuapp.com/shop/file/${id}`, {
           method: 'DELETE',
         },
       );
-      const { deleted, error } = await response.json();
+      const {
+        deleted,
+        error,
+      } = await response.json();
       if (deleted) {
         this.$notify({
           group: 'foo',
@@ -256,16 +386,24 @@ const actions = {
       return null;
     }
   },
-  async DELETE_COMMODITY({ state, getters, commit }, { id }) {
+  async DELETE_COMMODITY({
+    state,
+    getters,
+    commit,
+  }, {
+    id,
+  }) {
     try {
       const response = await fetch(
-        `https://nails-australia-staging.herokuapp.com/shop/commodity/${id}`,
-        {
+        `https://nails-australia-staging.herokuapp.com/shop/commodity/${id}`, {
           method: 'DELETE',
         },
       );
 
-      const { deleted, error } = await response.json();
+      const {
+        deleted,
+        error,
+      } = await response.json();
       if (deleted) {
         this.$notify({
           group: 'foo',
@@ -290,16 +428,6 @@ const actions = {
       });
       return null;
     }
-  },
-  SET_NEW_CATEGORY({
-    state, getters, commit, dispatch,
-  }, { category }) {
-    commit('SET_ACTIVE_CATEGORY', category);
-    dispatch('GET_SHOP_COMMODITIES', {
-      categoryId: category._id,
-      skip: 0,
-    });
-    return state.commodity;
   },
 };
 

@@ -1,30 +1,101 @@
 <template>
   <v-container>
-    <v-card min-height='850px' height='100%'>
-      <MainHeader
-        :selectCategory="selectCategory"
-        :modifyHandler="modifyHandler"
-        :categories="categories"
-        :selectedCategory="selectedCategory"
-        :showCommodities="showCommodities"
-        :setCommoditiesToShowValue="setCommoditiesToShowValue"
-      />
-      <v-row justify="start">
+    <v-row class="pa-5 shop-header">
+      <v-col cols="12" lg="6" class="pa-5">
+        <v-row>
+          <v-col cols="6">
+            <v-select
+              class="text-subtitle-1"
+              outlined
+              :value="activeCategory"
+              :items="categories"
+              item-text="name"
+              item-value="_id"
+              label="Category"
+              @change="selectCategory"
+            >
+              Choose category
+            </v-select>
+          </v-col>
+          <v-col cols="6" v-if="activeCategory">
+            <v-select
+              class="text-subtitle-1"
+              :disabled="!activeCategory"
+              outlined
+              :items="[
+                { name: 'Show all', _id: activeCategory._id },
+                ...activeCategory.subcategories,
+              ]"
+              item-text="name"
+              item-value="_id"
+              label="Subcategory"
+              @change="selectSubcategory"
+            >
+              Choose subcategory
+            </v-select>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field></v-text-field>
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col cols="12" lg="6" class="pa-5">
+        <v-row>
+          <v-col cols="6">
+            <v-radio-group
+              :value="filterShow"
+              @change="setCommoditiesToShowValue"
+              row
+            >
+              <v-row class="d-flex justify-space-between flex-column">
+                <v-radio label="All" value="withHidden"></v-radio>
+                <v-radio label="Hidden only" value="hiddenOnly"></v-radio>
+                <v-radio label="Published only" value="all"></v-radio>
+              </v-row>
+            </v-radio-group>
+          </v-col>
+          <v-col cols="6">
+            <v-btn @click="modifyHandler('new')">ADD NEW COMMODITY</v-btn>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+    <v-divider></v-divider>
+    <v-row v-if="isShopLoading">
+      <v-col cols="3" v-for="i in 8" :key="i">
+        <v-skeleton-loader
+          class="mx-auto"
+          max-width="300"
+          type="card"
+        ></v-skeleton-loader>
+      </v-col>
+    </v-row>
+    <v-row v-if="commodities">
+      <v-row v-if="commodities.length">
         <v-col cols="12">
-          <CardsList
-            v-if="!isLoading"
-            :cardClickHandler="modifyHandler"
-            :commodities="commodities"
-            :showCommodities="showCommodities"
-            :selectedCategory="selectedCategory"
-            :totalPages="totalPages"
-            :currentPage="currentPage"
-            :setPage="setPage"
-          />
-          <Spiner v-else />
+          <v-row>
+            <ShopCard
+              v-for="card in commodities"
+              :key="card.id"
+              :image="card.previewImage[0] && card.previewImage[0].link"
+              :name="card.name"
+              :price="card.price"
+              :brand="card.brand"
+              :id="card._id"
+              :handler="cardClickHandler"
+            />
+          </v-row>
+        </v-col>
+        <v-row justify="center" v-if="showMoreButton">
+          <v-btn @click="getMore">More</v-btn>
+        </v-row>
+      </v-row>
+      <v-row v-else>
+        <v-col>
+          <h1>No commodities</h1>
         </v-col>
       </v-row>
-    </v-card>
+    </v-row>
   </v-container>
 </template>
 <style scoped>
@@ -34,93 +105,62 @@
 </style>
 
 <script>
-import CardsList from './CardsList.vue';
-import MainHeader from './MainHeader.vue';
-import ModifyProduct from './ModifyProduct.vue';
-import Spiner from './Spiner';
+import "nails-shop-card";
 
-import 'nails-styles/css/fonts.scss';
-import 'nails-styles/css/variables.scss';
+import "nails-styles/css/fonts.scss";
+import "nails-styles/css/variables.scss";
 
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 
 export default {
-  name: 'ShopEdit',
-  data() {
-    return {
-      selectedCategory: null,
-      showCommodities: 'all',
-      currentPage: 1,
-      isLoading: false,
-    };
-  },
-  watch: {
-    async showCommodities(newVal) {
-      if( !this.selectedCategory) return
-      this.isLoading = true;
-      await this.$store.dispatch('shop/GET_SHOP_COMMODITIES', { categoryId: this.selectedCategory, skip: this.skip, show: this.showCommodities });
-      this.isLoading = false;
-    },
-  },
+  name: "shop",
   computed: {
-    ...mapState('shop', [
-      'categories',
-      'commodities',
-      'totalCommodities',
-      'activeCategory',
+    ...mapState("shop", [
+      "isShopLoading",
+      "categories",
+      "commodities",
+      "activeCategory",
+      "skip",
+      "searchParams",
+      "activeSubcategory",
+      "filterShow",
+      "totalCommodities",
     ]),
-    totalPages() {
-      return Math.ceil(this.totalCommodities / 20);
-    },
-    skip() {
-      return this.currentPage * 20 - 20;
+    showMoreButton() {
+      this.commodities.length < this.totalCommodities;
     },
   },
-  components: { CardsList, MainHeader, ModifyProduct, Spiner },
+
   methods: {
-    async getData() {
-      this.isLoading = true;
-      !this.categories &&
-        (await this.$store.dispatch('shop/GET_SHOP_CATEGORIES'));
-      if (this.categories) {
-        !this.activeCategory &&
-          await this.$store.dispatch('shop/SET_NEW_CATEGORY', {
-            category: this.categories[0],
-          });
-      }
-      this.isLoading = false
-    },
-    async getCards(categoryId, skip) {
-      this.isLoading = true;
-      await this.$store.dispatch('shop/GET_SHOP_COMMODITIES', { categoryId: categoryId, skip: skip || this.skip, show: this.showCommodities });
-      this.isLoading = await false;
-    },
     selectCategory(categoryId) {
-      this.selectedCategory = categoryId;
-      this.currentPage = 1;
-      this.$store.dispatch('shop/GET_SHOP_COMMODITIES', {categoryId, skip: 0, show: this.showCommodities});
+      this.$store.dispatch("shop/SET_CATEGORY", {
+        categoryId,
+      });
+    },
+    selectSubcategory(categoryId) {
+      this.$store.dispatch("shop/SET_SUBCATEGORY", {
+        categoryId,
+      });
     },
     modifyHandler(id) {
       this.$router.push({
-        name: 'CommodityEdit',
+        name: "commodity-edit",
         params: {
-        commodityId: id
-        }
-      })
+          commodityId: id,
+        },
+      });
     },
-    setPage(page) {
-      this.currentPage = page;
-      this.getCards(this.selectedCategory, this.skip);
+    setCommoditiesToShowValue(value) {
+      this.$store.dispatch("shop/SET_FILTER_SHOW", {
+        value,
+      });
     },
-    setCommoditiesToShowValue(val) {
-      this.showCommodities = val;
+    getMore() {
+      this.$store.dispatch("shop/GET_MORE_SHOP_COMMODITIES");
+    },
+    searchHandler() {
+      this.$store.dispatch("shop/GET_MORE_SHOP_COMMODITIES");
     },
   },
-  created() {
-    this.getData();
-  },
-  beforeDestroy() {
-    // this.$store.commit('shop/CLEAR_COMMODITIES')
-  }
 };
 </script>

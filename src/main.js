@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueCoreVideoPlayer from 'vue-core-video-player';
 import ErrorMessage from '@/components/popups/error.vue';
+import ConfirmDelete from '@/components/popups/confirmDelete.vue';
 import Message from '@/components/popups/message.vue';
 import App from './App.vue';
 import router from './router';
@@ -15,6 +16,7 @@ Vue.use(VueCoreVideoPlayer);
 
 Vue.component('error-message', ErrorMessage);
 Vue.component('simple-message', Message);
+Vue.component('confirm-delete', ConfirmDelete);
 
 new Vue({
   router,
