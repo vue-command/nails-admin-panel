@@ -20,7 +20,8 @@ const routes = [
     meta: {
       layout: 'shop',
     },
-    component: () => import(
+    component: () =>
+      import(
       /* webpackChunkName: "shop" */
       '@/views/Shop/Shop.vue'
     ),
@@ -31,7 +32,8 @@ const routes = [
     meta: {
       layout: 'shop',
     },
-    component: () => import(
+    component: () =>
+      import(
       /* webpackChunkName: "shop" */
       '@/views/Shop/ModifyProduct.vue'
     ),
@@ -42,7 +44,8 @@ const routes = [
     meta: {
       layout: 'courses',
     },
-    component: () => import(
+    component: () =>
+      import(
       /* webpackChunkName: "online-courses" */
       '@/views/Courses/OnlineCoursesPage.vue'
     ),
@@ -53,7 +56,8 @@ const routes = [
     meta: {
       layout: 'courses',
     },
-    component: () => import(
+    component: () =>
+      import(
       /* webpackChunkName: "online-course" */
       '@/views/Courses/Course.vue'
     ),
@@ -64,7 +68,8 @@ const routes = [
     meta: {
       layout: 'courses',
     },
-    component: () => import(
+    component: () =>
+      import(
       /* webpackChunkName: "online-course-videos" */
       '@/views/Courses/CourseVideos.vue'
     ),
@@ -75,7 +80,8 @@ const routes = [
     meta: {
       layout: 'courses',
     },
-    component: () => import(
+    component: () =>
+      import(
       /* webpackChunkName: "online-course-video" */
       '@/views/Courses/CourseVideoDetail.vue'
     ),
@@ -86,7 +92,8 @@ const routes = [
     meta: {
       layout: 'courses',
     },
-    component: () => import(
+    component: () =>
+      import(
       /* webpackChunkName: "offline-courses" */
       '@/views/Courses/OfflineCoursesPage.vue'
     ),
@@ -97,7 +104,8 @@ const routes = [
     meta: {
       layout: 'courses',
     },
-    component: () => import(
+    component: () =>
+      import(
       /* webpackChunkName: "offline-courses" */
       '@/views/Courses/CreateOfflineCourseForm.vue'
     ),
@@ -108,7 +116,8 @@ const routes = [
     meta: {
       layout: 'courses',
     },
-    component: () => import(
+    component: () =>
+      import(
       /* webpackChunkName: "online-course" */
       '@/views/Courses/OfflineCourse.vue'
     ),

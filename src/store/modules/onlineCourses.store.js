@@ -14,8 +14,7 @@ const state = {
   // onlineError: null,
 };
 
-const getters = {
-};
+const getters = {};
 
 const mutations = {
   ONLINE_COURSES: (state, { onlineCourses, total }) => {
@@ -46,7 +45,9 @@ const mutations = {
 const actions = {
   async GET_ONLINE_COURSES({ commit }, string) {
     commit('LOADING', true);
-    const { onlineCourses, total, error } = await getData(`${endpoints.get}/${string}`);
+    const { onlineCourses, total, error } = await getData(
+      `${endpoints.get}/${string}`
+    );
     if (!error) {
       commit('ONLINE_COURSES', { onlineCourses: onlineCourses ?? [], total });
     } else {
@@ -56,12 +57,13 @@ const actions = {
   },
   async GET_MORE_ONLINE_COURSES({ commit }, { string, skip }) {
     commit('LOADING', true);
-    const { onlineCourses, total, error } = await getData(`${endpoints.get}/${string}&skip=${skip}`);
+    const { onlineCourses, total, error } = await getData(
+      `${endpoints.get}/${string}&skip=${skip}`
+    );
     if (!error) {
       commit('MORE_ONLINE_COURSES', { onlineCourses, total });
     } else {
-      commit('ERROR',
-        errors.get, { root: true });
+      commit('ERROR', errors.get, { root: true });
     }
     commit('LOADING', false);
   },

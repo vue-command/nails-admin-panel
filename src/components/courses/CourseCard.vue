@@ -1,6 +1,11 @@
 <template>
   <v-card dark class="cardfone ma-12">
-    <CoverImage :url="checkUrl(course)" :width="400" :height="250" class="image-course"/>
+    <CoverImage
+      :url="checkUrl(course)"
+      :width="400"
+      :height="250"
+      class="image-course"
+    />
     <v-card-title class="buttons--text pa-0 pl-4 pt-4">
       {{ course.accessDays }} days | $ {{ course.price }}
     </v-card-title>
@@ -106,49 +111,44 @@
 </style>
 
 <script>
-import CoverImage from '@/components/CoverImage.vue';
+import CoverImage from '@/components/CoverImage.vue'
 
 export default {
   name: 'course-card',
-  props: [
-    'course',
-    'type',
-  ],
+  props: ['course', 'type'],
   components: {
-    CoverImage,
+    CoverImage
   },
   data() {
     return {
       // eslint-disable-next-line global-require
-      coverImageSrc: require('@/assets/noImage.jpg'),
-    };
+      coverImageSrc: require('@/assets/noImage.jpg')
+    }
   },
-  watch: {
-  },
+  watch: {},
   methods: {
     checkUrl(card) {
-      let img;
+      let img
       if (card.photo instanceof File) {
-        img = URL.createObjectURL(card.photo);
-        return img;
+        img = URL.createObjectURL(card.photo)
+        return img
       }
 
       if (card.photo && Array.isArray(card.photo) && card.photo.length) {
-        img = card.photo[0].link;
+        img = card.photo[0].link
       }
       if (!img) {
-        img = this.coverImageSrc;
+        img = this.coverImageSrc
       }
-      return img;
+      return img
     },
-    mok() {
-    },
+    mok() {}
     // detailInfoCard(route) {
     //   if (this.detailInfo) this.detailInfo(route, this.id);
     // },
     // payDetailForm() {
     //   if (this.payDetail) this.payDetail();
     // },
-  },
-};
+  }
+}
 </script>

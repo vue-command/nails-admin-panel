@@ -26,7 +26,7 @@ export default {
     commodity: 'shop/commodity',
     subcommodities: 'shop/subcommodities',
     search: 'shop/search',
-    newCommodity: '/shop/new/commodity',
+    newCommodity: 'shop/new/commodity',
     addFiles: 'shop/commodity/files',
     deleteFile: 'shop/commodity/files',
     newSubcategory: 'Fshop/file',

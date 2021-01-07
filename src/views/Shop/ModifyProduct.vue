@@ -14,7 +14,7 @@
 
     <v-card class="base-card pa-10">
       <v-card-text>
-        <h1>{{ productId === "new" ? "NEW" : "MODIFY" }} PRODUCT</h1>
+        <h1>{{ productId === 'new' ? 'NEW' : 'MODIFY' }} PRODUCT</h1>
       </v-card-text>
       <v-row>
         <v-col cols="12" sm="6">
@@ -36,8 +36,7 @@
                   :disabled="!category"
                   :items="
                     category
-                      ? categories.find((el) => el._id === category)
-                          .subcategories
+                      ? categories.find(el => el._id === category).subcategories
                       : []
                   "
                   outlined
@@ -45,7 +44,7 @@
                   item-text="name"
                   item-value="_id"
                   label="Subategory"
-                  v-model="category"
+                  v-model="subcategory"
                   >Choose subcategory</v-select
                 >
                 <v-textarea
@@ -114,58 +113,71 @@
         </v-col>
         <v-col cols="12" sm="6">
           <v-row justify="center">
-            <ShopCard
-              :image="previewImageLink || coverImageSrc"
-              :name="name || 'Name'"
-              :brand="brand || 'Brand'"
-              :price="price"
-            />
+            <v-card class="cardfone shop-card" min-width="300" min-height="500">
+              <v-card flat class="px-0 pt-4 gray-background" width="100%">
+                <v-img
+                  :src="previewImageLink || coverImageSrc"
+                  width="100%"
+                  height="350"
+                  contain
+                />
+              </v-card>
+              <v-card-text>
+                <p class="black--text text-h5 my-1 font-weight-medium">
+                  {{ name || 'Name' }}
+                </p>
+                <p class="black--text text-h6 ma-0 font-weight-medium">
+                  {{ brand || 'Brand' }}
+                </p>
+                <p class="d-flex justify-end text-h6 ma-0 font-weight-bold">
+                  {{ price }} AUD
+                </p>
+              </v-card-text>
+            </v-card>
           </v-row>
         </v-col>
       </v-row>
 
       <v-row>
-        <v-col>
-          <v-card outlined>
-            <v-col>
-              <h3>PAGE IMAGES</h3>
-              <v-row>
-                <v-card
-                  v-for="(image, index) in images"
-                  :key="index"
-                  class="pa-5 ma-5"
+        <v-card outlined>
+          <v-col>
+            <h3>PAGE IMAGES</h3>
+            <v-row>
+              <v-card
+                v-for="(image, index) in images"
+                :key="index"
+                class="pa-5 ma-5"
+              >
+                <v-img
+                  :src="image.link"
+                  height="200"
+                  width="200"
+                  contain
+                ></v-img>
+                <v-btn color="error" @click="deleteImageHandler(image, index)"
+                  >DELETE</v-btn
                 >
-                  <v-img
-                    :src="image.link"
-                    height="200"
-                    width="200"
-                    contain
-                  ></v-img>
-                  <v-btn color="error" @click="deleteImageHandler(image, index)"
-                    >DELETE</v-btn
-                  >
-                </v-card>
-              </v-row>
-              <v-row justify="center">
-                <v-btn
-                  color="success"
-                  @click="$refs.inputUpload.click()"
-                  :disabled="!currentProduct"
-                  class="my-10"
-                  >Upload images</v-btn
-                >
-                <input
-                  v-show="false"
-                  ref="inputUpload"
-                  accept="image/*"
-                  type="file"
-                  @change="previewFilesHandler"
-                  multiple
-                />
-              </v-row>
-            </v-col>
-          </v-card>
-        </v-col>
+              </v-card>
+            </v-row>
+            <v-row justify="center">
+              <v-btn
+                color="success"
+                @click="$refs.inputUpload.click()"
+                :disabled="!currentProduct"
+                class="my-10"
+                >Upload images</v-btn
+              >
+              <input
+                v-show="false"
+                ref="inputUpload"
+                accept="image/*"
+                type="file"
+                @change="previewFilesHandler"
+                multiple
+              />
+            </v-row>
+          </v-col>
+        </v-card>
       </v-row>
 
       <v-col cols="12">
@@ -179,7 +191,7 @@
             @click="publishHandler"
             :disabled="!currentProduct"
             >{{
-              this.isPublished ? "Hide commodity" : "Publish commodity"
+              this.isPublished ? 'Hide commodity' : 'Publish commodity'
             }}</v-btn
           >
           <v-btn
@@ -241,11 +253,11 @@
 
             <v-col cols="12" sm="12" md="5" xl="4" lg="4" class="px-0">
               <v-col cols="12" class="gray-font px-0 text-start">
-                <h2 class="dark-gray-font">{{ name || "Name" }}</h2>
+                <h2 class="dark-gray-font">{{ name || 'Name' }}</h2>
                 <h4>{{ brand }}</h4>
                 <div class="caption">
                   <h2 class="speciﬁcations">
-                    {{ speciﬁcations.trim() || "Specification" }}
+                    {{ speciﬁcations.trim() || 'Specification' }}
                   </h2>
                 </div>
                 <div class="price">
@@ -274,48 +286,48 @@
 </template>
 
 <script>
-import "nails-shop-card";
-import "nails-shop-card/dist/nails-shop-card.css";
-import { mapState } from "vuex";
-import confirmDelete from "../../components/popups/confirmDelete.vue";
+import 'nails-shop-card';
+import 'nails-shop-card/dist/nails-shop-card.css';
+import { mapState } from 'vuex';
+import confirmDelete from '../../components/popups/confirmDelete.vue';
 
 export default {
   components: { confirmDelete },
-  name: "ModifyProduct",
+  name: 'ModifyProduct',
   props: [
-    "createCommodity",
-    "Handler",
-    "uploadImages",
-    "deleteImage",
-    "createCategory",
-    "updateCommodity",
-    "getDataMain",
-    "deleteCommodity",
-    "noImage",
+    'createCommodity',
+    'Handler',
+    'uploadImages',
+    'deleteImage',
+    'createCategory',
+    'updateCommodity',
+    'getDataMain',
+    'deleteCommodity',
+    'noImage',
   ],
   data() {
     return {
       showDialog: false,
       valid: true,
-      category: "",
-      subCategory: "",
-      brand: "",
-      name: "",
-      codeOfProduct: "",
-      speciﬁcations: "",
+      category: '',
+      subcategory: '',
+      brand: '',
+      name: '',
+      codeOfProduct: '',
+      speciﬁcations: '',
       isPublished: false,
       price: 0,
       photos: [],
       currentProduct: null,
       rules: {
-        required: (v) => !!v || "input is required",
+        required: v => !!v || 'input is required',
       },
       images: [],
       previewFile: null,
       previewImageLink: this.noImage,
       activeCard: this.noImage,
       productId: this.$route.params.commodityId,
-      coverImageSrc: require("@/assets/noImage.jpg"),
+      coverImageSrc: require('@/assets/noImage.jpg'),
     };
   },
   watch: {
@@ -357,17 +369,17 @@ export default {
         }
       } catch (e) {
         this.$notify({
-          group: "foo",
-          text: "Publishing error",
+          group: 'foo',
+          text: 'Publishing error',
         });
       }
     },
     async getData() {
       if (!this.categories)
-        await this.$store.dispatch("shop/GET_SHOP_CATEGORIES");
+        await this.$store.dispatch('shop/GET_SHOP_CATEGORIES');
     },
     async getCommodity(id) {
-      this.$store.dispatch("shop/GET_COMMODITY", {
+      this.$store.dispatch('shop/GET_COMMODITY', {
         commodityId: id,
       });
     },
@@ -378,6 +390,7 @@ export default {
     async submitHandler() {
       const data = {
         categoryId: this.category,
+        subCategoryId: this.subcategory,
         name: this.name,
         speciﬁcations: this.speciﬁcations,
         price: Number(this.price).toFixed(2),
@@ -387,10 +400,7 @@ export default {
       };
       if (!this.isEditMode) {
         data.previewFile = this.previewFile;
-        const createdCommodity = await this.createCommodity(data);
-        if (createdCommodity) {
-          this.currentProduct = createdCommodity;
-        }
+        this.$store.dispatch('shop/CREATE_COMMODITY', { data });
       } else {
         if (this.previewFile) {
           data.previewFile = this.previewFile;
@@ -435,7 +445,7 @@ export default {
     async deleteImageHandler(img) {
       const isDeleted = await this.deleteImage(img._id);
       if (isDeleted) {
-        this.images = this.images.filter((el) => el._id !== img._id);
+        this.images = this.images.filter(el => el._id !== img._id);
       }
     },
     async deleteCommodityHandler() {
@@ -447,22 +457,20 @@ export default {
     },
   },
   computed: {
-    ...mapState("shop", [
-      "fullListOfCategories",
-      "commodity",
-      "totalCommodities",
-      "categories",
+    ...mapState('shop', [
+      'fullListOfCategories',
+      'commodity',
+      'totalCommodities',
+      'categories',
     ]),
     isEditMode() {
-      return this.productId !== "new";
+      return this.productId !== 'new';
     },
     isSaveDisabled() {
       let isDisabled = true;
       if (this.isEditMode) isDisabled = Boolean(!this.valid);
-      else {
-        if (this.valid) {
-          isDisabled = !this.previewFile;
-        }
+      else if (this.valid) {
+        isDisabled = !this.previewFile;
       }
       return isDisabled;
     },
@@ -474,7 +482,7 @@ export default {
     }
   },
   beforeDestroy() {
-    this.$store.commit("shop/CLEAR_COMMODITY");
+    this.$store.commit('shop/CLEAR_COMMODITY');
     window.onbeforeunload = () => null;
   },
 };
