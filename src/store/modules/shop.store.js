@@ -8,10 +8,11 @@ const { getData, postData, putData, deleteData, getFormData } = require('@/helpe
 const categoriesEndpoints = require('@/config/endpoints').default.categories;
 const commoditiesEndpoints = require('@/config/endpoints').default.commodities;
 const errors = require('@/config/errors').default.shop;
-const messages = require('@/config/messages').default.online;
+const messages = require('@/config/messages').default.shop;
 
 const state = {
   isShopLoading: true,
+  isCommodityLoading: false,
   categories: [],
   fullListOfCategories: [],
   commodities: [],
@@ -49,22 +50,31 @@ const mutations = {
     state.skip = state.commodities.length;
     state.totalCommodities = total;
   },
-  SHOP_COMMODITY: (state, { commodities }) => {
-    state.commodity = commodities[0];
+  SHOP_COMMODITY: (state, { commodity }) => {
+    state.commodity = commodity[0];
   },
   CLEAR_COMMODITY: state => {
     state.commodity = null;
   },
+  REMOVE_COMMODITY: (state, { id }) => {
+    state.commodity = null;
+    state.commodities = state.commodities.filter(elem => elem._id !== id);
+  },
   CLEAR_COMMODITIES: state => {
     state.commodities = [];
   },
-  ADD_NEW_COMMODITY: (state, { commodity }) => {
-    state.commodities = [commodity, ...state.commodities];
-    state.commodity = [commodity, ...state.commodities];
+  ADD_NEW_COMMODITY: (state, { data }) => {
+    if (state.commodities) {
+      state.commodities = [data, ...state.commodities];
+    }
+    state.commodity = data;
   },
   REPLACE_COMMODITY: (state, { commodity }) => {
-    const index = state.commodities.indexOf(el => el._id === commodity._id);
-    state.commodities[index] = commodity;
+    if (commodity.categoryId === state.activeCategory?._id || commodity.subCategoryId === state.activeCategory?._id) {
+      const index = state.commodities.indexOf(el => el._id === commodity._id);
+      state.commodities[index] = commodity;
+    }
+    state.commodity = commodity;
   },
   LOADING: (state, payload) => {
     state.isShopLoading = payload;
@@ -137,39 +147,43 @@ const actions = {
     }
   },
 
-  async GET_COMMODITY({ getters, commit }, { commodityId }) {
-    const { commodities, error } = await getData(`${commoditiesEndpoints.commodity}/${commodityId}`);
+  async GET_COMMODITY({ state, commit }, { commodityId }) {
+    state.isCommodityLoading = true;
+    const { commodity, error } = await getData(`${commoditiesEndpoints.commodity}/${commodityId}`);
     if (!error) {
       commit('SHOP_COMMODITY', {
-        commodities,
+        commodity,
       });
     } else {
       commit('ERROR', errors.oops, {
         root: true,
       });
     }
-    const response = await (await fetch(`${getters.commodityEndpoint}/${commodityId}`)).json();
+    state.isCommodityLoading = false;
   },
-  async CREATE_COMMODITY({ commit }, { data }) {
-    const formData = getFormData(data);
-    const { commodity, error } = await postData(commoditiesEndpoints.newCommodity, formData);
+  async CREATE_COMMODITY({ commit }, { data: form }) {
+    const formData = getFormData(form);
+    const { data, error } = await postData(commoditiesEndpoints.newCommodity, formData);
+    console.log('data', data);
     if (!error) {
       commit('ADD_NEW_COMMODITY', {
-        commodity,
+        data,
       });
     } else {
+      1;
       commit('ERROR', errors.oops, {
         root: true,
       });
     }
   },
-  async UPDATE_COMMODITY({ state, getters, commit }, { data, id }) {
-    const formData = getFormData(data);
-    const { commodity, error } = await putData(`${commoditiesEndpoints.newCommodity}/${id}`, formData);
+  async UPDATE_COMMODITY({ state, getters, commit }, { data: form, id }) {
+    const formData = getFormData(form);
+    const { data, error } = await putData(`${commoditiesEndpoints.commodity}/${id}`, formData);
     if (!error) {
       commit('REPLACE_COMMODITY', {
-        commodity,
+        commodity: data,
       });
+      commit('MESSAGE', messages.update, { root: true });
     } else {
       commit('ERROR', errors.oops, {
         root: true,
@@ -179,36 +193,8 @@ const actions = {
   async UPLOAD_IMAGES({ state, getters, commit }, { data, id }) {
     const formData = new FormData();
     [...data].map(item => formData.append('files', item));
-    try {
-      const response = await fetch(`https://nails-australia-staging.herokuapp.com/shop/commodity/files/${id}`, {
-        method: 'POST',
-        body: formData,
-      });
-      const { updatedCommodity, error } = await response.json();
-      if (updatedCommodity) {
-        this.$notify({
-          group: 'foo',
-          title: 'Images uploaded',
-        });
-      }
-      if (error) {
-        this.$notify({
-          group: 'foo',
-          title: 'Error',
-          type: 'error',
-          text: error,
-        });
-      }
-      return updatedCommodity;
-    } catch (error) {
-      this.$notify({
-        group: 'foo',
-        type: 'error',
-        title: 'Error',
-        text: error.message || 'Something went wrong',
-      });
-      return null;
-    }
+    const res = await postData(`${commoditiesEndpoints.files}/${id}`, formData);
+    console.log(res);
   },
   async DELETE_IMAGE({ state, getters, commit }, { id }) {
     try {
@@ -242,35 +228,16 @@ const actions = {
     }
   },
   async DELETE_COMMODITY({ state, getters, commit }, { id }) {
-    try {
-      const response = await fetch(`https://nails-australia-staging.herokuapp.com/shop/commodity/${id}`, {
-        method: 'DELETE',
+    // const { isFDeleted, error } = await getData(`${commoditiesEndpoints.commodity}/${commodityId}`);
+    const { deleted, error } = await deleteData(`${commoditiesEndpoints.commodity}/${id}`);
+    if (deleted) {
+      commit('REMOVE_COMMODITY', {
+        id,
       });
-
-      const { deleted, error } = await response.json();
-      if (deleted) {
-        this.$notify({
-          group: 'foo',
-          title: 'Commodity deleted',
-        });
-      }
-      if (error) {
-        this.$notify({
-          group: 'foo',
-          title: 'Error',
-          type: 'error',
-          text: error,
-        });
-      }
-      return deleted;
-    } catch (error) {
-      this.$notify({
-        group: 'foo',
-        type: 'error',
-        title: 'Error',
-        text: error.message || 'Something went wrong',
+    } else {
+      commit('ERROR', errors.oops, {
+        root: true,
       });
-      return null;
     }
   },
 
@@ -289,7 +256,6 @@ const actions = {
   },
   SET_FILTER_SHOW({ state, dispatch }, { value }) {
     state.filterShow = value;
-    console.log(state.filterShow);
     dispatch('GET_SHOP_COMMODITIES', {
       categoryId: state.activeCategory._id,
     });

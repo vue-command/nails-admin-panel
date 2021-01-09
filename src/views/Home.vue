@@ -2,31 +2,17 @@
   <v-container>
     <v-row class="text-center">
       <v-col cols="6" lg="6">
-        <v-card
-          class="mx-auto ma-5"
-          max-width="344"
-          outlined
-          @click="goToOfflineCourses('offline-courses')"
-        >
+        <v-card class="mx-auto ma-5" max-width="344" outlined @click="goToOfflineCourses('offline-courses')">
           <v-list-item three-line>
             <v-list-item-content>
-              <v-list-item-title class="headline mb-1">
-                OFFLINE COURSES
-              </v-list-item-title>
+              <v-list-item-title class="headline mb-1"> OFFLINE COURSES </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-card>
-        <v-card
-          class="mx-auto ma-5"
-          max-width="344"
-          outlined
-          @click="goToOfflineCourses('online-courses')"
-        >
+        <v-card class="mx-auto ma-5" max-width="344" outlined @click="goToOfflineCourses('online-courses')">
           <v-list-item three-line>
             <v-list-item-content>
-              <v-list-item-title class="headline mb-1">
-                ONLINE COURSES
-              </v-list-item-title>
+              <v-list-item-title class="headline mb-1"> ONLINE COURSES </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-card>
@@ -35,18 +21,14 @@
         <v-card class="mx-auto ma-5" max-width="344" outlined @click="goToShop">
           <v-list-item three-line>
             <v-list-item-content>
-              <v-list-item-title class="headline mb-1">
-                Shop
-              </v-list-item-title>
+              <v-list-item-title class="headline mb-1"> Shop </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-card>
         <v-card class="mx-auto ma-5" max-width="344" outlined @click="goToShop">
           <v-list-item three-line>
             <v-list-item-content>
-              <v-list-item-title class="headline mb-1">
-                Shop categories
-              </v-list-item-title>
+              <v-list-item-title class="headline mb-1"> Shop categories </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-card>

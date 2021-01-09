@@ -23,4 +23,21 @@ export default {
       messageText: 'Publishing course successfully',
     },
   },
+  shop: {
+    update: {
+      message: true,
+      messageType: 'Update commodity',
+      messageText: 'Commody was successfully updated',
+    },
+    create: {
+      message: true,
+      messageType: 'Create commodity',
+      messageText: 'Commodity was successfully updated',
+    },
+    delete: {
+      message: true,
+      messageType: 'Delete offline course',
+      messageText: 'Deleted offline course successfully',
+    },
+  },
 };

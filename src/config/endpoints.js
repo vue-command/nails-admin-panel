@@ -27,8 +27,7 @@ export default {
     subcommodities: 'shop/subcommodities',
     search: 'shop/search',
     newCommodity: 'shop/new/commodity',
-    addFiles: 'shop/commodity/files',
-    deleteFile: 'shop/commodity/files',
+    files: 'shop/commodity/files',
     newSubcategory: 'Fshop/file',
   },
 };

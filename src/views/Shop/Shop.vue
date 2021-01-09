@@ -60,17 +60,10 @@
         <v-skeleton-loader class="mx-auto" max-width="300" type="card"></v-skeleton-loader>
       </v-col>
     </v-row>
-    <v-row v-else-if="commodities">
+    <v-row v-else-if="commodities" class="pa-2 ma-2">
       <v-row v-if="commodities.length">
-        <v-col cols="12" sm="6" md="4" lg="3">
-          <v-card
-            class="cardfone shop-card"
-            min-width="300"
-            min-height="500"
-            v-for="card in commodities"
-            :key="card.id"
-            :@click="modifyHandler(card.id)"
-          >
+        <v-col cols="12" sm="12" md="4" lg="3" v-for="card in commodities" :key="card.id" class="pa-2">
+          <v-card class="" min-height="500" @click="modifyHandler(card._id)">
             <v-card flat class="px-0 pt-4 gray-background" width="100%">
               <v-img :src="card.previewImage[0] && card.previewImage[0].link" width="100%" height="350" contain />
             </v-card>
@@ -104,8 +97,6 @@
 </style>
 
 <script>
-import 'nails-shop-card';
-
 import 'nails-styles/css/fonts.scss';
 import 'nails-styles/css/variables.scss';
 
@@ -114,10 +105,7 @@ import { mapState } from 'vuex';
 export default {
   name: 'shop',
   data() {
-    return {
-      // selectedCategory: "",
-      // selectedSubcategory: "",
-    };
+    return {};
   },
   computed: {
     ...mapState('shop', [
@@ -161,6 +149,7 @@ export default {
       });
     },
     modifyHandler(id) {
+      console.log(id);
       this.$router.push({
         name: 'commodity-edit',
         params: {
