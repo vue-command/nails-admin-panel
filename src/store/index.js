@@ -6,8 +6,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    // host: process.env.VUE_APP_API_URL,
-    // host: 'https://nails-australia-staging.herokuapp.com',
+    loading: false,
     error: null,
     errorMessage: '',
     errorType: '',
@@ -37,6 +36,9 @@ export default new Vuex.Store({
         state.messageType = payload.messageType;
         state.messageText = payload.messageText;
       }
+    },
+    LOADING(state, payload) {
+      state.loading = payload;
     },
   },
   actions: {},

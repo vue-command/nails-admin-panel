@@ -2,13 +2,13 @@
   <div>
     <Spinner v-if="loading" />
     <CourseDetail
-      v-if="!loading && onlineCourseById"
-      :course="onlineCourseById"
-      :type="typeCourse"
+      v-if="!loading && course"
+      :course="course"
+      :type="type"
       btnTitle="BUY THIS COURSE"
     />
     <div
-      v-if="!loading && onlineCourseById"
+      v-if="!loading && course"
       class="d-flex flex-column align-center flex-sm-row justify-sm-center mt-8"
     >
       <v-btn
@@ -22,8 +22,8 @@
         >Videos</v-btn
       >
       <v-btn
-        @click="$store.dispatch('onlineCourses/PUBLISH', courseId)"
-        :disabled="!onlineCourseById.isPaid || onlineCourseById.isPublished"
+        @click="()=> publish(courseId)"
+        :disabled="!course.isPaid || course.isPublished"
         color="buttons"
         rounded
         large
@@ -37,35 +37,36 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 import CourseDetail from '@/components/courses/CourseDetail.vue';
 import Spinner from '@/components/Spinner.vue';
 
 export default {
-  name: 'online-course',
+  name: 'Course',
   components: {
     Spinner,
     CourseDetail,
   },
   data() {
     return {
-      courseId: this.$route.params.courseid,
-      course: null,
-      ready: false,
-      typeCourse: 'online',
+      type: 'online',
     };
   },
   computed: {
+    ...mapState(['loading']),
     ...mapState('onlineCourses', [
-      'onlineCourses',
-      'onlineCourseById',
-      'totalOnlineCourses',
-      'loading',
+      'courses',
+      'course',
+      'total',
     ]),
   },
   watch: {},
   methods: {
+    ...mapActions('onlineCourses', {
+      getCourse: 'GET_COURSE',
+      publish: 'PUBLISH',
+    }),
     goToVideos() {
       if (this.$route.name !== 'online-course-videos') {
         this.$router.push({ name: 'online-course-videos' });
@@ -73,7 +74,7 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('onlineCourses/GET_ONLINE_COURSE_BY_ID', this.courseId);
+    this.getCourse(this.$route.params.courseid);
   },
 };
 </script>

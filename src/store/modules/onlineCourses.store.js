@@ -6,11 +6,11 @@ const errors = require('@/config/errors').default.online;
 const messages = require('@/config/messages').default.online;
 
 const state = {
-  onlineCourses: [],
-  onlineCourseById: null,
-  currentVideo: null,
-  totalOnlineCourses: 0,
-  loading: false,
+  courses: [],
+  course: null,
+  video: null,
+  total: 0,
+  // loading: false,
   // onlineError: null,
 };
 
@@ -18,73 +18,71 @@ const getters = {
 };
 
 const mutations = {
-  ONLINE_COURSES: (state, { onlineCourses, total }) => {
-    state.onlineCourses = onlineCourses;
-    state.totalOnlineCourses = total;
+  COURSES: (state, payload) => {
+    state.courses = payload ?? [];
   },
-  MORE_ONLINE_COURSES: (state, { onlineCourses, total }) => {
-    state.onlineCourses = [...state.onlineCourses, ...onlineCourses];
-    state.totalOnlineCourses = total;
+  TOTAL: (state, payload) => {
+    state.total = payload ?? 0;
   },
-  ONLINE_COURSE_BY_ID: (state, { onlineCourse }) => {
-    state.onlineCourseById = onlineCourse;
+  MORE_COURSES: (state, payload) => {
+    state.courses = state.courses.concat(payload);
   },
-  ONLINE_COURSE_VIDEO_BY_ID: (state, { video }) => {
-    state.currentVideo = video;
+  COURSE: (state, payload) => {
+    state.course = payload;
   },
-  ONLINE_COURSE_BY_ID_CLEAR: (state) => {
-    state.onlineCourseById = null;
-  },
-  // ERROR: (state, payload) => {
-  //   state.onlineError = payload;
-  // },
-  LOADING: (state, payload) => {
-    state.loading = payload;
+  VIDEO: (state, payload) => {
+    state.video = payload;
   },
 };
 
 const actions = {
-  async GET_ONLINE_COURSES({ commit }, string) {
-    commit('LOADING', true);
+  async GET_COURSES({ commit }, string) {
+    commit('LOADING', true, { root: true });
     const { onlineCourses, total, error } = await getData(`${endpoints.get}/${string}`);
     if (!error) {
-      commit('ONLINE_COURSES', { onlineCourses: onlineCourses ?? [], total });
+      commit('COURSES', onlineCourses);
+      commit('TOTAL', total);
     } else {
       commit('ERROR', errors.get, { root: true });
     }
-    commit('LOADING', false);
+    commit('LOADING', false, { root: true });
   },
-  async GET_MORE_ONLINE_COURSES({ commit }, { string, skip }) {
-    commit('LOADING', true);
+
+  async GET_MORE_COURSES({ commit }, { string, skip }) {
+    commit('LOADING', true, { root: true });
     const { onlineCourses, total, error } = await getData(`${endpoints.get}/${string}&skip=${skip}`);
     if (!error) {
-      commit('MORE_ONLINE_COURSES', { onlineCourses, total });
+      commit('MORE_COURSES', onlineCourses);
+      commit('TOTAL', total);
     } else {
       commit('ERROR',
         errors.get, { root: true });
     }
-    commit('LOADING', false);
+    commit('LOADING', false, { root: true });
   },
-  async GET_ONLINE_COURSE_BY_ID({ commit }, id) {
-    commit('LOADING', true);
+
+  async GET_COURSE({ commit }, id) {
+    commit('LOADING', true, { root: true });
     const { onlineCourse, error } = await getData(`${endpoints.get}/${id}`);
     if (!error) {
-      commit('ONLINE_COURSE_BY_ID', { onlineCourse });
+      commit('COURSE', onlineCourse);
     } else {
       commit('ERROR', errors.get_by_id, { root: true });
     }
-    commit('LOADING', false);
+    commit('LOADING', false, { root: true });
   },
-  async GET_ONLINE_COURSE_VIDEO_BY_ID({ commit }, id) {
-    commit('LOADING', true);
+
+  async GET_VIDEO({ commit }, id) {
+    commit('LOADING', true, { root: true });
     const { video, error } = await getData(`${endpoints.get_video}/${id}`);
     if (!error) {
-      commit('ONLINE_COURSE_VIDEO_BY_ID', { video });
+      commit('VIDEO', video);
     } else {
       commit('ERROR', errors.get_video, { root: true });
     }
-    commit('LOADING', false);
+    commit('LOADING', false, { root: true });
   },
+
   async PUBLISH({ commit, dispatch }, id) {
     const data = {
       isPublished: true,
@@ -92,14 +90,14 @@ const actions = {
     const response = await patchData(`${endpoints.patch}/${id}`, data);
     if (!response.error) {
       commit('MESSAGE', messages.publish, { root: true });
-      dispatch('GET_ONLINE_COURSE_BY_ID', id);
+      dispatch('GET_COURSE', id);
     } else {
       commit('ERROR', errors.publish, { root: true });
     }
   },
-  async CLEAR_ONLINE_COURSE_BY_ID({ commit }) {
-    commit('ONLINE_COURSE_BY_ID_CLEAR');
-  },
+  // async CLEAR_ONLINE_COURSE_BY_ID({ commit }) {
+  //   commit('ONLINE_COURSE_BY_ID_CLEAR');
+  // },
 };
 
 export default {

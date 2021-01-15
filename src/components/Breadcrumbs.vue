@@ -30,14 +30,21 @@ export default {
     return {};
   },
   computed: {
-    ...mapState('onlineCourses', ['onlineCourses', 'onlineCourseById', 'currentVideo']),
-    ...mapState('offlineCourses', ['offlineCourses', 'currentOfflineCourse']),
+    ...mapState('onlineCourses', {
+      onlineCourses: 'courses',
+      onlineCourse: 'course',
+      video: 'video',
+    }),
+    ...mapState('offlineCourses', {
+      offlineCourses: 'courses',
+      offlineCourse: 'course',
+    }),
     courseId() {
       return this.$route.params.courseid;
     },
     course() {
-      if (this.type === 'online-courses') return this.onlineCourseById;
-      if (this.type === 'offline-courses') return this.currentOfflineCourse;
+      if (this.type === 'online-courses') return this.onlineCourse;
+      if (this.type === 'offline-courses') return this.offlineCourse;
       return {};
     },
     courseName() {
@@ -70,7 +77,7 @@ export default {
           href: `/online-courses/${this.courseId}/videos`,
         },
         {
-          text: this.currentVideo?.name,
+          text: this.video?.name,
           href: '#',
         },
       ];

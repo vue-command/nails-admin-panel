@@ -1,112 +1,81 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col cols="12" xs="12">
-        <h2 class="ma-4 text-title">OFFLINE COURSES</h2>
-      </v-col>
+    <h2 class="ma-4 text-title">OFFLINE COURSES</h2>
+    <v-btn class="my-8" @click="$router.push({ name: 'create-offline-course' })"
+      >add new offline course</v-btn
+    >
 
-      <v-col cols="12" xs="12">
-        <v-btn @click="$router.push({ name: 'create-offline-course' })"
-          >add new offline course</v-btn
-        >
-      </v-col>
-
-      <v-col cols="12" xs="12" v-if="loading">
-        <Spiner />
-      </v-col>
-
-      <v-col cols="12" xs="12" v-if="emtyCourses">
-        <div class="text-message">No courses have been added yet.</div>
-      </v-col>
-
-      <v-col cols="12" xs="12" v-if="!emtyCourses">
-        <v-row class="d-flex justify-center">
-          <v-col
-            cols="12"
-            xs="12"
-            sm="6"
-            md="4"
-            lg="3"
-            v-for="course in offlineCourses"
-            :key="course._id"
-          >
-            <v-card @click="goToCourse(course._id)">
-              <v-card-title class="d-flex justify-center"
-                ><h2>{{ course.nameOfCourse }}</h2></v-card-title
-              >
-              <CoverImage :url="checkUrl(course)" :height="300" />
-
-              <v-card-actions>
-                <v-btn
-                  @click.stop="
-                    dialog = true;
-                    deleteId = course._id;
-                  "
-                  >delete</v-btn
-                >
-              </v-card-actions>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-col cols="12" xs="12" v-if="!emtyCourses && isHideMoreBtn">
-        <v-btn
-          @click="
-            $store.dispatch('offlineCourses/GET_MORE_OFFLINE_COURSES', {
-              skip: offlineCourses.length,
-            })
-          "
-          >More</v-btn
-        >
-      </v-col>
-    </v-row>
+    <Spiner v-if="loading" />
+    <h3 v-if="emtyCourses" class="text-center text-message">
+      No courses have been added yet.
+    </h3>
+    <div class="d-flex flex-wrap justify-center">
+      <CourseCard
+        v-for="course in courses"
+        :key="course._id"
+        :course="course"
+        type="offline"
+        @click="goToCourse"
+        @delete="removeCourse"
+      />
+    </div>
+    <v-btn
+      v-if="!emtyCourses && isHideMoreBtn"
+      color="buttons"
+      rounded
+      outlined
+      primary
+      @click="
+        getMoreCourses({
+          skip: courses.length,
+        })
+      "
+      >More</v-btn
+    >
     <confirmDelete :dialog.sync="dialog" :confirmDelete="confirmDelete" />
   </v-container>
 </template>
+
 <style scoped>
-.text-title,
-.text-message {
-  color: #fff;
-}
-.text-message {
-  font-size: 22px;
-  margin-top: 50px;
-}
 </style>
+
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 import Spiner from '@/components/Spinner.vue';
-import CoverImage from '@/components/CoverImage.vue';
+import CourseCard from '@/components/courses/CourseCard.vue';
 import confirmDelete from '@/components/popups/confirmDelete.vue';
 
 export default {
-  name: 'offline-courses',
+  name: 'OfflineCoursesPage',
   components: {
-    // Courses,
     Spiner,
-    CoverImage,
+    CourseCard,
     confirmDelete,
   },
   data: () => ({
-    // eslint-disable-next-line global-require
-    coverImageSrc: require('@/assets/noImage.jpg'),
     dialog: false,
     deleteId: null,
   }),
   computed: {
-    ...mapState('offlineCourses', ['offlineCourses', 'totalOfflineCourses', 'loading']),
+    ...mapState(['loading']),
+    ...mapState('offlineCourses', ['courses', 'total']),
     emtyCourses() {
-      return !this.loading && !this.offlineCourses?.length;
+      return !this.loading && !this.courses?.length;
     },
     isHideMoreBtn() {
-      return this.offlineCourses.length < this.totalOfflineCourses;
+      return this.courses.length < this.total;
     },
   },
   watch: {},
   methods: {
+    ...mapActions('offlineCourses', {
+      getCourses: 'GET_COURSES',
+      getMoreCourses: 'GET_MORE_COURSES',
+      deleteCourse: 'DELETE_COURSE',
+    }),
     confirmDelete() {
-      this.$store.dispatch('offlineCourses/REMOVE_OFFLINE_COURSE', this.deleteId);
+      this.deleteCourse(this.deleteId);
       this.dialog = false;
     },
     goToCourse(id) {
@@ -117,19 +86,13 @@ export default {
         },
       });
     },
-    checkUrl(card) {
-      let img;
-      if (card.photo && Array.isArray(card.photo) && card.photo.length) {
-        img = card.photo[0].link;
-      }
-      if (!img) {
-        img = this.coverImageSrc;
-      }
-      return img;
+    removeCourse(id) {
+      this.dialog = true;
+      this.deleteId = id;
     },
   },
   created() {
-    this.$store.dispatch('offlineCourses/GET_OFFLINE_COURSES');
+    this.getCourses();
   },
 };
 </script>

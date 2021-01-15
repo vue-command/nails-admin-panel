@@ -1,6 +1,6 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
+/* eslint-disable no-underscore-dangle */
+
 const {
   getData, postData, putData, deleteData,
 } = require('@/helpers').default;
@@ -10,114 +10,99 @@ const errors = require('@/config/errors').default.offline;
 const messages = require('@/config/messages').default.offline;
 
 const state = {
-  offlineCourses: [],
-  currentOfflineCourse: null,
-  // currentVideo: null,
-  totalOfflineCourses: 0,
-  newOfflineCourse: null,
-  loading: false,
+  courses: [],
+  course: null,
+  total: 0,
 };
 
 const getters = {
 };
 
 const mutations = {
-  OFFLINE_COURSES: (state, { offlineCourses, total }) => {
-    state.offlineCourses = offlineCourses;
-    state.totalOfflineCourses = total;
+  COURSES: (state, payload) => {
+    state.courses = payload ?? [];
   },
-  NEW_OFFLINE_COURSE: (state, { newOfflineCourse }) => {
-    state.newOfflineCourse = newOfflineCourse;
+  TOTAL: (state, payload) => {
+    state.total = payload ?? 0;
   },
-  MORE_OFFLINE_COURSES: (state, { offlineCourses, total }) => {
-    state.offlineCourses = [...state.offlineCourses, ...offlineCourses];
-    state.totalOfflineCourses = total;
+  MORE_COURSES: (state, payload) => {
+    state.courses = state.courses.concat(payload);
   },
-  OFFLINE_COURSE_BY_ID: (state, { offlineCourse }) => {
-    state.currentOfflineCourse = offlineCourse;
-  },
-  UPDATE_OFFLINE_COURSE: (state, { updatedOfflineCourse }) => {
-    state.currentOfflineCourse = updatedOfflineCourse;
-  },
-  OFFLINE_COURSE_BY_ID_CLEAR: (state) => {
-    state.currentOfflineCourse = null;
-    state.newOfflineCourse = null;
-  },
-  LOADING: (state, payload) => {
-    state.loading = payload;
+  COURSE: (state, payload) => {
+    state.course = payload;
   },
 };
 
 const actions = {
-  async GET_OFFLINE_COURSES({ commit }) {
-    commit('LOADING', true);
+  async GET_COURSES({ commit }) {
+    commit('LOADING', true, { root: true });
     const { offlineCourses, total, error } = await getData(endpoints.get);
     if (!error) {
-      commit('OFFLINE_COURSES', { offlineCourses: offlineCourses ?? [], total });
+      commit('COURSES', offlineCourses);
+      commit('TOTAL', total);
     } else {
       commit('ERROR', errors.get, { root: true });
     }
-    commit('LOADING', false);
+    commit('LOADING', false, { root: true });
   },
-  async GET_MORE_OFFLINE_COURSES({ state, getters, commit }, { skip }) {
-    commit('LOADING', true);
+
+  async GET_MORE_COURSES({ commit }, { skip }) {
+    commit('LOADING', true, { root: true });
     const { offlineCourses, total, error } = await getData(`${endpoints.get}?skip=${skip}`);
     if (!error) {
-      commit('MORE_OFFLINE_COURSES', { offlineCourses, total });
+      commit('MORE_COURSES', offlineCourses);
+      commit('TOTAL', total);
     } else {
       commit('ERROR', errors.get, { root: true });
     }
-    commit('LOADING', false);
+    commit('LOADING', false, { root: true });
   },
-  async GET_OFFLINE_COURSE_BY_ID({ commit }, id) {
-    commit('LOADING', true);
+
+  async GET_COURSE({ commit }, id) {
+    commit('LOADING', true, { root: true });
     const { offlineCourse, error } = await getData(`${endpoints.get}/${id}`);
     if (!error) {
-      commit('OFFLINE_COURSE_BY_ID', { offlineCourse });
+      commit('COURSE', offlineCourse);
     } else {
       commit('ERROR', errors.get_by_id, { root: true });
     }
-    commit('LOADING', false);
+    commit('LOADING', false, { root: true });
   },
-  async CREATE_OFFLINE_COURSE({ getters, commit }, data) {
-    commit('LOADING', true);
+
+  async POST_COURSE({ commit }, data) {
+    commit('LOADING', true, { root: true });
     const { newOfflineCourse, error } = await postData(endpoints.post, data);
     if (!error) {
-      commit('NEW_OFFLINE_COURSE', { newOfflineCourse });
       commit('MESSAGE', messages.post, { root: true });
     } else {
       commit('ERROR', errors.post, { root: true });
     }
-    commit('LOADING', false);
+    commit('LOADING', false, { root: true });
+    return newOfflineCourse._id;
   },
-  async EDIT_OFFLINE_COURSE({
-    state, getters, commit, dispatch,
-  }, { data, id }) {
-    commit('LOADING', true);
+
+  async PUT_COURSE({ commit }, { data, id }) {
+    commit('LOADING', true, { root: true });
     const { updatedOfflineCourse, error } = await putData(`${endpoints.put}/${id}`, data);
     if (!error) {
-      commit('UPDATE_OFFLINE_COURSE', { updatedOfflineCourse });
+      commit('COURSE', updatedOfflineCourse);
       commit('MESSAGE', messages.put, { root: true });
     } else {
       commit('ERROR', errors.put, { root: true });
     }
-    commit('LOADING', false);
+    commit('LOADING', false, { root: true });
   },
-  async REMOVE_OFFLINE_COURSE({
-    state, getters, commit, dispatch,
-  }, id) {
-    commit('LOADING', true);
-    const { deleted, error } = await deleteData(`${endpoints.delete}/${id}`);
+
+  async DELETE_COURSE({ commit, dispatch }, id) {
+    commit('LOADING', true, { root: true });
+    const { error } = await deleteData(`${endpoints.delete}/${id}`);
     if (!error) {
       commit('MESSAGE', messages.delete, { root: true });
-      dispatch('GET_OFFLINE_COURSES');
+      dispatch('GET_COURSES');
     } else {
       commit('ERROR', errors.delete, { root: true });
     }
-    commit('LOADING', false);
-  },
-  async CLEAR_OFFLINE_COURSE_BY_ID({ commit }) {
-    commit('OFFLINE_COURSE_BY_ID_CLEAR');
+    commit('LOADING', false, { root: true });
   },
 };
 

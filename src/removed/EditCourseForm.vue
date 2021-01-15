@@ -33,40 +33,67 @@
                 maxlength="40"
               ></v-text-field>
               <div v-if="typeCourse === 'offline'">
+                <!-- <div
+                    v-for="(textField, i) in courseData.dateOfCourses"
+                    :key="i"
+                    class="d-flex input-container"
+                  >
+                    <v-text-field
+                      label="date of the course"
+                      v-model="courseData.dateOfCourses[i]"
+                      :rules="[rules.required]"
+                      outlined
+                      dark
+                    ></v-text-field>
+                    <v-btn
+                      @click="removeField(i, '')"
+                      v-if="i !== 0"
+                      class="remove"
+                    >
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </div>
+                  <div class="d-flex justify-end mb-8">
+                    <v-btn @click="addField('')">
+                      <v-icon>mdi-plus</v-icon>
+                    </v-btn>
+                  </div>
+                  <v-text-field
+                    label="available spots"
+                    v-model="courseData.availableSpots"
+                    :rules="[rules.required, rules.onlyDigits]"
+                    outlined
+                    dark
+                  ></v-text-field>
+                </div> -->
                 <div
                   v-for="(textField, i) in courseData.dateOfCourses"
                   :key="i"
                   class="d-flex input-container"
                 >
                   <v-text-field
-                    label="date of the course"
-                    v-model="courseData.dateOfCourses[i]"
+                    label="Date of course"
+                    v-model="textField.date"
                     :rules="[rules.required]"
                     outlined
                     dark
                   ></v-text-field>
-                  <v-btn
-                    @click="removeField(i, '')"
-                    v-if="i !== 0"
-                    class="remove"
+                  <v-text-field
+                    label="Available Spots"
+                    v-model="textField.availableSpots"
+                    :rules="[rules.required]"
+                    outlined
+                    dark
+                    class="ml-4"
+                  ></v-text-field>
+                  <v-btn @click="removeField2(i)" v-if="i !== 0" class="remove"
+                    ><v-icon>mdi-delete</v-icon></v-btn
                   >
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
                 </div>
                 <div class="d-flex justify-end mb-8">
-                  <v-btn @click="addField('')">
-                    <v-icon>mdi-plus</v-icon>
-                  </v-btn>
+                  <v-btn @click="addField2"><v-icon>mdi-plus</v-icon></v-btn>
                 </div>
-                <v-text-field
-                  label="available spots"
-                  v-model="courseData.availableSpots"
-                  :rules="[rules.required, rules.onlyDigits]"
-                  outlined
-                  dark
-                ></v-text-field>
               </div>
-
               <v-text-field
                 v-model="courseData.accessDays"
                 :rules="[rules.required, rules.onlyDigits]"
@@ -116,11 +143,7 @@
                   outlined
                   dark
                 ></v-text-field>
-                <v-btn
-                  @click="removeField(i, 'suitable')"
-                  v-if="i !== 0"
-                  class="remove"
-                >
+                <v-btn @click="removeField(i, 'suitable')" v-if="i !== 0" class="remove">
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </div>
@@ -174,12 +197,7 @@
           </v-row>
         </v-form>
       </v-col>
-      <v-col
-        cols="12"
-        xs="12"
-        md="5"
-        class="d-flex flex-column justify-space-between align-center"
-      >
+      <v-col cols="12" xs="12" md="5" class="d-flex flex-column justify-space-between align-center">
         <CourseCard :course="courseData" :type="typeCourse" />
       </v-col>
       <CourseDetail
@@ -216,7 +234,10 @@ export default {
         infoForBonus: '',
         description: '',
         photo: null,
-        dateOfCourses: [''],
+        dateOfCourses: [{
+          date: '',
+          availableSpots: null,
+        }],
         availableSpots: '',
         thisCourseIsSuitableFor: [''],
       },
@@ -238,13 +259,20 @@ export default {
         this.submitHandler();
       }
     },
-    addField(entryField) {
-      return entryField ? this.courseData.thisCourseIsSuitableFor.push('') : this.courseData.dateOfCourses.push('');
+    addField() {
+      this.courseData.thisCourseIsSuitableFor.push('');
     },
-    removeField(index, entryField) {
-      return entryField
-        ? this.courseData.thisCourseIsSuitableFor.splice(index, 1)
-        : this.courseData.dateOfCourses.splice(index, 1);
+    addField2() {
+      this.courseData.dateOfCourses.push({
+        date: '',
+        availableSpots: '',
+      });
+    },
+    removeField(index) {
+      this.courseData.thisCourseIsSuitableFor.splice(index, 1);
+    },
+    removeField2(index) {
+      this.courseData.dateOfCourses.splice(index, 1);
     },
     cancelHandler() {
       this.back();
@@ -265,9 +293,9 @@ export default {
           else if (typeof value !== 'object') fd.append(name, value);
         }
       });
-      dateOfCourses.forEach((str) => {
-        if (str) {
-          fd.append('dateOfCourses[]', str);
+      dateOfCourses.forEach((obj) => {
+        if (obj) {
+          fd.append('dateOfCourses[]', JSON.stringify(obj));
         }
       });
       thisCourseIsSuitableFor.forEach((str) => {

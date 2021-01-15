@@ -30,7 +30,7 @@
             sm="6"
             md="4"
             lg="3"
-            v-for="course in onlineCourses"
+            v-for="course in courses"
             :key="course._id"
           >
             <v-card @click="goToCourse(course._id)">
@@ -45,9 +45,9 @@
       <v-col cols="12" xs="12" v-if="!emtyCourses && isHideMoreBtn">
         <v-btn
           @click="
-            $store.dispatch('onlineCourses/GET_MORE_ONLINE_COURSES', {
+            getMore({
               string: filterCourses[radioGroup].param,
-              skip: onlineCourses.length,
+              skip: courses.length,
             })
           "
           >More</v-btn
@@ -67,13 +67,13 @@
 }
 </style>
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 import CoverImage from '@/components/CoverImage.vue';
 import Spinner from '@/components/Spinner.vue';
 
 export default {
-  name: 'online-courses',
+  name: 'CoursesPage',
   components: {
     CoverImage,
     Spinner,
@@ -97,12 +97,13 @@ export default {
     coverImageSrc: 'img/noImage.jpg',
   }),
   computed: {
-    ...mapState('onlineCourses', ['onlineCourses', 'totalOnlineCourses', 'loading']),
+    ...mapState(['loading']),
+    ...mapState('onlineCourses', ['courses', 'total']),
     emtyCourses() {
-      return !this.loading && !this.onlineCourses?.length;
+      return !this.loading && !this.courses?.length;
     },
     isHideMoreBtn() {
-      return this.onlineCourses.length < this.totalOnlineCourses;
+      return this.courses.length < this.total;
     },
   },
   watch: {
@@ -111,6 +112,10 @@ export default {
     },
   },
   methods: {
+    ...mapActions('onlineCourses', {
+      getCourses: 'GET_COURSES',
+      getMore: 'GET_MORE_COURSES',
+    }),
     goToCourse(id) {
       this.$router.push({
         name: 'online-course',
@@ -128,9 +133,6 @@ export default {
         img = this.coverImageSrc;
       }
       return img;
-    },
-    getCourses(string) {
-      this.$store.dispatch('onlineCourses/GET_ONLINE_COURSES', string);
     },
   },
   created() {

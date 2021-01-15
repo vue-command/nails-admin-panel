@@ -57,7 +57,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
 
 import CoursesLayout from './Layouts/CoursesLayout.vue';
 import ShopLayout from './Layouts/ShopLayout.vue';
@@ -80,8 +79,6 @@ export default {
     layout() {
       return `${this.$route.meta?.layout || 'default'}-layout`;
     },
-    ...mapState('offlineCourses', ['offlineError']),
-    ...mapState('onlineCourses', ['onlineError']),
   },
   methods: {
     goTo(name) {
