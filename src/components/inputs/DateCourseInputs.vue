@@ -6,16 +6,22 @@
       :key="i"
       class="d-flex input-container"
     >
+    <v-row>
+      <v-col cols="8">
       <TextInput
         label="Date"
         :value.sync="localValue[i].date"
         :required="true"
       />
+      </v-col>
+      <v-col cols="4">
       <TextInput
         label="Available of spots"
         :value.sync="localValue[i].availableSpots"
         :required="true"
       />
+      </v-col>
+    </v-row>
       <v-btn @click="removeField(i)" v-if="localValue.length > 1" class="remove">
         <v-icon>mdi-delete</v-icon>
       </v-btn>

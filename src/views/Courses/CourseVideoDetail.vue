@@ -15,10 +15,10 @@
         <vue-core-video-player :src="video.link" />
       </v-col>
       <v-col cols="12" xs="12" offset-md="2" md="8" v-if="!loading && video">
-        <v-card-title>{{ currentVideo.description }}</v-card-title>
+        <v-card-title>{{ video.description }}</v-card-title>
       </v-col>
       <v-col cols="12" xs="12" offset-md="2" md="8" v-if="!loading && video">
-        <CoverImage :url="checkLink(video)" :height="500" />
+        <CoverImage :url="checkVideoLink(video)" :height="500" />
         <v-card v-if="video.pdfs" flat class="d-flex justify-center mt-16 transparent">
           <a
             v-for="pdf in video.pdfs"
@@ -39,7 +39,7 @@ import { mapState, mapActions } from 'vuex';
 
 import CoverImage from '@/components/CoverImage.vue';
 import Spinner from '@/components/Spinner.vue';
-import checkLink from '@/helpers/checkLink';
+import checkVideoLink from '@/helpers/checkVideoLink';
 
 export default {
   components: {
@@ -50,8 +50,6 @@ export default {
     return {
       volume: 0,
       showForm: false,
-      // eslint-disable-next-line global-require
-      coverImageSrc: require('@/assets/noImage.jpg'),
     };
   },
   computed: {
@@ -65,20 +63,7 @@ export default {
       getVideo: 'GET_VIDEO',
       getCourse: 'GET_COURSE',
     }),
-    checkLink,
-    // linkCheck(course) {
-    //   return checkLink(course);
-    // },
-    // checkUrl(card) {
-    //   let img;
-    //   if (card.coverImg?.link) {
-    //     img = card.coverImg.link;
-    //   }
-    //   if (!img) {
-    //     img = this.coverImageSrc;
-    //   }
-    //   return img;
-    // },
+    checkVideoLink,
   },
   created() {
     this.getVideo(this.$route.params.videoid);

@@ -1,82 +1,65 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col cols="12" xs="12">
-        <h2 class="ma-4 text-title">ONLINE COURSES</h2>
-      </v-col>
-      <v-col cols="12" xs="12">
-        <div class="d-flex justify-center">
-          <v-radio-group v-model="radioGroup" row>
-            <v-radio
-              v-for="current of filterCourses"
-              :key="current.title"
-              dark
-              :label="current.title"
-            ></v-radio>
-          </v-radio-group>
-        </div>
-      </v-col>
-      <v-col cols="12" xs="12" v-if="loading">
-        <Spinner />
-      </v-col>
-      <v-col cols="12" xs="12" v-if="emtyCourses">
-        <h2 class="text-message">No courses have been added yet</h2>
-      </v-col>
-      <v-col cols="12" xs="12" v-if="!emtyCourses">
-        <v-row class="d-flex justify-center">
-          <v-col
-            cols="12"
-            xs="12"
-            sm="6"
-            md="4"
-            lg="3"
-            v-for="course in courses"
-            :key="course._id"
-          >
-            <v-card @click="goToCourse(course._id)">
-              <v-card-title class="d-flex justify-center"
-                ><h2>{{ course.nameOfCourse }}</h2></v-card-title
-              >
-              <CoverImage :url="checkUrl(course)" :height="300" />
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-col cols="12" xs="12" v-if="!emtyCourses && isHideMoreBtn">
-        <v-btn
-          @click="
-            getMore({
-              string: filterCourses[radioGroup].param,
-              skip: courses.length,
-            })
-          "
-          >More</v-btn
-        >
-      </v-col>
-    </v-row>
+    <h2 class="ma-4 text-title">ONLINE COURSES</h2>
+    <div class="d-flex justify-center">
+      <v-radio-group v-model="radioGroup" row>
+        <v-radio
+          v-for="current of filterCourses"
+          :key="current.title"
+          dark
+          :label="current.title"
+        ></v-radio>
+      </v-radio-group>
+    </div>
+    <!-- <Spinner v-if="loading" /> -->
+    <h2 v-if="emtyCourses" class="text-message">
+      No courses have been added yet
+    </h2>
+    <div class="d-flex flex-wrap justify-center">
+      <CourseCard
+        v-for="course in courses"
+        :key="course._id"
+        :course="course"
+        type="online"
+        @click="goToCourse"
+      />
+    </div>
+    <div v-if="loading" class="d-flex flex-wrap justify-center">
+      <v-card
+        v-for="(item, index) in 4"
+        :key="index"
+        width="400"
+        height="350"
+        class="ma-4"
+      >
+        <v-skeleton-loader type="card"></v-skeleton-loader>
+      </v-card>
+    </div>
+    <v-btn
+      v-if="!emtyCourses && isHideMoreBtn"
+      @click="
+        getMore({
+          string: filterCourses[radioGroup].param,
+          skip: courses.length,
+        })
+      "
+      >More</v-btn
+    >
   </v-container>
 </template>
 <style scoped>
-.text-title,
-.text-message {
-  color: #fff;
-}
-.text-message {
-  font-size: 22px;
-  margin-top: 50px;
-}
 </style>
 <script>
 import { mapState, mapActions } from 'vuex';
 
-import CoverImage from '@/components/CoverImage.vue';
-import Spinner from '@/components/Spinner.vue';
+import CourseCard from '@/components/courses/CourseCard.vue';
+// import Spinner from '@/components/Spinner.vue';
 
 export default {
   name: 'CoursesPage',
   components: {
-    CoverImage,
-    Spinner,
+    // Spinner,
+    CourseCard,
   },
   data: () => ({
     radioGroup: 0,
@@ -94,7 +77,6 @@ export default {
         param: '',
       },
     ],
-    coverImageSrc: 'img/noImage.jpg',
   }),
   computed: {
     ...mapState(['loading']),
@@ -123,16 +105,6 @@ export default {
           courseid: id,
         },
       });
-    },
-    checkUrl(card) {
-      let img;
-      if (card.photo && Array.isArray(card.photo) && card.photo.length) {
-        img = card.photo[0].link;
-      }
-      if (!img) {
-        img = this.coverImageSrc;
-      }
-      return img;
     },
   },
   created() {
