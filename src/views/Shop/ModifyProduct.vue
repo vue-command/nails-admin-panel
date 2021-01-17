@@ -6,9 +6,9 @@
       </v-btn>
     </v-row>
 
-    <v-card class="base-card pa-10" v-if="!isCommodityLoading">
+    <v-card class="pa-10" v-if="!isCommodityLoading">
       <v-card-text class="mb-10">
-        <h1>{{ productId === 'new' ? 'NEW' : 'MODIFY' }} PRODUCT</h1>
+        <h1 class="text-h4 black--text">{{ productId === 'new' ? 'NEW' : 'MODIFY' }} PRODUCT</h1>
       </v-card-text>
       <v-row>
         <v-col cols="12" sm="6">
@@ -23,29 +23,33 @@
                   item-text="name"
                   item-value="_id"
                   label="Category"
-                  v-model="category"
+                  v-model="currentCommodity.categoryId"
                   >Choose category</v-select
                 >
                 <v-select
-                  :disabled="!category"
-                  :items="category ? categories.find(el => el._id === category).subcategories : []"
+                  :disabled="!currentCommodity.categoryId"
+                  :items="
+                    currentCommodity.categoryId
+                      ? categories.find(el => el._id === currentCommodity.categoryId).subcategories
+                      : []
+                  "
                   outlined
                   :rules="[rules.required]"
                   item-text="name"
                   item-value="_id"
                   label="Subategory"
-                  v-model="subcategory"
+                  v-model="currentCommodity.subCategoryId"
                   >Choose subcategory</v-select
                 >
                 <v-textarea
-                  v-model="speciﬁcations"
+                  v-model="currentCommodity.speciﬁcations"
                   :rules="[rules.required]"
                   label="Speciﬁcation"
                   outlined
                 ></v-textarea>
                 <v-col cols="6">
                   <v-text-field
-                    v-model="price"
+                    v-model="currentCommodity.price"
                     :rules="[rules.required]"
                     label="Price"
                     type="number"
@@ -55,9 +59,24 @@
                 </v-col>
               </v-col>
               <v-col cols="12" xl="6" md="6" lg="6" sm="12">
-                <v-text-field v-model="brand" :rules="[rules.required]" label="Brand" outlined></v-text-field>
-                <v-text-field v-model="name" :rules="[rules.required]" label="Name" outlined></v-text-field>
-                <v-text-field v-model="codeOfProduct" :rules="[rules.required]" label="Code" outlined></v-text-field>
+                <v-text-field
+                  v-model="currentCommodity.brand"
+                  :rules="[rules.required]"
+                  label="Brand"
+                  outlined
+                ></v-text-field>
+                <v-text-field
+                  v-model="currentCommodity.name"
+                  :rules="[rules.required]"
+                  label="Name"
+                  outlined
+                ></v-text-field>
+                <v-text-field
+                  v-model="currentCommodity.codeOfProduct"
+                  :rules="[rules.required]"
+                  label="Code"
+                  outlined
+                ></v-text-field>
                 <v-file-input
                   v-model="previewFile"
                   accept="image/*"
@@ -73,7 +92,7 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-btn color="success" @click="submitHandler" :disabled="isSaveDisabled">Save </v-btn>
+                <v-btn color="secondary" @click="submitHandler" :disabled="isSaveDisabled">Save </v-btn>
                 <v-btn v-if="commodity" @click="cancelHandler"> Cancel </v-btn>
               </v-col>
             </v-row>
@@ -81,35 +100,46 @@
         </v-col>
         <v-col cols="12" sm="6">
           <v-row justify="center">
-            <v-card class="cardfone shop-card" min-width="300" min-height="500">
+            <v-card class="cardfone shop-card" width="300" min-height="500">
               <v-card flat class="px-0 pt-4 gray-background" width="100%">
                 <v-img :src="previewImageLink || coverImageSrc" width="100%" height="350" contain />
               </v-card>
               <v-card-text>
-                <p class="black--text text-h5 my-1 font-weight-medium">
-                  {{ name || 'Name' }}
+                <p class="dgrey--text text-subtitle-1 my-1 font-weight-bold text-start">
+                  {{ currentCommodity.name || 'Name' }}
                 </p>
-                <p class="black--text text-h6 ma-0 font-weight-medium">
-                  {{ brand || 'Brand' }}
+                <p class="black--text text-subtitle-1 ma-0 font-weight-medium text-start">
+                  {{ currentCommodity.brand || 'Brand' }}
                 </p>
-                <p class="d-flex justify-end text-h6 ma-0 font-weight-bold">{{ price }} AUD</p>
+                <p class="d-flex justify-end text-h6 ma-0 font-weight-bold">{{ currentCommodity.price }} AUD</p>
               </v-card-text>
             </v-card>
           </v-row>
         </v-col>
+        <v-col cols="12" class="mb-10">
+          <v-divider></v-divider>
+        </v-col>
       </v-row>
-
       <v-row>
         <v-col cols="12">
-          <h3>ATTACHED IMAGES</h3>
+          <v-card-text class="text-h4 black--text ma-5"> ATTACHED IMAGES </v-card-text>
           <v-row>
-            <v-card v-for="(image, index) in images" :key="index" class="pa-5 ma-5">
-              <v-img :src="image.link" height="200" width="200" contain></v-img>
-              <v-btn color="error" @click="deleteImageHandler(image, index)">DELETE</v-btn>
+            <v-card flat min-height="400" color="accent" class="d-flex flex-column justify-center" width="100%">
+              <v-row v-if="images && images.length">
+                <v-col v-for="(image, index) in images" :key="index" lg="3" md="4" sm="6">
+                  <v-card class="pa-5 ma-5">
+                    <v-img :src="image.link" height="200" width="200" contain></v-img>
+                    <v-btn color="error" @click="deleteImageHandler(image, index)">DELETE</v-btn>
+                  </v-card>
+                </v-col>
+              </v-row>
+              <v-card-text v-else justify="center">
+                <v-card-text class="text-h4 black--text ma-5"> NO IMAGES </v-card-text>
+              </v-card-text>
             </v-card>
           </v-row>
           <v-row justify="center">
-            <v-btn color="success" @click="$refs.inputUpload.click()" :disabled="!commodity" class="my-10"
+            <v-btn color="secondary" @click="$refs.inputUpload.click()" :disabled="!commodity" class="my-10"
               >Upload images</v-btn
             >
             <input
@@ -134,7 +164,7 @@
             class="yellow-button mt-4"
             @click="publishHandler"
             :disabled="!commodity"
-            >{{ this.isPublished ? 'Hide commodity' : 'Publish commodity' }}</v-btn
+            >{{ currentCommodity.isPublished ? 'Hide commodity' : 'Publish commodity' }}</v-btn
           >
           <v-btn color="error" large min-width="90" class="mt-4" @click="showDialog = true" :disabled="!commodity"
             >DELETE COMMODITY</v-btn
@@ -172,15 +202,15 @@
 
             <v-col cols="12" sm="12" md="5" xl="4" lg="4" class="px-0">
               <v-col cols="12" class="text--shopfont px-0 text-start">
-                <h2 class="text--darkGrey">{{ name || 'Name' }}</h2>
-                <h4>{{ brand }}</h4>
+                <h2 class="text--darkGrey">{{ currentCommodity.name || 'Name' }}</h2>
+                <h4>{{ currentCommodity.brand }}</h4>
                 <div class="caption">
                   <h2 class="speciﬁcations">
-                    {{ speciﬁcations ? speciﬁcations.trim() : 'Specification' }}
+                    {{ currentCommodity.speciﬁcations ? currentCommodity.speciﬁcations.trim() : 'Specification' }}
                   </h2>
                 </div>
                 <div class="price">
-                  <h3 class="text--darkGrey">{{ price }} AUD</h3>
+                  <h3 class="text--darkGrey">{{ currentCommodity.price }} AUD</h3>
                   <div class="shop-buttons">
                     <v-btn tile small width="100%" color="darkGrey">Add to card</v-btn>
                     <v-btn tile small width="100%" color="darkGrey">Buy it now</v-btn>
@@ -193,10 +223,9 @@
       </v-row>
       <confirm-delete :confirmDelete="deleteCommodityHandler" :dialog="showDialog"> </confirm-delete>
     </v-card>
-    <v-card v-else width="100%" height="80vh">
+    <v-card v-else width="100%" height="80vh" class="pa-10">
       <v-skeleton-loader
         height="100%"
-        v-bind="attrs"
         animation
         type="image, list-item-three-line, actions, card-heading, image, actions, image, list-item-three-line, actions"
       ></v-skeleton-loader>
@@ -205,35 +234,27 @@
 </template>
 
 <script>
-import 'nails-shop-card';
-import 'nails-shop-card/dist/nails-shop-card.css';
 import { mapState } from 'vuex';
 import confirmDelete from '../../components/popups/confirmDelete.vue';
 
 export default {
   components: { confirmDelete },
   name: 'ModifyProduct',
-  props: [
-    'uploadImages',
-    'deleteImage',
-    'createCategory',
-    'updateCommodity',
-    'getDataMain',
-    'deleteCommodity',
-    'noImage',
-  ],
+  props: ['noImage'],
   data() {
     return {
       showDialog: false,
       valid: true,
-      category: '',
-      subcategory: '',
-      brand: '',
-      name: '',
-      codeOfProduct: '',
-      speciﬁcations: '',
-      isPublished: false,
-      price: 0,
+      currentCommodity: {
+        categoryId: '',
+        subCategoryId: '',
+        brand: '',
+        name: '',
+        codeOfProduct: '',
+        speciﬁcations: '',
+        isPublished: false,
+        price: 0,
+      },
       photos: [],
       currentProduct: null,
       rules: {
@@ -241,9 +262,8 @@ export default {
       },
       images: [],
       previewFile: null,
-      previewImageLink: this.noImage,
-      activeCard: this.noImage,
-      productId: this.$route.params.commodityId,
+      previewImageLink: require('@/assets/noImage.jpg'),
+      activeCard: require('@/assets/noImage.jpg'),
       coverImageSrc: require('@/assets/noImage.jpg'),
     };
   },
@@ -274,39 +294,43 @@ export default {
       this.$store.dispatch('shop/UPDATE_COMMODITY', {
         data: {
           ...commodityToUpdate,
-          isPublished: !this.isPublished,
+          isPublished: !this.currentCommodity.isPublished,
         },
         id: this.productId,
       });
     },
     setCommodity(commodity) {
-      this.category = commodity.categoryId;
-      this.subcategory = commodity.subCategoryId;
-      this.brand = commodity.brand;
-      this.name = commodity.name;
-      this.speciﬁcations = commodity.speciﬁcations;
-      this.codeOfProduct = commodity.codeOfProduct;
-      this.price = commodity.price;
+      const { categoryId, subCategoryId, brand, name, codeOfProduct, speciﬁcations, isPublished, price } = {
+        ...commodity,
+      };
+      this.currentCommodity = {
+        categoryId,
+        subCategoryId,
+        brand,
+        name,
+        codeOfProduct,
+        speciﬁcations,
+        isPublished,
+        price,
+      };
       this.images = commodity.images;
-      this.isPublished = commodity.isPublished;
       this.previewImageLink = commodity.previewImage[0].link;
       this.previewImage = commodity.previewImage;
-      this.activeCard = (commodity.images[0] && commodity.images[0].link) || this.noImage;
+      this.activeCard = (commodity.images[0] && commodity.images[0].link) || this.coverImageSrc;
     },
     setPhoto(val, toggle) {
       toggle();
       this.activeCard = val.link;
     },
     async submitHandler() {
-      const data = { ...this.getCommodityData };
-      if (!this.isEditMode) {
+      const data = { ...this.currentCommodity };
+      if (this.productId === 'new') {
         data.previewFile = this.previewFile;
         this.$store.dispatch('shop/CREATE_COMMODITY', { data });
       } else {
         if (this.previewFile) {
           data.previewFile = this.previewFile;
         }
-        console.log(data);
         this.$store.dispatch('shop/UPDATE_COMMODITY', { data, id: this.productId });
       }
     },
@@ -317,11 +341,9 @@ export default {
       this.$store.dispatch('shop/UPLOAD_IMAGES', { data: e.target.files, id: this.commodity._id });
     },
     async deleteImageHandler(img) {
-      img;
-      // const isDeleted = await this.deleteImage(img._id);
-      // if (isDeleted) {
-      //   this.images = this.images.filter(el => el._id !== img._id);
-      // }
+      this.$store.dispatch('shop/DELETE_IMAGE', {
+        id: img._id,
+      });
     },
     async deleteCommodityHandler() {
       await this.$store.dispatch('shop/DELETE_COMMODITY', { id: this.commodity._id });
@@ -330,34 +352,21 @@ export default {
   },
   computed: {
     ...mapState('shop', ['fullListOfCategories', 'commodity', 'categories', 'isCommodityLoading']),
-    isEditMode() {
-      return this.productId !== 'new';
-    },
     isSaveDisabled() {
       let isDisabled = true;
-      if (this.isEditMode) isDisabled = !this.valid;
+      if (this.productId !== 'new') isDisabled = !this.valid;
       else if (this.valid) {
         isDisabled = !this.previewFile;
       }
       return isDisabled;
     },
-    getCommodityData() {
-      const data = {
-        categoryId: this.category,
-        subCategoryId: this.subcategory,
-        name: this.name,
-        speciﬁcations: this.speciﬁcations,
-        price: Number(this.price).toFixed(2),
-        codeOfProduct: this.codeOfProduct,
-        brand: this.brand,
-        isPublished: this.isPublished,
-      };
-      return data;
+    productId() {
+      return this.$route.params.commodityId;
     },
   },
   async created() {
     if (!this.categories) await this.$store.dispatch('shop/GET_SHOP_CATEGORIES');
-    if (this.isEditMode) {
+    if (this.productId !== 'new') {
       this.$store.dispatch('shop/GET_COMMODITY', {
         commodityId: this.productId,
       });

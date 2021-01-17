@@ -33,7 +33,15 @@
             </v-select>
           </v-col>
           <v-col cols="12">
-            <v-text-field></v-text-field>
+            <v-text-field
+              @input="searchDebounced"
+              v-model="search"
+              clearable
+              prepend-inner-icon="mdi-magnify"
+              filled
+              dense
+              rounded
+            ></v-text-field>
           </v-col>
         </v-row>
       </v-col>
@@ -41,10 +49,10 @@
         <v-row>
           <v-col cols="6">
             <v-radio-group :value="filterShow" @change="setCommoditiesToShowValue" row>
-              <v-row class="d-flex justify-space-between flex-column">
-                <v-radio label="All" value="withHidden"></v-radio>
-                <v-radio label="Hidden only" value="hiddenOnly"></v-radio>
-                <v-radio label="Published only" value="all"></v-radio>
+              <v-row class="d-flex justify-space-between flex-column text-body-1">
+                <v-radio class="ma-1 font-weight-bold" label="Published" value=""></v-radio>
+                <v-radio class="ma-1 font-weight-bold" label="Hidden" value="hiddenOnly"></v-radio>
+                <v-radio class="ma-1 font-weight-bold" label="All" value="withHidden"></v-radio>
               </v-row>
             </v-radio-group>
           </v-col>
@@ -65,7 +73,12 @@
         <v-col cols="12" sm="12" md="4" lg="3" v-for="card in commodities" :key="card.id" class="pa-2">
           <v-card class="" min-height="500" @click="modifyHandler(card._id)">
             <v-card flat class="px-0 pt-4 gray-background" width="100%">
-              <v-img :src="card.previewImage[0] && card.previewImage[0].link" width="100%" height="350" contain />
+              <v-img
+                :src="card.previewImage && card.previewImage[0] && card.previewImage[0].link"
+                width="100%"
+                height="350"
+                contain
+              />
             </v-card>
             <v-card-text>
               <p class="black--text text-h5 my-1 font-weight-medium">
@@ -78,8 +91,10 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-row justify="center" v-if="showMoreButton">
-          <v-btn @click="getMore">More</v-btn>
+        <v-row justify="center" class="ma-5" v-if="showMoreButton">
+          <v-col>
+            <v-btn @click="getMore" x-large color="success">More</v-btn>
+          </v-col>
         </v-row>
       </v-row>
       <v-row v-else>
@@ -90,22 +105,21 @@
     </v-row>
   </v-container>
 </template>
-<style scoped>
-.home {
-  background: #000;
-}
-</style>
 
 <script>
 import 'nails-styles/css/fonts.scss';
 import 'nails-styles/css/variables.scss';
+
+import debounce from '../../utils/debounce';
 
 import { mapState } from 'vuex';
 
 export default {
   name: 'shop',
   data() {
-    return {};
+    return {
+      search: '',
+    };
   },
   computed: {
     ...mapState('shop', [
@@ -133,7 +147,10 @@ export default {
     selectedSubategory() {
       if (!this.activeSubcategory) return '';
       if (!this.activeCategory) return '';
-      return this.activeCategory._id;
+      return this.activeSubcategory._id;
+    },
+    searchDebounced() {
+      return debounce(this.searchHandler, 1000);
     },
   },
 
@@ -149,7 +166,6 @@ export default {
       });
     },
     modifyHandler(id) {
-      console.log(id);
       this.$router.push({
         name: 'commodity-edit',
         params: {
@@ -166,8 +182,21 @@ export default {
       this.$store.dispatch('shop/GET_MORE_SHOP_COMMODITIES');
     },
     searchHandler() {
-      this.$store.dispatch('shop/GET_MORE_SHOP_COMMODITIES');
+      if (this.search) {
+        this.$store.dispatch('shop/SEARCH_COMMODITIES', {
+          search: this.search,
+        });
+      } else {
+        this.$store.dispatch('shop/UPDATE_SHOP');
+      }
     },
+  },
+  mounted() {
+    if (this.activeCategory) {
+      // this.$store.dispatch('shop/GET_SHOP_COMMODITIES', {
+      //   commodityId: this.activeCategory._id,
+      // });
+    }
   },
 };
 </script>

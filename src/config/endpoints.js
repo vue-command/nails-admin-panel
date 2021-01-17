@@ -28,6 +28,6 @@ export default {
     search: 'shop/search',
     newCommodity: 'shop/new/commodity',
     files: 'shop/commodity/files',
-    newSubcategory: 'Fshop/file',
+    file: 'shop/file',
   },
 };
