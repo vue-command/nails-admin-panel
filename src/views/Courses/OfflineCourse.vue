@@ -1,95 +1,122 @@
 <template>
-  <div>
-    <Spinner v-if="loading" />
-    <CourseDetail
-      v-if="noEmptyCourse"
-      :course="currentOfflineCourse"
-      :type="typeCourse"
-      btnTitle="BUY THIS COURSE"
-      :btnCallBack="null"
-    />
-    <EditCourseForm
-      v-if="showForm"
-      :typeCourse="typeCourse"
-      :course="currentOfflineCourse"
-      :back="backForm"
-    />
-    <div
-      v-if="noEmptyCourse"
-      class="d-flex flex-column align-center flex-sm-row justify-sm-center mt-8"
-    >
-      <v-btn
-        @click="showForm = true"
-        color="buttons"
-        rounded
-        large
-        dark
-        min-width="160"
-        class="yellow-button"
-        >Edit</v-btn
+  <v-container id="edit-form">
+    <v-row>
+      <!-- <v-col cols="12" xs="12" v-if="loading">
+        <Spinner />
+      </v-col> -->
+      <v-col cols="12" xs="12" v-if="!loading && course && !editing ">
+        <CourseDetail
+          :course="course"
+          :type="type"
+          btnTitle="BUY THIS COURSE"
+        />
+      </v-col>
+       <v-col cols="12" xs="12" md="7" v-if="editing">
+        <OfflineForm :course.sync="courseData" mode="edit" @submit="submit" @back="back" />
+      </v-col>
+      <v-col
+        v-if="editing"
+        cols="12"
+        xs="12"
+        md="5"
+        class="d-flex flex-column justify-space-between align-center"
       >
-    </div>
-  </div>
+        <CourseCard :course="courseData" :type="type" />
+      </v-col>
+      <v-col cols="12" xs="12">
+         <CourseDetail
+          v-if="editing"
+          :course="courseData"
+          :type="type"
+          btnTitle="BUY THIS COURSE"
+        />
+      <div
+        v-if="!editing"
+        class="d-flex flex-column align-center flex-sm-row justify-sm-center mt-8"
+      >
+        <v-btn
+          @click="fillingForm"
+          color="buttons"
+          rounded
+          large
+          dark
+          min-width="160"
+          class="yellow-button"
+          >Edit</v-btn
+        >
+      </div>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
-import Spinner from '@/components/Spinner.vue';
+// import Spinner from '@/components/Spinner.vue';
 import CourseDetail from '@/components/courses/CourseDetail.vue';
-import EditCourseForm from '@/components/courses/EditCourseForm.vue';
+import CourseCard from '@/components/courses/CourseCard.vue';
+import OfflineForm from '@/components/forms/OfflineForm.vue';
 
 export default {
-  name: 'offline-course',
+  name: 'OfflineCourse',
   components: {
-    Spinner,
+    // Spinner,
     CourseDetail,
-    EditCourseForm,
+    CourseCard,
+    OfflineForm,
   },
   data() {
     return {
-      courseId: this.$route.params.courseid,
-      showForm: false,
-      typeCourse: 'offline',
-      // eslint-disable-next-line global-require
-      coverImageSrc: require('@/assets/noImage.jpg'),
+      // courseId: this.$route.params.courseid,
+      // showForm: false,
+      courseData: null,
+      editing: false,
+      type: 'offline',
     };
   },
   computed: {
+    ...mapState(['loading']),
     ...mapState('offlineCourses', [
-      'offlineCourses',
-      'currentOfflineCourse',
-      'totalOfflineCourses',
-      'loading',
+      'course',
     ]),
-    noEmptyCourse() {
-      return !this.loading && this.currentOfflineCourse && !this.showForm;
-    },
   },
   watch: {
-    currentOfflineCourse(val) {
+    сourse(val) {
       if (!val) return;
-      this.showForm = false;
+      this.editing = false;
     },
   },
   methods: {
-    editCourseById(data) {
-      this.$store.dispatch('userCourses/PUT_USER_COURSE_ID', {
+    ...mapActions('offlineCourses', {
+      putCourse: 'PUT_COURSE',
+      getCourse: 'GET_COURSE',
+    }),
+    fillingForm() {
+      if (this.course) {
+        this.courseData = JSON.parse(JSON.stringify(this.course));
+        this.editing = true;
+        this.$vuetify.goTo('#edit-form', {
+          duration: 500,
+          offset: 80,
+          easing: 'easeInOutCubic',
+        });
+      }
+    },
+    submit(data) {
+      this.putCourse({
         data,
-        id: this.courseId,
+        id: this.$route.params.courseid,
       });
     },
-    backForm() {
-      this.showForm = false;
+    back() {
+      this.editing = false;
     },
   },
   created() {
-    if (!this.currentOfflineCourse) {
-      this.$store.dispatch('offlineCourses/GET_OFFLINE_COURSE_BY_ID', this.courseId);
-    }
+    this.getCourse(this.$route.params.courseid);
   },
   beforeDestroy() {
-    this.$store.dispatch('offlineCourses/CLEAR_OFFLINE_COURSE_BY_ID');
   },
 };
 </script>

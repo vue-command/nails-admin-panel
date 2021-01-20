@@ -1,8 +1,8 @@
 <template>
   <v-container fluid>
     <v-row class="d-flex justify-center">
-      <v-col cols="12" xs="12" v-if="onlineCourseById">
-        <h2 align="center">{{ onlineCourseById.nameOfCourse }}</h2>
+      <v-col cols="12" xs="12" v-if="course">
+        <h2 align="center">{{ course.nameOfCourse }}</h2>
       </v-col>
       <v-col cols="12" xs="12" v-if="noVideos">
         <h2 align="center">You don't have video yet</h2>
@@ -28,15 +28,15 @@
         </v-card>
       </v-col>
 
-      <v-col cols="12" xs="12" v-if="onlineCourseById">
-        <h3 align="center">{{ onlineCourseById.description }}</h3>
+      <v-col cols="12" xs="12" v-if="course">
+        <h3 align="center">{{ course.description }}</h3>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 import CoverImage from '@/components/CoverImage.vue';
 import Spinner from '@/components/Spinner.vue';
@@ -48,25 +48,26 @@ export default {
   },
   data() {
     return {
-      courseId: this.$route.params.courseid,
-      // eslint-disable-next-line global-require
-      coverImageSrc: 'img/noImage.jpg',
     };
   },
   computed: {
-    ...mapState('onlineCourses', ['onlineCourseById', 'loading']),
+    ...mapState(['loading']),
+    ...mapState('onlineCourses', ['course']),
     videos() {
-      return this.onlineCourseById?.videos;
+      return this.course?.videos;
     },
     noVideos() {
-      return !this?.onlineCourseById?.videos?.length && !this.loading;
+      return !this.loading && !this?.course?.videos?.length;
     },
   },
   watch: {
   },
   methods: {
+    ...mapActions('onlineCourses', {
+      getCourse: 'GET_COURSE',
+    }),
     coverImage(index) {
-      return this.onlineCourseById?.videos[index].coverImg?.link || this.coverImageSrc;
+      return this.course?.videos[index].coverImg?.link || this.coverImageSrc;
     },
     goToDetailVideo(id) {
       this.$router.push({
@@ -78,7 +79,7 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('onlineCourses/GET_ONLINE_COURSE_BY_ID', this.courseId);
+    this.getCourse(this.$route.params.courseid);
   },
 };
 </script>

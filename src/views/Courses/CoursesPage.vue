@@ -1,22 +1,27 @@
 <template>
   <v-container>
-    <h2 class="ma-4 text-title">OFFLINE COURSES</h2>
-    <v-btn class="my-8" @click="$router.push({ name: 'create-offline-course' })"
-      >add new offline course</v-btn
-    >
-
-    <!-- <Spiner v-if="loading" /> -->
-    <h3 v-if="emtyCourses" class="text-center text-message">
-      No courses have been added yet.
-    </h3>
+    <h2 class="ma-4 text-title">ONLINE COURSES</h2>
+    <div class="d-flex justify-center">
+      <v-radio-group v-model="radioGroup" row>
+        <v-radio
+          v-for="current of filterCourses"
+          :key="current.title"
+          dark
+          :label="current.title"
+        ></v-radio>
+      </v-radio-group>
+    </div>
+    <!-- <Spinner v-if="loading" /> -->
+    <h2 v-if="emtyCourses" class="text-message">
+      No courses have been added yet
+    </h2>
     <div class="d-flex flex-wrap justify-center">
       <CourseCard
         v-for="course in courses"
         :key="course._id"
         :course="course"
-        type="offline"
+        type="online"
         @click="goToCourse"
-        @delete="removeCourse"
       />
     </div>
     <div v-if="loading" class="d-flex flex-wrap justify-center">
@@ -32,45 +37,50 @@
     </div>
     <v-btn
       v-if="!emtyCourses && isHideMoreBtn"
-      color="buttons"
-      rounded
-      outlined
-      primary
       @click="
-        getMoreCourses({
+        getMore({
+          string: filterCourses[radioGroup].param,
           skip: courses.length,
         })
       "
       >More</v-btn
     >
-    <confirmDelete :dialog.sync="dialog" :confirmDelete="confirmDelete" />
   </v-container>
 </template>
-
 <style scoped>
 </style>
-
 <script>
 import { mapState, mapActions } from 'vuex';
 
-// import Spiner from '@/components/Spinner.vue';
 import CourseCard from '@/components/courses/CourseCard.vue';
-import confirmDelete from '@/components/popups/confirmDelete.vue';
+// import Spinner from '@/components/Spinner.vue';
 
 export default {
-  name: 'OfflineCoursesPage',
+  name: 'CoursesPage',
   components: {
-    // Spiner,
+    // Spinner,
     CourseCard,
-    confirmDelete,
   },
   data: () => ({
-    dialog: false,
-    deleteId: null,
+    radioGroup: 0,
+    filterCourses: [
+      {
+        title: 'All',
+        param: '?withHidden=withHidden',
+      },
+      {
+        title: 'Hidden only',
+        param: '?withHidden=hiddenOnly',
+      },
+      {
+        title: 'Published only',
+        param: '',
+      },
+    ],
   }),
   computed: {
     ...mapState(['loading']),
-    ...mapState('offlineCourses', ['courses', 'total']),
+    ...mapState('onlineCourses', ['courses', 'total']),
     emtyCourses() {
       return !this.loading && !this.courses?.length;
     },
@@ -78,32 +88,27 @@ export default {
       return this.courses.length < this.total;
     },
   },
-  watch: {},
-  methods: {
-    ...mapActions('offlineCourses', {
-      getCourses: 'GET_COURSES',
-      getMoreCourses: 'GET_MORE_COURSES',
-      deleteCourse: 'DELETE_COURSE',
-    }),
-    confirmDelete() {
-      this.deleteCourse(this.deleteId);
-      this.dialog = false;
+  watch: {
+    radioGroup(newVal) {
+      this.getCourses(this.filterCourses[newVal].param);
     },
+  },
+  methods: {
+    ...mapActions('onlineCourses', {
+      getCourses: 'GET_COURSES',
+      getMore: 'GET_MORE_COURSES',
+    }),
     goToCourse(id) {
       this.$router.push({
-        name: 'offline-course',
+        name: 'online-course',
         params: {
           courseid: id,
         },
       });
     },
-    removeCourse(id) {
-      this.dialog = true;
-      this.deleteId = id;
-    },
   },
   created() {
-    this.getCourses();
+    this.getCourses(this.filterCourses[this.radioGroup].param);
   },
 };
 </script>

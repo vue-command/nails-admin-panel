@@ -47,7 +47,7 @@ const routes = [
     component: () =>
       import(
       /* webpackChunkName: "online-courses" */
-      '@/views/Courses/OnlineCoursesPage.vue'
+      '@/views/Courses/CoursesPage.vue'
     ),
   },
   {
@@ -107,7 +107,7 @@ const routes = [
     component: () =>
       import(
       /* webpackChunkName: "offline-courses" */
-      '@/views/Courses/CreateOfflineCourseForm.vue'
+      '@/views/Courses/OfflineCourseCreate.vue'
     ),
   },
   {

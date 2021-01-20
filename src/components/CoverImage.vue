@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-img :src="imgUrl" :width="width" :height="height" @error="onError"></v-img>
+    <v-img :src="imgUrl" :width="width" :height="height" @error="error = true"></v-img>
   </div>
 </template>
 
@@ -16,7 +16,7 @@ export default {
   },
   computed: {
     imgUrl() {
-      return this.error ? this.coverImageSrc : this.url;
+      return this.error || !this.url ? this.coverImageSrc : this.url;
     },
   },
   watch: {
@@ -26,9 +26,6 @@ export default {
     },
   },
   methods: {
-    onError() {
-      this.error = true;
-    },
   },
 };
 </script>
