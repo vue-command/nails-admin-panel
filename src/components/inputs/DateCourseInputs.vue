@@ -15,7 +15,7 @@
       />
       </v-col>
       <v-col cols="4">
-      <TextInput
+      <NumberInput
         label="Available of spots"
         :value.sync="localValue[i].availableSpots"
         :required="true"
@@ -36,6 +36,7 @@
 
 <script>
 import TextInput from '@/components/inputs/TextInput.vue';
+import NumberInput from '@/components/inputs/NumberInput.vue';
 
 export default {
   name: 'DateCourseInputs',
@@ -51,6 +52,7 @@ export default {
   },
   components: {
     TextInput,
+    NumberInput,
   },
   data() {
     return {};
