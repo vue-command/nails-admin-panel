@@ -109,7 +109,7 @@ const actions = {
     state.skip = 0;
     state.searchParams = search;
     const { commodities, total, error } = await getData(
-      `${commoditiesEndpoints.search}?query=${state.searchParams}&skip=${state.skip}`
+      `${commoditiesEndpoints.search}?query=${state.searchParams}&skip=${state.skip}&withHidden=${state.filterShow}`
     );
     console.log(commodities);
     if (!error) {
@@ -268,11 +268,18 @@ const actions = {
   },
   async SET_FILTER_SHOW({ state, dispatch }, { value }) {
     state.filterShow = value;
-    await dispatch('GET_SHOP_COMMODITIES', {
-      categoryId: state.activeCategory._id,
-    });
+    if (!state.searchParams) {
+      await dispatch('GET_SHOP_COMMODITIES', {
+        categoryId: state.activeCategory._id,
+      });
+    } else {
+      await dispatch('SEARCH_COMMODITIES', {
+        search: state.searchParams,
+      });
+    }
   },
   async UPDATE_SHOP({ state, dispatch }) {
+    state.searchParams = '';
     if (state.activeSubcategory) {
       dispatch('SET_SUBCATEGORY', {
         categoryId: state.activeSubcategory._id,

@@ -128,7 +128,7 @@
               <v-row v-if="images && images.length">
                 <v-col v-for="(image, index) in images" :key="index" lg="3" md="4" sm="6">
                   <v-card class="pa-5 ma-5">
-                    <v-img :src="image.link" height="200" width="200" contain></v-img>
+                    <v-img :src="image.link" height="200" contain></v-img>
                     <v-btn color="error" @click="deleteImageHandler(image, index)">DELETE</v-btn>
                   </v-card>
                 </v-col>
@@ -171,7 +171,7 @@
           >
         </v-row>
       </v-col>
-
+      <v-divider class="my-10"></v-divider>
       <v-row>
         <v-col cols="12">
           <v-row justify="start" class="pt-10">

@@ -1,10 +1,11 @@
 <template>
   <v-container>
-    <v-row class="pa-5 shop-header">
+    <v-row class="pa-5">
       <v-col cols="12" lg="6" class="pa-5">
         <v-row>
           <v-col cols="6">
             <v-select
+              :disabled="!!searchParams"
               class="text-subtitle-1"
               outlined
               :value="selectedCategory"
@@ -20,7 +21,7 @@
           <v-col cols="6" v-if="activeCategory">
             <v-select
               class="text-subtitle-1"
-              :disabled="!selectedCategory"
+              :disabled="!selectedCategory || !!searchParams"
               :value="selectedSubategory"
               outlined
               :items="subcategoriesSelect"
@@ -50,7 +51,7 @@
           <v-col cols="6">
             <v-radio-group :value="filterShow" @change="setCommoditiesToShowValue" row>
               <v-row class="d-flex justify-space-between flex-column text-body-1">
-                <v-radio class="ma-1 font-weight-bold" label="Published" value=""></v-radio>
+                <v-radio class="ma-1 font-weight-bold" label="Published" value="all"></v-radio>
                 <v-radio class="ma-1 font-weight-bold" label="Hidden" value="hiddenOnly"></v-radio>
                 <v-radio class="ma-1 font-weight-bold" label="All" value="withHidden"></v-radio>
               </v-row>
@@ -69,34 +70,47 @@
       </v-col>
     </v-row>
     <v-row v-else-if="commodities" class="pa-2 ma-2">
-      <v-row v-if="commodities.length">
-        <v-col cols="12" sm="12" md="4" lg="3" v-for="card in commodities" :key="card.id" class="pa-2">
-          <v-card class="" min-height="500" @click="modifyHandler(card._id)">
-            <v-card flat class="px-0 pt-4 gray-background" width="100%">
-              <v-img
-                :src="card.previewImage && card.previewImage[0] && card.previewImage[0].link"
-                width="100%"
-                height="350"
-                contain
-              />
+      <v-col v-if="commodities.length">
+        <v-row>
+          <v-col cols="12" sm="6" md="4" lg="3" v-for="card in commodities" :key="card.id" class="pa-2">
+            <v-card
+              width="100%"
+              min-height="300"
+              rounded="0"
+              shaped
+              height="100%"
+              color="lgrey"
+              class="pa-2"
+              @click="modifyHandler(card._id)"
+            >
+              <v-card flat width="100%">
+                <v-img
+                  :src="card.previewImage && card.previewImage[0] && card.previewImage[0].link"
+                  width="100%"
+                  height="270"
+                  contain
+                />
+              </v-card>
+              <v-card-text class="pa-2 pb-0">
+                <span>
+                  <p class="text-h6 ma-0 pa-0 font-weight-bold dgrey--text text-start">
+                    {{ card.name }}
+                  </p>
+                  <p class="text-subtitle-1 ma-0 font-weight-medium dgrey--text text-start">
+                    {{ card.brand }}
+                  </p>
+                </span>
+                <p class="text-end text-subtitle-1 ma-0 pa-0 font-weight-bold dgrey--text">{{ card.price }} AUD</p>
+              </v-card-text>
             </v-card>
-            <v-card-text>
-              <p class="black--text text-h5 my-1 font-weight-medium">
-                {{ card.name }}
-              </p>
-              <p class="black--text text-h6 ma-0 font-weight-medium">
-                {{ card.brand }}
-              </p>
-              <p class="d-flex justify-end text-h6 ma-0 font-weight-bold">{{ card.price }} AUD</p>
-            </v-card-text>
-          </v-card>
-        </v-col>
+          </v-col>
+        </v-row>
         <v-row justify="center" class="ma-5" v-if="showMoreButton">
           <v-col>
             <v-btn @click="getMore" x-large color="success">More</v-btn>
           </v-col>
         </v-row>
-      </v-row>
+      </v-col>
       <v-row v-else>
         <v-col>
           <h1>No commodities</h1>
@@ -107,9 +121,6 @@
 </template>
 
 <script>
-import 'nails-styles/css/fonts.scss';
-import 'nails-styles/css/variables.scss';
-
 import debounce from '../../utils/debounce';
 
 import { mapState } from 'vuex';
