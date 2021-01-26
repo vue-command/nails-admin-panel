@@ -31,11 +31,7 @@
             :label="field.label"
             :required="field.required"
           />
-          <SuitableInputs
-            v-if="field.type === 'suitable'"
-            :value.sync="data[name]"
-            :label="field.label"
-          />
+          <SuitableInputs v-if="field.type === 'suitable'" :value.sync="data[name]" :label="field.label" />
           <TextAreaInput
             v-if="field.type === 'textarea'"
             :value.sync="data[name]"
@@ -130,16 +126,10 @@ export default {
       schema,
       data: Object.keys({ ...schema.sideLeft, ...schema.sideRight }).reduce((acc, key) => {
         const obj = { [key]: '' };
-        if (
-          schema.sideLeft[key]?.type === 'suitable'
-          || schema.sideRight[key]?.type === 'suitable'
-        ) {
+        if (schema.sideLeft[key]?.type === 'suitable' || schema.sideRight[key]?.type === 'suitable') {
           obj[key] = [''];
         }
-        if (
-          schema.sideLeft[key]?.type === 'dateCourse'
-          || schema.sideRight[key]?.type === 'dateCourse'
-        ) {
+        if (schema.sideLeft[key]?.type === 'dateCourse' || schema.sideRight[key]?.type === 'dateCourse') {
           obj[key] = [
             {
               date: '',
@@ -171,7 +161,7 @@ export default {
     },
     fillingForm() {
       if (this.course) {
-        Object.keys(this.course).forEach((key) => {
+        Object.keys(this.course).forEach(key => {
           this.data[key] = this.course[key];
         });
       }
@@ -181,6 +171,7 @@ export default {
       delete this.data._id;
       this.data.description = this.data.description.split(' ').filter((str) => str).join(' ');
       this.data.dateOfCourses = this.data.dateOfCourses.map((obj) => {
+        // eslint-disable-next-line no-unused-vars
         const { _id, ...rest } = obj;
         return rest;
       });
@@ -193,10 +184,10 @@ export default {
         if (value instanceof File) fd.append('file', value);
         else fd.append(name, value);
       });
-      dateOfCourses.forEach((obj) => {
+      dateOfCourses.forEach(obj => {
         fd.append('dateOfCourses[]', JSON.stringify(obj));
       });
-      thisCourseIsSuitableFor.forEach((str) => {
+      thisCourseIsSuitableFor.forEach(str => {
         fd.append('thisCourseIsSuitableFor[]', str);
       });
 
@@ -209,5 +200,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

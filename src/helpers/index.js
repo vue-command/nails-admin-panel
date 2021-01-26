@@ -3,6 +3,7 @@ const postData = require('./postData').default;
 const putData = require('./putData').default;
 const patchData = require('./patchData').default;
 const deleteData = require('./deleteData').default;
+const getFormData = require('./getFormData').default;
 
 export default {
   getData,
@@ -10,4 +11,5 @@ export default {
   putData,
   patchData,
   deleteData,
+  getFormData,
 };

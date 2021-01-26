@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
 const state = {
@@ -11,8 +10,10 @@ const state = {
 };
 
 const getters = {
-  onlineCoursesEndpoint: (state, getters, rootState) => `${rootState.host}/course/online/`,
-  videoCourseEndpoint: (state, getters, rootState) => `${rootState.host}/course/online/findvideo/`,
+  onlineCoursesEndpoint: (state, getters, rootState) =>
+    `${rootState.host}/course/online/`,
+  videoCourseEndpoint: (state, getters, rootState) =>
+    `${rootState.host}/course/online/findvideo/`,
 };
 
 const mutations = {
@@ -30,7 +31,7 @@ const mutations = {
   ONLINE_COURSE_VIDEO_BY_ID: (state, { video }) => {
     state.currentVideo = video;
   },
-  ONLINE_COURSE_BY_ID_CLEAR: (state) => {
+  ONLINE_COURSE_BY_ID_CLEAR: state => {
     state.onlineCourseById = null;
   },
   ERROR: (state, payload) => {

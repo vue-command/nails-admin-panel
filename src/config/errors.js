@@ -49,5 +49,11 @@ export default {
       errorMessage: 'Publishing course error',
     },
   },
-
+  shop: {
+    oops: {
+      error: true,
+      errorType: 'Something went wrong',
+      errorMessage: 'Process failed. Data was not received',
+    },
+  },
 };

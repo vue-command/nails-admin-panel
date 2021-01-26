@@ -14,5 +14,20 @@ export default {
     patch: '/course/online/set-published',
     delete: '',
   },
-
+  categories: {
+    categories: 'shop/categories',
+    category: 'shop/category',
+    subcategory: 'shop/subcategory',
+    newCategory: 'shop/new/category',
+    newSubcategory: 'shop/new/subcategory',
+  },
+  commodities: {
+    commodities: 'shop/commodities',
+    commodity: 'shop/commodity',
+    subcommodities: 'shop/subcommodities',
+    search: 'shop/search',
+    newCommodity: 'shop/new/commodity',
+    files: 'shop/commodity/files',
+    file: 'shop/file',
+  },
 };

@@ -1,9 +1,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-underscore-dangle */
 
-const {
-  getData, postData, putData, deleteData,
-} = require('@/helpers').default;
+const { getData, postData, putData, deleteData } = require('@/helpers').default;
 
 const endpoints = require('@/config/endpoints').default.offline;
 const errors = require('@/config/errors').default.offline;
@@ -15,8 +13,7 @@ const state = {
   total: 0,
 };
 
-const getters = {
-};
+const getters = {};
 
 const mutations = {
   COURSES: (state, payload) => {

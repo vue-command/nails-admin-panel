@@ -20,14 +20,16 @@ export default new Vuetify({
     },
     themes: {
       light: {
-        // orange
-        primary: '#FFC44A',
-        // light gray
+        orange: '#FFC44A',
+        primary: '#333333',
         secondary: '#dde',
-        darkGrey: '#333333',
+        // accent: '',
+        dgrey: '#333333',
+        lgrey: '#F4F4F4',
         buttons: '#FFC44A',
         homefone: '#ffffff',
         warning: '#FAFF00',
+        light: '#808080',
         // shop
         substrate: '#F4F4F4',
         secondaryGray: '#262624',

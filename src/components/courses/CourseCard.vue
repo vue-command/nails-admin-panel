@@ -1,11 +1,6 @@
 <template>
   <v-card dark class="cardfone ma-12" @click="$emit('click', course._id)">
-    <CoverImage
-      :url="checkLink(course)"
-      :width="400"
-      :height="250"
-      class="image-course"
-    />
+    <CoverImage :url="checkLink(course)" :width="400" :height="250" class="image-course" />
     <v-card-title class="buttons--text pa-0 pl-4 pt-4">
       {{ course.accessDays }} days | $ {{ course.price }}
     </v-card-title>
@@ -37,16 +32,7 @@
         class="yellow-button mr-4"
         >pay</v-btn
       >
-      <v-btn
-        v-if="!course._id"
-        color="buttons"
-        rounded
-        small
-        min-width="90"
-        dark
-        class="yellow-button"
-        >more</v-btn
-      >
+      <v-btn v-if="!course._id" color="buttons" rounded small min-width="90" dark class="yellow-button">more</v-btn>
     </v-card-actions>
     <!-- <v-card-actions v-if="type === 'online'" class="pl-4 pb-4">
       <v-btn
@@ -110,8 +96,7 @@
   </v-card>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
 
 <script>
 import CoverImage from '@/components/CoverImage.vue';

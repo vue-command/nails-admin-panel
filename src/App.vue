@@ -28,7 +28,7 @@
             </v-list-item-icon>
             <v-list-item-title>Online courses</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="goTo('ShopEdit')">
+          <v-list-item @click="goTo('shop')">
             <v-list-item-icon>
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
@@ -74,6 +74,9 @@ export default {
     CoursesLayout,
     ShopLayout,
     DefaultLayout,
+  },
+  created() {
+    this.$store.dispatch('shop/STORE_INIT');
   },
   computed: {
     layout() {

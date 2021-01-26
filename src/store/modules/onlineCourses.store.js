@@ -14,8 +14,7 @@ const state = {
   // onlineError: null,
 };
 
-const getters = {
-};
+const getters = {};
 
 const mutations = {
   COURSES: (state, payload) => {
@@ -55,8 +54,7 @@ const actions = {
       commit('MORE_COURSES', onlineCourses);
       commit('TOTAL', total);
     } else {
-      commit('ERROR',
-        errors.get, { root: true });
+      commit('ERROR', errors.get, { root: true });
     }
     commit('LOADING', false, { root: true });
   },

@@ -74,7 +74,7 @@
         align="center"
         justify="center"
       >
-        <CoverImage :url="checkLink(course)"/>
+        <CoverImage :url="checkLink(course)" :height="500"/>
       </v-col>
       <v-col cols="12" xs="12" order="2">
         <v-card-text
