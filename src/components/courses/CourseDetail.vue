@@ -24,29 +24,34 @@
             >{{ course.accessDays }} days | $ {{ course.price }}</v-card-title
           >
         </v-card>
-        <v-card flat class="transparent" dark v-if="type === 'online'">
-          <v-card-text
-            v-if="!course.isPaid"
-            class="pa-0 pl-4 pb-4 d-flex notPaidAndPublised--text"
-            ><h3>this course has not been paid for yet</h3></v-card-text
-          >
-          <v-card-text
-            v-if="!course.isPublished"
-            class="pa-0 pl-4 d-flex notPaidAndPublised--text"
-            ><h3>this course has not been published yet</h3></v-card-text
+        <v-card
+          flat
+          class="transparent"
+          dark
+          v-if="type === 'online' && (!course.isPaid || !course.isPublished)"
+        >
+          <v-card-text class="pa-0 pl-4 pb-4 notPaidAndPublished--text"
+            ><h3 v-if="!course.isPaid">
+              this course has not been paid for yet
+            </h3>
+            <h3 v-if="!course.isPublished">
+              this course has not been published yet
+            </h3></v-card-text
           >
         </v-card>
         <v-card
           flat
           class="transparent d-flex flex-column align-center"
           dark
-          v-else
+          v-if="type === 'offline'"
         >
           <v-card-title>Date of courses:</v-card-title>
-          <div v-for="(item, index) in course.dateOfCourses" :key="index">
-            <p>Date: {{ item.date }}</p>
-            <p>Available of spots: {{ item.availableSpots }}</p>
-          </div>
+          <table>
+            <tr v-for="item in course.dateOfCourses" :key="item._id">
+              <td>{{ item.date }}</td>
+              <td>available spots {{ item.availableSpots }}</td>
+            </tr>
+          </table>
         </v-card>
         <v-card flat class="transparent d-flex flex-column align-center" dark>
           <v-card-title>This course is cuitable for:</v-card-title>
@@ -69,7 +74,7 @@
         align="center"
         justify="center"
       >
-        <CoverImage :url="checkLink(course)" :height="400" />
+        <CoverImage :url="checkLink(course)"/>
       </v-col>
       <v-col cols="12" xs="12" order="2">
         <v-card-text
@@ -83,8 +88,12 @@
           <v-card-title class="d-flex justify-center justify-sm-start"
             >On this course:</v-card-title
           >
-          <v-card-text>{{ course.description }}</v-card-text>
-          <v-card-text>{{ course.infoBonus }}</v-card-text>
+          <v-card-text>
+            <p v-for="(item, index) in descriptions" :key="index">
+              {{ item }}
+            </p>
+          </v-card-text>
+          <v-card-text>{{ course.infoForBonus }}</v-card-text>
         </v-card>
       </v-col>
       <!-- <v-col
@@ -108,23 +117,46 @@
     </v-row>
   </v-container>
 </template>
-<style scoped></style>
+
+<style scoped>
+td {
+  padding: 8px;
+}
+</style>
+
 <script>
 import CoverImage from '@/components/CoverImage.vue';
 import checkLink from '@/helpers/checkLink';
 
 export default {
-  props: ['course', 'type'],
+  props: {
+    course: {
+      type: Object,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+    },
+  },
   components: {
     CoverImage,
   },
-  name: 'preview-course',
+  name: 'CourseDetail',
   data() {
-    return {
-    };
+    return {};
+  },
+  computed: {
+    descriptions() {
+      return this.course?.description
+        ? this.course.description
+          .split('\n')
+          .map((str) => str.trim())
+          .filter((str) => str)
+        : [];
+    },
   },
   watch: {},
-  computed: {},
   methods: {
     checkLink,
   },

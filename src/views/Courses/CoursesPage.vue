@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h2 class="ma-4 text-title">ONLINE COURSES</h2>
+    <h2 class="ma-4 text-center">ONLINE COURSES</h2>
     <div class="d-flex justify-center">
       <v-radio-group v-model="radioGroup" row>
         <v-radio
@@ -12,7 +12,7 @@
       </v-radio-group>
     </div>
     <!-- <Spinner v-if="loading" /> -->
-    <h2 v-if="emtyCourses" class="text-message">
+    <h2 v-if="emtyCourses" class="text-center">
       No courses have been added yet
     </h2>
     <div class="d-flex flex-wrap justify-center">
@@ -35,16 +35,22 @@
         <v-skeleton-loader type="card"></v-skeleton-loader>
       </v-card>
     </div>
-    <v-btn
-      v-if="!emtyCourses && isHideMoreBtn"
-      @click="
-        getMore({
-          string: filterCourses[radioGroup].param,
-          skip: courses.length,
-        })
-      "
-      >More</v-btn
-    >
+    <div class="d-flex justify-center">
+      <v-btn
+        v-if="!emtyCourses && isHideMoreBtn"
+        color="buttons"
+        rounded
+        outlined
+        primary
+        @click="
+          getMore({
+            string: filterCourses[radioGroup].param,
+            skip: courses.length,
+          })
+        "
+        >More</v-btn
+      >
+    </div>
   </v-container>
 </template>
 <style scoped>

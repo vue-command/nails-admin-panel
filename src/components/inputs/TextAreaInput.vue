@@ -1,7 +1,7 @@
 <template>
   <v-textarea
     :label="label"
-    v-model="localValue"
+    v-model.trim="localValue"
     :disabled="disabled"
     :rules="[rules.required]"
     outlined

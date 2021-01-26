@@ -62,6 +62,11 @@ const actions = {
     commit('LOADING', true, { root: true });
     const { offlineCourse, error } = await getData(`${endpoints.get}/${id}`);
     if (!error) {
+      offlineCourse.dateOfCourses = offlineCourse.dateOfCourses.map((item) => {
+        const { availableSpots, ...rest } = item;
+        const str = availableSpots.toString();
+        return { availableSpots: str, ...rest };
+      });
       commit('COURSE', offlineCourse);
     } else {
       commit('ERROR', errors.get_by_id, { root: true });
@@ -85,6 +90,11 @@ const actions = {
     commit('LOADING', true, { root: true });
     const { updatedOfflineCourse, error } = await putData(`${endpoints.put}/${id}`, data);
     if (!error) {
+      updatedOfflineCourse.dateOfCourses = updatedOfflineCourse.dateOfCourses.map((item) => {
+        const { availableSpots, ...rest } = item;
+        const str = availableSpots.toString();
+        return { availableSpots: str, ...rest };
+      });
       commit('COURSE', updatedOfflineCourse);
       commit('MESSAGE', messages.put, { root: true });
     } else {

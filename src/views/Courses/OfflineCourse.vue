@@ -68,15 +68,13 @@ export default {
   },
   data() {
     return {
-      // courseId: this.$route.params.courseid,
-      // showForm: false,
       courseData: null,
       editing: false,
       type: 'offline',
     };
   },
   computed: {
-    ...mapState(['loading']),
+    ...mapState(['loading', 'error']),
     ...mapState('offlineCourses', [
       'course',
     ]),
@@ -103,11 +101,12 @@ export default {
         });
       }
     },
-    submit(data) {
-      this.putCourse({
+    async submit(data) {
+      await this.putCourse({
         data,
         id: this.$route.params.courseid,
       });
+      if (!this.error) this.back();
     },
     back() {
       this.editing = false;

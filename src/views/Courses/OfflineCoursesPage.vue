@@ -1,12 +1,20 @@
 <template>
   <v-container>
-    <h2 class="ma-4 text-title">OFFLINE COURSES</h2>
-    <v-btn class="my-8" @click="$router.push({ name: 'create-offline-course' })"
-      >add new offline course</v-btn
-    >
+    <h2 class="ma-4 text-center">OFFLINE COURSES</h2>
+    <div class="d-flex justify-center">
+      <v-btn
+        color="buttons"
+        rounded
+        outlined
+        primary
+        class="my-8"
+        @click="$router.push({ name: 'create-offline-course' })"
+        >add new offline course</v-btn
+      >
+    </div>
 
     <!-- <Spiner v-if="loading" /> -->
-    <h3 v-if="emtyCourses" class="text-center text-message">
+    <h3 v-if="emtyCourses" class="text-center">
       No courses have been added yet.
     </h3>
     <div class="d-flex flex-wrap justify-center">

@@ -35,6 +35,7 @@ export default new Vuetify({
         shopfont: '#808080',
         // courses
         coursesGray: '#4D4D4D',
+        notPaidAndPublished: '#369ab3',
       },
       dark: {
         // orange
@@ -51,6 +52,7 @@ export default new Vuetify({
         lightFont: '#808080',
         // courses
         coursesGray: '#4D4D4D',
+        notPaidAndPublished: '#369ab3',
       },
     },
   },

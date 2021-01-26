@@ -179,6 +179,7 @@ export default {
     async submit() {
       // eslint-disable-next-line no-underscore-dangle
       delete this.data._id;
+      this.data.description = this.data.description.split(' ').filter((str) => str).join(' ');
       this.data.dateOfCourses = this.data.dateOfCourses.map((obj) => {
         const { _id, ...rest } = obj;
         return rest;

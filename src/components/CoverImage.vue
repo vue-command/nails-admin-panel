@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-img :src="imgUrl" :width="width" :height="height" @error="error = true"></v-img>
+    <v-img :src="imgUrl" :width="width" :height="height" contain @error="error = true"></v-img>
   </div>
 </template>
 
