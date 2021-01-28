@@ -1,59 +1,48 @@
 <template>
-  <v-snackbar
-    v-model="snackbar"
-    :timeout="timeout"
-    :color="color"
-    top
-    position="top center"
-  >
-    <h3>{{ messageType || "Unknown message type" }}</h3>
-    <h3>{{ messageText || "Unknown message" }}</h3>
-    <template v-slot:action="{ attrs }">
-      <!-- <v-card> -->
-      <v-btn icon v-bind="attrs" @click="snackbar = false">
-        <v-icon>mdi-close</v-icon></v-btn
-      >
-      <!-- <v-card-text class="text-center mt-10">
-          <h4>{{ errorType || "Unknown error type" }}</h4>
-        </v-card-text>
-        <v-card-text class="text-center">
-          <p>{{ errorMessage || "Unknown Error" }}</p>
-        </v-card-text>
-      </v-card> -->
-    </template>
-  </v-snackbar>
+  <v-dialog v-model="dialog" max-width="480px" class="pa-4">
+    <v-card flat>
+      <v-toolbar dark dense color="primary">
+        <v-icon class="mr-4"> mdi-message-text </v-icon>
+        <v-toolbar-title> Message </v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="dialog = false">
+          <v-icon large> mdi-close </v-icon>
+        </v-btn>
+      </v-toolbar>
+      <v-card-text class="text-center mt-10">
+        <h4>{{ messageType || '' }}</h4>
+      </v-card-text>
+      <v-card-text class="text-center">
+        <h3>{{ messageText }}</h3>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'MessagePopup',
-  data() {
-    return {
-      timeout: 8000,
-      color: '#FFC44A',
-    };
-  },
   computed: {
     ...mapState(['message', 'messageText', 'messageType']),
-    snackbar: {
-      get() {
-        return this.message;
+    dialog: {
+      get () {
+        return this.message
       },
-      set(val) {
-        // eslint-disable-next-line no-unused-expressions
-        !val && this.resetMessage();
-      },
-    },
+      set (val) {
+        !val && this.resetMessage()
+      }
+    }
   },
   methods: {
     ...mapMutations({
-      setMessage: 'MESSAGE',
+      setMessage: 'MESSAGE'
     }),
-    resetMessage() {
-      this.setMessage(null);
-    },
-  },
-};
+    resetMessage () {
+      this.setMessage(null)
+    }
+  }
+}
 </script>

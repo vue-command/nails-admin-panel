@@ -1,7 +1,7 @@
 <template>
-  <v-dialog v-model="dialog" max-width="480px" class="pa-4">
+  <v-dialog v-model="localDialog" max-width="480px" class="pa-4">
     <v-card flat>
-      <v-toolbar dark dense color="#900">
+      <v-toolbar dark dense color="error">
         <v-icon class="mr-4"> $delete </v-icon>
         <v-toolbar-title> Delete </v-toolbar-title>
         <v-spacer></v-spacer>
@@ -18,7 +18,7 @@
       <v-btn color="buttons" text large @click="$emit('update:dialog', false)"
         >Cancel</v-btn
       >
-      <v-btn color="#900" text large @click="confirmDelete">OK</v-btn>
+      <v-btn color="error" text large @click="confirmDelete">OK</v-btn>
       <v-spacer></v-spacer>
     </v-card-actions>
   </v-dialog>
@@ -26,8 +26,18 @@
 
 <script>
 export default {
-  name: 'PopupDelete',
+  name: 'confirmDelete',
   props: ['dialog', 'confirmDelete', 'title'],
+  computed: {
+    localDialog: {
+      get() {
+        return this.dialog
+      },
+      set(val) {
+        this.$emit('update:dialog', val)
+      }
+    }
+  },
   methods: {},
 };
 </script>
