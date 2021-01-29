@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import VueCoreVideoPlayer from 'vue-core-video-player';
+import VueVideoPlayer from 'vue-video-player'
 import ErrorMessage from '@/components/popups/error.vue';
 import ConfirmDelete from '@/components/popups/confirmDelete.vue';
 import Message from '@/components/popups/message.vue';
@@ -11,7 +11,10 @@ import vuetify from './plugins/vuetify';
 import '@/css/fonts.scss';
 
 Vue.config.productionTip = false;
-Vue.use(VueCoreVideoPlayer);
+
+import 'video.js/dist/video-js.css'
+
+Vue.use(VueVideoPlayer)
 
 Vue.component('error-message', ErrorMessage);
 Vue.component('simple-message', Message);
