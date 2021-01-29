@@ -81,21 +81,18 @@ const actions = {
     commit('LOADING', false, { root: true });
   },
 
-  async PUBLISH({ commit, dispatch }, id) {
+  async PUBLISH({ commit, dispatch }, { id, publish }) {
     const data = {
-      isPublished: true,
+      isPublished: publish,
     };
     const response = await patchData(`${endpoints.patch}/${id}`, data);
     if (!response.error) {
-      commit('MESSAGE', messages.publish, { root: true });
+      commit('MESSAGE', publish ? messages.publish : messages.unpublish, { root: true });
       dispatch('GET_COURSE', id);
     } else {
-      commit('ERROR', errors.publish, { root: true });
+      commit('ERROR', publish ? errors.publish : errors.unpublish, { root: true });
     }
   },
-  // async CLEAR_ONLINE_COURSE_BY_ID({ commit }) {
-  //   commit('ONLINE_COURSE_BY_ID_CLEAR');
-  // },
 };
 
 export default {

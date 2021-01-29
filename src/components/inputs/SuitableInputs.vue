@@ -10,11 +10,11 @@
         :value.sync="localValue[i]"
         :required="true"
       />
-      <v-btn @click="removeField(i)" v-if="i !== 0" class="remove">
+      <v-btn @click="removeField(i)" v-if="localValue.length > 1" class="remove">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </div>
-    <div class="d-flex justify-end mb-8">
+    <div  v-if="localValue.length < 5" class="d-flex justify-end mb-8">
       <v-btn @click="addField">
         <v-icon>mdi-plus</v-icon>
       </v-btn>

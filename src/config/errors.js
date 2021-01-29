@@ -48,6 +48,11 @@ export default {
       errorType: 'Publish course',
       errorMessage: 'Publishing course error',
     },
+   unpublish: {
+      error: true,
+      errorType: 'Unublish course',
+      errorMessage: 'Unpublishing course error',
+    },
   },
   shop: {
     oops: {

@@ -11,7 +11,7 @@ export default {
     get_video: 'course/online/findvideo',
     post: '',
     put: '',
-    patch: '/course/online/set-published',
+    patch: 'course/online/set-published',
     delete: '',
   },
   categories: {

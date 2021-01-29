@@ -1,16 +1,8 @@
 <template>
   <div>
     <Spinner v-if="loading" />
-    <CourseDetail
-      v-if="!loading && course"
-      :course="course"
-      :type="type"
-      btnTitle="BUY THIS COURSE"
-    />
-    <div
-      v-if="!loading && course"
-      class="d-flex flex-column align-center flex-sm-row justify-sm-center mt-8"
-    >
+    <CourseDetail v-if="!loading && course" :course="course" :type="type" btnTitle="BUY THIS COURSE" />
+    <div v-if="!loading && course" class="d-flex flex-column align-center flex-sm-row justify-sm-center mt-8">
       <v-btn
         @click="goToVideos"
         color="buttons"
@@ -22,15 +14,15 @@
         >Videos</v-btn
       >
       <v-btn
-        @click="()=> publish(courseId)"
-        :disabled="!course.isPaid || course.isPublished"
+        @click="() => publish({ id: course._id, publish: !course.isPublished })"
+        :disabled="!course.isPaid"
         color="buttons"
         rounded
         large
         dark
         min-width="160"
         class="yellow-button"
-        >publish</v-btn
+        >{{ course.isPublished ? 'unpublish' : 'publish' }}</v-btn
       >
     </div>
   </div>
@@ -55,11 +47,7 @@ export default {
   },
   computed: {
     ...mapState(['loading']),
-    ...mapState('onlineCourses', [
-      'courses',
-      'course',
-      'total',
-    ]),
+    ...mapState('onlineCourses', ['courses', 'course', 'total']),
   },
   watch: {},
   methods: {

@@ -25,6 +25,7 @@
         type="offline"
         @click="goToCourse"
         @delete="removeCourse"
+        :deleteBtn="true"
       />
     </div>
     <div v-if="loading" class="d-flex flex-wrap justify-center">

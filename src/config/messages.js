@@ -22,6 +22,11 @@ export default {
       messageType: 'Publish course',
       messageText: 'Publishing course successfully',
     },
+    unpublish: {
+      message: true,
+      messageType: 'Unpublish course',
+      messageText: 'Unpublishing course successfully',
+    }
   },
   shop: {
     update: {
