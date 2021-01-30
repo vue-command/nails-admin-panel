@@ -18,16 +18,19 @@ export default {
     subtitle: {
       label: 'Subtitle',
       type: 'text',
+      limit: 60,
       required: true,
     },
     accessDays: {
       label: 'Access (days)',
       type: 'number',
+      limit: 3,
       required: true,
     },
     price: {
       label: 'Price',
       type: 'number',
+      limit: 5,
       required: true,
     },
     author: {
@@ -43,6 +46,7 @@ export default {
     infoForBonus: {
       label: 'Info for bonus',
       type: 'text',
+      limit: 250,
       required: true,
     },
     dateOfCourses: {
@@ -54,15 +58,21 @@ export default {
     thisCourseIsSuitableFor: {
       label: 'This course is suitable for',
       type: 'suitable',
+      limit: 100,
+      required: true,
     },
     description: {
       label: 'Description',
       type: 'textarea',
+      limit: 2000,
       required: true,
     },
     photo: {
       label: 'Cover picture',
       type: 'file',
+      icon: 'mdi-camera',
+      accept: 'image/png, image/jpeg, image/bmp',
+      size: 10000,
       required: true,
     },
   },

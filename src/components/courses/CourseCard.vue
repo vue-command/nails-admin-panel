@@ -5,6 +5,7 @@
       :elevation="hover ? 16 : 2"
       :class="{ 'on-hover': hover }"
       class="ma-12"
+      :width="400"
       @click="$emit('click', course._id)"
     >
       <CoverImage :url="checkLink(course)" :width="400" :height="250" />
@@ -12,10 +13,10 @@
         {{ course.accessDays }} days | $ {{ course.price }}
       </v-card-title>
       <v-card-title class="pa-0 pl-4">
-        {{ course.name }}
+        {{ courseName }}
       </v-card-title>
       <v-card-text class="pa-0 px-4 pb-4 text-start">
-        {{ course.subtitle }}
+        {{ courseSubtitle }}
       </v-card-text>
       <v-card-actions v-if="type === 'online'">
         <v-btn color="buttons" rounded small outlined primary min-width="90" class="yellow-button mr-4">pay</v-btn>
@@ -59,6 +60,14 @@ export default {
   },
   data() {
     return {};
+  },
+  computed: {
+    courseName() {
+      return this.course?.nameOfCourse?.length < 25 ? this.course?.nameOfCourse : this.course?.nameOfCourse?.slice(0, 22) + '...';
+    },
+    courseSubtitle() {
+      return this.course?.subtitle?.length < 70 ? this.course?.subtitle : this.course?.subtitle?.slice(0, 67) + '...';
+    },
   },
   watch: {},
   methods: {

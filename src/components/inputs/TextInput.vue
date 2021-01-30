@@ -3,7 +3,7 @@
     :label="label"
     v-model="localValue"
     :disabled="disabled"
-    :rules="[rules.required, rules.noRepeat]"
+    :rules="[rules.required, rules.limit, rules.noRepeat]"
     outlined
     dark
   />
@@ -20,6 +20,10 @@ export default {
     label: {
       type: String,
       default: '',
+    },
+     limit: {
+      type: Number,
+      default: 25,
     },
     disabled: {
       type: Boolean,
@@ -44,7 +48,7 @@ export default {
           const res = !(a && b) && (a || b);
           return res || 'Input is required';
         },
-
+        limit : v => v.length <= this.limit || `Max ${this.limit} characters`,
         noRepeat: (value) => (
           !this.noRepeat
             || value !== this.noRepeat

@@ -11,13 +11,16 @@
       <TextInput
         label="Date"
         :value.sync="localValue[i].date"
+        :limit="35"
         :required="true"
+        
       />
       </v-col>
       <v-col cols="4">
       <NumberInput
         label="Available of spots"
         :value.sync="localValue[i].availableSpots"
+        :limit="3"
         :required="true"
       />
       </v-col>

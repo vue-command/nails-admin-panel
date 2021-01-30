@@ -8,7 +8,9 @@
       <TextInput
         :label="label"
         :value.sync="localValue[i]"
-        :required="true"
+        :required="required"
+        :limit="limit"
+        :outlined="outlined"
       />
       <v-btn @click="removeField(i)" v-if="localValue.length > 1" class="remove">
         <v-icon>mdi-delete</v-icon>
@@ -35,6 +37,18 @@ export default {
     label: {
       type: String,
       default: '',
+    },
+    limit: {
+      type: Number,
+      required: true
+    },
+    required: {
+      type: Boolean,
+      required: true
+    },
+    outlined: {
+      type: Boolean,
+      default: true,
     },
   },
   components: {

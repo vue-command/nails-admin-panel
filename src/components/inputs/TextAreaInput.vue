@@ -3,10 +3,9 @@
     :label="label"
     v-model.trim="localValue"
     :disabled="disabled"
-    :rules="[rules.required]"
-    outlined
+    :rules="[rules.required, rules.limit]"
+    :outlined="outlined"
     rows="8"
-    dark
     no-resize
   />
 </template>
@@ -23,6 +22,10 @@ export default {
       type: String,
       default: '',
     },
+     limit: {
+      type: Number,
+      default: 200,
+    },
     disabled: {
       type: Boolean,
       default: false,
@@ -30,6 +33,10 @@ export default {
     required: {
       type: Boolean,
       default: false,
+    },
+    outlined: {
+      type: Boolean,
+      default: true,
     },
   },
   data() {
@@ -42,6 +49,7 @@ export default {
           const res = !(a && b) && (a || b);
           return res || 'Input is required';
         },
+        limit : v => v.length <= this.limit || `Max ${this.limit} characters`,
       },
     };
   },

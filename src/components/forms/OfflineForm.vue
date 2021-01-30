@@ -7,12 +7,14 @@
             v-if="field.type === 'text'"
             :value.sync="data[name]"
             :label="field.label"
+            :limit="field.limit"
             :required="field.required"
           />
           <NumberInput
             v-if="field.type === 'number'"
             :value.sync="data[name]"
             :label="field.label"
+            :limit="field.limit"
             :required="field.required"
           />
           <DateCourseInputs
@@ -31,11 +33,18 @@
             :label="field.label"
             :required="field.required"
           />
-          <SuitableInputs v-if="field.type === 'suitable'" :value.sync="data[name]" :label="field.label" />
+          <SuitableInputs
+            v-if="field.type === 'suitable'"
+            :value.sync="data[name]"
+            :limit="field.limit"
+            :label="field.label"
+            :required="field.required"
+          />
           <TextAreaInput
             v-if="field.type === 'textarea'"
             :value.sync="data[name]"
             :label="field.label"
+            :limit="field.limit"
             :required="field.required"
           />
           <div v-if="field.type === 'file'">
@@ -54,8 +63,10 @@
               v-else
               :value.sync="data[name]"
               :label="field.label"
+              :icon="field.icon"
+              :size="field.size"
+              :accept="field.accept"
               :required="field.required"
-              icon="mdi-camera"
             />
           </div>
         </div>
@@ -169,8 +180,11 @@ export default {
     async submit() {
       // eslint-disable-next-line no-underscore-dangle
       delete this.data._id;
-      this.data.description = this.data.description.split(' ').filter((str) => str).join(' ');
-      this.data.dateOfCourses = this.data.dateOfCourses.map((obj) => {
+      this.data.description = this.data.description
+        .split(' ')
+        .filter(str => str)
+        .join(' ');
+      this.data.dateOfCourses = this.data.dateOfCourses.map(obj => {
         // eslint-disable-next-line no-unused-vars
         const { _id, ...rest } = obj;
         return rest;

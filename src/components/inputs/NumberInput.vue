@@ -4,9 +4,8 @@
     v-model="localValue"
     :label="label"
     :disabled="disabled"
-    :rules="[rules.required, rules.onlyDigits, rules.noRepeat]"
-    outlined
-    dark
+    :rules="[rules.required, rules.onlyDigits, rules.limit, rules.noRepeat]"
+    :outlined="outlined"
   />
 </template>
 
@@ -22,6 +21,10 @@ export default {
       type: String,
       default: '',
     },
+    limit: {
+      type: Number,
+      default: 10,
+    },
     disabled: {
       type: Boolean,
       default: false,
@@ -34,23 +37,25 @@ export default {
       type: String,
       default: '',
     },
+    outlined: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
       rules: {
-        required: (v) => {
+        required: v => {
           const a = this.required && !!v;
           const b = !this.required;
           // res = a XOR b
           const res = !(a && b) && (a || b);
           return res || 'Input is required';
         },
-        onlyDigits: (v) => !/\D/g.test(v) || 'input should consist only of digits',
-        noRepeat: (value) => (
-          !this.noRepeat
-            || value.split(' ').join('') !== this.noRepeat.split(' ').join('')
-            || 'Digits must not match'
-        ),
+        onlyDigits: v => !/\D/g.test(v) || 'input should consist only of digits',
+        limit : v => v.length <= this.limit || `Max ${this.limit} characters`,
+        noRepeat: value =>
+          !this.noRepeat || value.split(' ').join('') !== this.noRepeat.split(' ').join('') || 'Digits must not match',
       },
     };
   },
