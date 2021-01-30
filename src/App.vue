@@ -18,25 +18,25 @@
 
           <v-list-item @click="goTo('offline-courses')">
             <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
+              <v-icon>$offlineCourse</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Offline courses</v-list-item-title>
           </v-list-item>
           <v-list-item @click="goTo('online-courses')">
             <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
+              <v-icon>$onlineCourse</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Online courses</v-list-item-title>
           </v-list-item>
           <v-list-item @click="goTo('shop')">
             <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
+              <v-icon>$shop</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Shop</v-list-item-title>
           </v-list-item>
           <v-list-item @click="goTo('shop-categories')">
             <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
+              <v-icon>$shopCategories</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Shop categories</v-list-item-title>
           </v-list-item>
