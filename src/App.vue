@@ -125,4 +125,24 @@ a {
 .v-snack__content {
   text-align: center !important;
 }
+::-webkit-scrollbar {
+width: 10px;
+height: 10px;
+}
+::-webkit-scrollbar-button:start:decrement,
+::-webkit-scrollbar-button:end:increment  {
+height: 10px;
+background-color: transparent;
+}
+::-webkit-scrollbar-track-piece  {
+background-color: #ffffff00;
+-webkit-border-radius: 16px;
+}
+::-webkit-scrollbar-thumb:vertical {
+cursor: crosshair;
+height: 10px;
+background-color: #666;
+border: 1px solid #eee;
+-webkit-border-radius: 16px;
+}
 </style>
