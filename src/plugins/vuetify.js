@@ -12,6 +12,13 @@ export default new Vuetify({
       expand: 'mdi-expand-more',
       home: 'mdi-home-circle',
       back: 'mdi-arrow-left',
+      onlineCourse: 'mdi-laptop',
+      // onlineCourse: 'mdi-cast-education',
+      offlineCourse: 'mdi-school',
+      // offlineCourse: 'mdi-human-male-board',
+      shop: 'mdi-shopping',
+      // shop: 'mdi-basket',
+      shopCategories: 'mdi-cart',
     },
   },
   theme: {

@@ -18,25 +18,25 @@
 
           <v-list-item @click="goTo('offline-courses')">
             <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
+              <v-icon>$offlineCourse</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Offline courses</v-list-item-title>
           </v-list-item>
           <v-list-item @click="goTo('online-courses')">
             <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
+              <v-icon>$onlineCourse</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Online courses</v-list-item-title>
           </v-list-item>
           <v-list-item @click="goTo('shop')">
             <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
+              <v-icon>$shop</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Shop</v-list-item-title>
           </v-list-item>
           <v-list-item @click="goTo('shop-categories')">
             <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
+              <v-icon>$shopCategories</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Shop categories</v-list-item-title>
           </v-list-item>
@@ -124,5 +124,25 @@ a {
 }
 .v-snack__content {
   text-align: center !important;
+}
+::-webkit-scrollbar {
+width: 10px;
+height: 10px;
+}
+::-webkit-scrollbar-button:start:decrement,
+::-webkit-scrollbar-button:end:increment  {
+height: 10px;
+background-color: transparent;
+}
+::-webkit-scrollbar-track-piece  {
+background-color: #ffffff00;
+-webkit-border-radius: 16px;
+}
+::-webkit-scrollbar-thumb:vertical {
+cursor: crosshair;
+height: 10px;
+background-color: #666;
+border: 1px solid #eee;
+-webkit-border-radius: 16px;
 }
 </style>

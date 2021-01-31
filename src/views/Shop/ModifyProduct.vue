@@ -42,8 +42,11 @@
                   >Choose subcategory</v-select
                 >
                 <v-textarea
+                  class="textarea-speciﬁcation"
                   v-model="currentCommodity.speciﬁcations"
                   :rules="[rules.required]"
+                  rows="8"
+                  no-resize
                   label="Speciﬁcation"
                   outlined
                 ></v-textarea>
@@ -82,7 +85,6 @@
                   accept="image/*"
                   color="deep-purple accent-4"
                   label="Cover picture"
-                  placeholder="Select your file"
                   prepend-icon="mdi-paperclip"
                   outlined
                   :show-size="1000"
@@ -92,7 +94,7 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-btn color="secondary" @click="submitHandler" :disabled="isSaveDisabled">Save </v-btn>
+                <v-btn color="buttons" @click="submitHandler" :disabled="isSaveDisabled">Save </v-btn>
                 <v-btn v-if="commodity" @click="cancelHandler"> Cancel </v-btn>
               </v-col>
             </v-row>
@@ -124,7 +126,7 @@
         <v-col cols="12">
           <v-card-text class="text-h4 black--text ma-5"> ATTACHED IMAGES </v-card-text>
           <v-row>
-            <v-card flat min-height="400" color="accent" class="d-flex flex-column justify-center" width="100%">
+            <v-card flat min-height="400" class="d-flex flex-column justify-center" width="100%">
               <v-row v-if="images && images.length">
                 <v-col v-for="(image, index) in images" :key="index" lg="3" md="4" sm="6">
                   <v-card class="pa-5 ma-5">
@@ -138,8 +140,8 @@
               </v-card-text>
             </v-card>
           </v-row>
-          <v-row justify="center">
-            <v-btn color="secondary" @click="$refs.inputUpload.click()" :disabled="!commodity" class="my-10"
+          <v-row justify="start">
+            <v-btn color="buttons" @click="$refs.inputUpload.click()" :disabled="!commodity" class="my-10"
               >Upload images</v-btn
             >
             <input
@@ -153,24 +155,6 @@
           </v-row>
         </v-col>
       </v-row>
-
-      <v-col cols="12">
-        <v-row justify="space-around">
-          <v-btn
-            color="buttons"
-            outlined
-            large
-            min-width="90"
-            class="yellow-button mt-4"
-            @click="publishHandler"
-            :disabled="!commodity"
-            >{{ currentCommodity.isPublished ? 'Hide commodity' : 'Publish commodity' }}</v-btn
-          >
-          <v-btn color="error" large min-width="90" class="mt-4" @click="showDialog = true" :disabled="!commodity"
-            >DELETE COMMODITY</v-btn
-          >
-        </v-row>
-      </v-col>
       <v-divider class="my-10"></v-divider>
       <v-row>
         <v-col cols="12">
@@ -222,6 +206,21 @@
         </v-col>
       </v-row>
       <confirm-delete :confirmDelete="deleteCommodityHandler" :dialog="showDialog"> </confirm-delete>
+      <v-divider class="my-10"></v-divider>
+      <v-row justify="space-between">
+        <v-btn color="error" large min-width="90" class="mt-4" @click="showDialog = true" :disabled="!commodity"
+          >DELETE COMMODITY</v-btn
+        >
+        <v-btn
+          color="buttons"
+          large
+          min-width="90"
+          class="yellow-button mt-4"
+          @click="publishHandler"
+          :disabled="!commodity"
+          >{{ currentCommodity.isPublished ? 'Hide commodity' : 'Publish commodity' }}</v-btn
+        >
+      </v-row>
     </v-card>
     <v-card v-else width="100%" height="80vh" class="pa-10">
       <v-skeleton-loader
@@ -393,7 +392,7 @@ export default {
   justify-content: space-around;
 }
 .speciﬁcations {
-  white-space: pre;
+  white-space: pre-wrap;
 }
 .caption {
   margin-top: 50px;
