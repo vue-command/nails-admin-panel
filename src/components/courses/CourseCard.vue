@@ -5,10 +5,10 @@
       :elevation="hover ? 16 : 2"
       :class="{ 'on-hover': hover }"
       class="ma-12"
-      :width="400"
+      max-width="400"
       @click="$emit('click', course._id)"
     >
-      <CoverImage :url="checkLink(course)" :width="400" :height="250" />
+      <CoverImage :url="checkLink(course)" :height="250" />
       <v-card-title class="buttons--text pa-0 pl-4 pt-4">
         {{ course.accessDays }} days | $ {{ course.price }}
       </v-card-title>
@@ -66,7 +66,7 @@ export default {
       return this.course?.nameOfCourse?.length < 25 ? this.course?.nameOfCourse : this.course?.nameOfCourse?.slice(0, 22) + '...';
     },
     courseSubtitle() {
-      return this.course?.subtitle?.length < 70 ? this.course?.subtitle : this.course?.subtitle?.slice(0, 67) + '...';
+      return this.course?.subtitle?.length < 50 ? this.course?.subtitle : this.course?.subtitle?.slice(0, 47) + '...';
     },
   },
   watch: {},
