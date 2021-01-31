@@ -5,7 +5,7 @@
       :elevation="hover ? 16 : 2"
       :class="{ 'on-hover': hover }"
       class="ma-12"
-      max-width="400"
+      width="400"
       @click="$emit('click', course._id)"
     >
       <CoverImage :url="checkLink(course)" :height="250" />
