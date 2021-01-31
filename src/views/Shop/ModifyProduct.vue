@@ -104,7 +104,7 @@
           <v-row justify="center">
             <v-card class="cardfone shop-card" width="300" min-height="500">
               <v-card flat class="px-0 pt-4 gray-background" width="100%">
-                <v-img :src="previewImageLink || coverImageSrc" width="100%" height="350" contain />
+                <v-img :src="previewImageLink || coverImageSrc" :lazy-src="noImage" width="100%" height="350" contain />
               </v-card>
               <v-card-text>
                 <p class="dgrey--text text-subtitle-1 my-1 font-weight-bold text-start">
@@ -130,7 +130,7 @@
               <v-row v-if="images && images.length">
                 <v-col v-for="(image, index) in images" :key="index" lg="3" md="4" sm="6">
                   <v-card class="pa-5 ma-5">
-                    <v-img :src="image.link" height="200" contain></v-img>
+                    <v-img :src="image.link" :lazy-src="noImage" height="200" contain></v-img>
                     <v-btn color="error" @click="deleteImageHandler(image, index)">DELETE</v-btn>
                   </v-card>
                 </v-col>
@@ -163,13 +163,14 @@
 
             <v-col cols="12" sm="6" md="4" xl="4" lg="4" xs="12" class="px-0">
               <v-row class="image-row">
-                <v-img :src="activeCard" max-width="100%" max-height="400px" contain></v-img>
+                <v-img :src="activeCard" :lazy-src="noImage" max-width="100%" max-height="400px" contain></v-img>
               </v-row>
               <v-row class="justify-center">
                 <v-slide-group :model="activeCard" class="px-0 justify-center" center-active mandatory>
                   <v-slide-item v-for="img in images" :key="img._id" v-slot:default="{ active, toggle }">
                     <v-img
                       @click="setPhoto(img, toggle)"
+                      :lazy-src="noImage"
                       :src="img.link"
                       width="60px"
                       height="60px"
@@ -195,9 +196,9 @@
                 </div>
                 <div class="price">
                   <h3 class="text--darkGrey">{{ currentCommodity.price }} AUD</h3>
-                  <div class="shop-buttons">
-                    <v-btn tile small width="100%" color="darkGrey">Add to card</v-btn>
-                    <v-btn tile small width="100%" color="darkGrey">Buy it now</v-btn>
+                  <div style="width: 200px">
+                    <v-btn small width="100%" class="pa-2 ma-2 dgrey--text" color="orange">Add to card</v-btn>
+                    <v-btn small width="100%" class="pa-2 ma-2 white--text" color="dgrey">Buy it now</v-btn>
                   </div>
                 </div>
               </v-col>
@@ -239,9 +240,9 @@ import confirmDelete from '../../components/popups/confirmDelete.vue';
 export default {
   components: { confirmDelete },
   name: 'ModifyProduct',
-  props: ['noImage'],
   data() {
     return {
+      noImage: require('@/views/Shop/assets/no-image.png'),
       showDialog: false,
       valid: true,
       currentCommodity: {

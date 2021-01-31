@@ -85,6 +85,7 @@
             >
               <v-card flat width="100%">
                 <v-img
+                  :lazy-src="noImage"
                   :src="card.previewImage && card.previewImage[0] && card.previewImage[0].link"
                   width="100%"
                   height="270"
@@ -130,6 +131,7 @@ export default {
   data() {
     return {
       search: '',
+      noImage: require('@/views/Shop/assets/no-image.png'),
     };
   },
   computed: {
