@@ -1,113 +1,55 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
-const state = {
-  onlineCourses: [],
-  onlineCourseById: null,
-  currentVideo: null,
-  totalOnlineCourses: 0,
-  loading: false,
-  onlineError: null,
-};
+const { getData, postData, putData, deleteData, getFormData } = require('@/helpers').default;
 
-const getters = {
-  onlineCoursesEndpoint: (state, getters, rootState) =>
-    `${rootState.host}/course/online/`,
-  videoCourseEndpoint: (state, getters, rootState) =>
-    `${rootState.host}/course/online/findvideo/`,
+const categoriesEndpoints = require('@/config/endpoints').default.categories;
+const errors = require('@/config/errors').default.shop;
+const messages = require('@/config/messages').default.shop;
+
+const state = {
+  isPageLoading: true,
+  categories: [],
+  fullListOfCategories: [],
+  activeCategory: null,
+  activeSubcategory: null,
 };
 
 const mutations = {
-  ONLINE_COURSES: (state, { onlineCourses, total }) => {
-    state.onlineCourses = onlineCourses;
-    state.totalOnlineCourses = total;
-  },
-  MORE_ONLINE_COURSES: (state, { onlineCourses, total }) => {
-    state.onlineCourses = [...state.onlineCourses, ...onlineCourses];
-    state.totalOnlineCourses = total;
-  },
-  ONLINE_COURSE_BY_ID: (state, { onlineCourse }) => {
-    state.onlineCourseById = onlineCourse;
-  },
-  ONLINE_COURSE_VIDEO_BY_ID: (state, { video }) => {
-    state.currentVideo = video;
-  },
-  ONLINE_COURSE_BY_ID_CLEAR: state => {
-    state.onlineCourseById = null;
-  },
-  ERROR: (state, payload) => {
-    state.onlineError = payload;
-  },
-  LOADING: (state, payload) => {
-    state.loading = payload;
+  SHOP_CATEGORIES: (state, { categories }) => {
+    state.fullListOfCategories = categories.reduce((prev, curr) => {
+      prev.push(curr);
+      if (Array.isArray(curr.subcategories) && curr.subcategories.length) {
+        prev = prev.concat(curr.subcategories);
+      }
+      return prev;
+    }, []);
+    state.categories = categories;
   },
 };
 
 const actions = {
-  async GET_ONLINE_COURSES({ state, getters, commit }, string) {
-    commit('LOADING', true);
-    commit('ERROR', null);
-    const { onlineCourses, total, error } = await (
-      await fetch(`${getters.onlineCoursesEndpoint}${string}`)
-    ).json();
+  async GET_SHOP_CATEGORIES({ commit }) {
+    state.isPageLoading = true;
+    const { categories, error } = await getData(categoriesEndpoints.categories);
     if (!error) {
-      commit('ONLINE_COURSES', { onlineCourses, total });
-      commit('LOADING', false);
+      commit('SHOP_CATEGORIES', {
+        categories,
+      });
     } else {
-      commit('LOADING', false);
-      commit('ERROR', error);
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
     }
-  },
-  async GET_MORE_ONLINE_COURSES({ state, getters, commit }, { string, skip }) {
-    // commit('LOADING', true);
-    commit('ERROR', null);
-    const { onlineCourses, total, error } = await (
-      await fetch(`${getters.onlineCoursesEndpoint}${string}&skip=${skip}`)
-    ).json();
-    if (!error) {
-      // commit('LOADING', false);
-      commit('MORE_ONLINE_COURSES', { onlineCourses, total });
-    } else {
-      // commit('LOADING', false);
-      commit('ERROR', error);
-    }
-  },
-  async GET_ONLINE_COURSE_BY_ID({ state, getters, commit }, id) {
-    commit('LOADING', true);
-    commit('ERROR', null);
-    const { onlineCourse, error } = await (
-      await fetch(`${getters.onlineCoursesEndpoint}${id}`)
-    ).json();
-    if (!error) {
-      commit('ONLINE_COURSE_BY_ID', { onlineCourse });
-      commit('LOADING', false);
-    } else {
-      commit('LOADING', false);
-      commit('ERROR', error);
-    }
-  },
-  async GET_ONLINE_COURSE_VIDEO_BY_ID({ state, getters, commit }, id) {
-    commit('LOADING', true);
-    commit('ERROR', null);
-    const { video, error } = await (
-      await fetch(`${getters.videoCourseEndpoint}${id}`)
-    ).json();
-    if (!error) {
-      commit('ONLINE_COURSE_VIDEO_BY_ID', { video });
-      commit('LOADING', false);
-    } else {
-      commit('LOADING', false);
-      commit('ERROR', error);
-    }
-  },
-  async CLEAR_ONLINE_COURSE_BY_ID({ commit }) {
-    commit('ONLINE_COURSE_BY_ID_CLEAR');
+    state.isPageLoading = false;
   },
 };
 
 export default {
   namespaced: true,
   state,
-  getters,
   actions,
   mutations,
 };

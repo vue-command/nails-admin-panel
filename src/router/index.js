@@ -22,9 +22,9 @@ const routes = [
     },
     component: () =>
       import(
-      /* webpackChunkName: "shop" */
-      '@/views/Shop/Shop.vue'
-    ),
+        /* webpackChunkName: "shop" */
+        '@/views/Shop/Shop.vue'
+      ),
   },
   {
     path: '/shop/commodity/:commodityId',
@@ -34,9 +34,21 @@ const routes = [
     },
     component: () =>
       import(
-      /* webpackChunkName: "shop" */
-      '@/views/Shop/ModifyProduct.vue'
-    ),
+        /* webpackChunkName: "shop" */
+        '@/views/Shop/ModifyProduct.vue'
+      ),
+  },
+  {
+    path: '/categories',
+    name: 'categories',
+    meta: {
+      layout: 'shop',
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "shop" */
+        '@/views/CategoriesPage.vue'
+      ),
   },
   {
     path: '/online-courses',
@@ -46,9 +58,9 @@ const routes = [
     },
     component: () =>
       import(
-      /* webpackChunkName: "online-courses" */
-      '@/views/Courses/CoursesPage.vue'
-    ),
+        /* webpackChunkName: "online-courses" */
+        '@/views/Courses/CoursesPage.vue'
+      ),
   },
   {
     path: '/online-courses/:courseid',
@@ -58,9 +70,9 @@ const routes = [
     },
     component: () =>
       import(
-      /* webpackChunkName: "online-course" */
-      '@/views/Courses/Course.vue'
-    ),
+        /* webpackChunkName: "online-course" */
+        '@/views/Courses/Course.vue'
+      ),
   },
   {
     path: '/online-courses/:courseid/videos',
@@ -70,9 +82,9 @@ const routes = [
     },
     component: () =>
       import(
-      /* webpackChunkName: "online-course-videos" */
-      '@/views/Courses/CourseVideos.vue'
-    ),
+        /* webpackChunkName: "online-course-videos" */
+        '@/views/Courses/CourseVideos.vue'
+      ),
   },
   {
     path: '/online-courses/:courseid/videos/:videoid',
@@ -82,9 +94,9 @@ const routes = [
     },
     component: () =>
       import(
-      /* webpackChunkName: "online-course-video" */
-      '@/views/Courses/CourseVideoDetail.vue'
-    ),
+        /* webpackChunkName: "online-course-video" */
+        '@/views/Courses/CourseVideoDetail.vue'
+      ),
   },
   {
     path: '/offline-courses',
@@ -94,9 +106,9 @@ const routes = [
     },
     component: () =>
       import(
-      /* webpackChunkName: "offline-courses" */
-      '@/views/Courses/OfflineCoursesPage.vue'
-    ),
+        /* webpackChunkName: "offline-courses" */
+        '@/views/Courses/OfflineCoursesPage.vue'
+      ),
   },
   {
     path: '/offline-courses/create-offline-course',
@@ -106,9 +118,9 @@ const routes = [
     },
     component: () =>
       import(
-      /* webpackChunkName: "offline-courses" */
-      '@/views/Courses/OfflineCourseCreate.vue'
-    ),
+        /* webpackChunkName: "offline-courses" */
+        '@/views/Courses/OfflineCourseCreate.vue'
+      ),
   },
   {
     path: '/offline-courses/:courseid',
@@ -118,9 +130,9 @@ const routes = [
     },
     component: () =>
       import(
-      /* webpackChunkName: "online-course" */
-      '@/views/Courses/OfflineCourse.vue'
-    ),
+        /* webpackChunkName: "online-course" */
+        '@/views/Courses/OfflineCourse.vue'
+      ),
   },
   // { path: '/admin/:hash', redirect: '/' },
   {
