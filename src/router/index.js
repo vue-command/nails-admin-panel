@@ -51,6 +51,18 @@ const routes = [
     ),
   },
   {
+    path: '/online-courses/create-online-course',
+    name: 'create-online-course',
+    meta: {
+      layout: 'courses',
+    },
+    component: () =>
+      import(
+      /* webpackChunkName: "offline-courses" */
+      '@/views/Courses/OnlineCourseCreate.vue'
+    ),
+  },
+  {
     path: '/online-courses/:courseid',
     name: 'online-course',
     meta: {

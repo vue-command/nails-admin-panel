@@ -10,8 +10,7 @@ export default {
   data() {
     return {
       error: false,
-      // eslint-disable-next-line global-require
-      coverImageSrc: require('@/assets/noImage.jpg'),
+      coverImageSrc: `${process.env.BASE_URL}/img/noImage.jpg`,
     };
   },
   computed: {
@@ -27,6 +26,8 @@ export default {
   },
   methods: {
   },
+  mounted() {
+  }
 };
 </script>
 

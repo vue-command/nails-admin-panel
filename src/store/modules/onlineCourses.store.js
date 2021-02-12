@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-const { getData, patchData } = require('@/helpers').default;
+const { getData, postData, patchData, putData, deleteData } = require('@/helpers').default;
 
 const endpoints = require('@/config/endpoints').default.online;
 const errors = require('@/config/errors').default.online;
@@ -35,9 +35,9 @@ const mutations = {
 };
 
 const actions = {
-  async GET_COURSES({ commit }, string) {
+  async GET_COURSES({ commit }, query) {
     commit('LOADING', true, { root: true });
-    const { onlineCourses, total, error } = await getData(`${endpoints.get}/${string}`);
+    const { onlineCourses, total, error } = await getData(`${endpoints.get}${query}`);
     if (!error) {
       commit('COURSES', onlineCourses);
       commit('TOTAL', total);
@@ -47,9 +47,9 @@ const actions = {
     commit('LOADING', false, { root: true });
   },
 
-  async GET_MORE_COURSES({ commit }, { string, skip }) {
+  async GET_MORE_COURSES({ commit }, query) {
     commit('LOADING', true, { root: true });
-    const { onlineCourses, total, error } = await getData(`${endpoints.get}/${string}&skip=${skip}`);
+    const { onlineCourses, total, error } = await getData(`${endpoints.get}${query}`);
     if (!error) {
       commit('MORE_COURSES', onlineCourses);
       commit('TOTAL', total);
@@ -80,7 +80,31 @@ const actions = {
     }
     commit('LOADING', false, { root: true });
   },
-
+  async POST_COURSE({ commit},  data) {
+    commit('LOADING', true, { root: true });
+    const { newOnlineCourse, error } = await postData(endpoints.post, data);
+    if (!error) {
+      commit('MESSAGE', messages.post, { root: true });
+    } else {
+      commit('ERROR', errors.post, { root: true });
+    }
+    commit('LOADING', false, { root: true });
+    return newOnlineCourse._id;
+  },
+  async PUT_COURSE({ state, commit }, { data, id }) {
+    const { updatedOnlineCourse, error } = await putData(`${endpoints.get}/${id}`, data);
+    if (!error) {
+      commit('COURSE', updatedOnlineCourse);
+      commit('COURSES', state.courses.map(course => course._id === id ? updatedOnlineCourse: course));
+    } else {
+      commit('ERROR', errors.get, { root: true })
+    }
+  },
+  async DELETE_COURSE( { commit }, courseId) {
+    const { error } = await deleteData(`${endpoints.delete}/${courseId}`);
+    if (error) commit('ERROR', errors.get, { root: true })
+  
+  },
   async PUBLISH({ commit, dispatch }, { id, publish }) {
     const data = {
       isPublished: publish,

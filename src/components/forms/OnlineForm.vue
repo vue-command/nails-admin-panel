@@ -7,20 +7,14 @@
             v-if="field.type === 'text'"
             :value.sync="data[name]"
             :label="field.label"
-            :limit="field.limit"
             :required="field.required"
+            :limit="field.limit"
           />
           <NumberInput
             v-if="field.type === 'number'"
             :value.sync="data[name]"
             :label="field.label"
             :limit="field.limit"
-            :required="field.required"
-          />
-          <DateCourseInputs
-            v-if="field.type === 'dateCourse'"
-            :value.sync="data[name]"
-            :label="field.label"
             :required="field.required"
           />
         </div>
@@ -32,20 +26,21 @@
             :value.sync="data[name]"
             :label="field.label"
             :required="field.required"
+            :limit="field.limit"
           />
           <SuitableInputs
             v-if="field.type === 'suitable'"
             :value.sync="data[name]"
-            :limit="field.limit"
             :label="field.label"
             :required="field.required"
+            :limit="field.limit"
           />
           <TextAreaInput
             v-if="field.type === 'textarea'"
             :value.sync="data[name]"
             :label="field.label"
-            :limit="field.limit"
             :required="field.required"
+            :limit="field.limit"
           />
           <div v-if="field.type === 'file'">
             <v-btn
@@ -63,10 +58,10 @@
               v-else
               :value.sync="data[name]"
               :label="field.label"
-              :icon="field.icon"
-              :size="field.size"
-              :accept="field.accept"
               :required="field.required"
+              :icon="field.icon"
+              :accept="field.accept"
+              :size="field.size"
             />
           </div>
         </div>
@@ -103,17 +98,18 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import TextInput from '@/components/inputs/TextInput.vue';
 import NumberInput from '@/components/inputs/NumberInput.vue';
-import DateCourseInputs from '@/components/inputs/DateCourseInputs.vue';
 import SuitableInputs from '@/components/inputs/SuitableInputs.vue';
 import TextAreaInput from '@/components/inputs/TextAreaInput.vue';
 import FileInput from '@/components/inputs/FileInput.vue';
 
-const schema = require('@/config/offlineCourseSchema').default;
+const schema = require('@/config/onlineCourseSchema').default;
 
 export default {
-  name: 'OfflineForm',
+  name: 'OnlineForm',
   props: {
     course: {
       type: Object,
@@ -130,23 +126,14 @@ export default {
     SuitableInputs,
     TextAreaInput,
     FileInput,
-    DateCourseInputs,
   },
   data() {
     return {
       schema,
-      data: Object.keys({ ...schema.sideLeft, ...schema.sideRight }).reduce((acc, key) => {
+      data: Object.keys(Object.assign({}, schema.sideLeft, schema.sideRight)).reduce((acc, key) => {
         const obj = { [key]: '' };
         if (schema.sideLeft[key]?.type === 'suitable' || schema.sideRight[key]?.type === 'suitable') {
           obj[key] = [''];
-        }
-        if (schema.sideLeft[key]?.type === 'dateCourse' || schema.sideRight[key]?.type === 'dateCourse') {
-          obj[key] = [
-            {
-              date: '',
-              availableSpots: '',
-            },
-          ];
         }
         if (schema.sideLeft[key]?.type === 'file' || schema.sideRight[key]?.type === 'file') {
           obj[key] = null;
@@ -155,11 +142,13 @@ export default {
       }, {}),
     };
   },
+  computed: {
+    ...mapState('user', ['user']),
+  },
   watch: {
     data: {
       deep: true,
       handler() {
-        // eslint-disable-next-line no-unused-expressions
         this.$emit('update:course', this.data);
       },
     },
@@ -172,40 +161,37 @@ export default {
     },
     fillingForm() {
       if (this.course) {
-        Object.keys(this.course).forEach(key => {
+        Object.keys(this.data).forEach(key => {
           this.data[key] = this.course[key];
         });
       }
     },
     async submit() {
-      // eslint-disable-next-line no-underscore-dangle
-      delete this.data._id;
-      this.data.description = this.data.description
-        .split(' ')
-        .filter(str => str)
-        .join(' ');
-      this.data.dateOfCourses = this.data.dateOfCourses.map(obj => {
-        // eslint-disable-next-line no-unused-vars
-        const { _id, ...rest } = obj;
-        return rest;
-      });
-      if (Array.isArray(this.data.photo)) delete this.data.photo;
-      const { dateOfCourses, thisCourseIsSuitableFor, ...rest } = this.data;
+      if (this.mode === 'create') {
+        this.data.description = this.data.description
+          .split(' ')
+          .filter(str => str)
+          .join(' ');
+        this.data.idUser = this.user._id;
+        this.data.isPublished = false;
+        const { thisCourseIsSuitableFor, ...rest } = this.data;
 
-      const fd = new FormData();
+        const fd = new FormData();
 
-      Object.entries(rest).forEach(([name, value]) => {
-        if (value instanceof File) fd.append('file', value);
-        else fd.append(name, value);
-      });
-      dateOfCourses.forEach(obj => {
-        fd.append('dateOfCourses[]', JSON.stringify(obj));
-      });
-      thisCourseIsSuitableFor.forEach(str => {
-        fd.append('thisCourseIsSuitableFor[]', str);
-      });
+        Object.entries(rest).forEach(([name, value]) => {
+          if (value instanceof File) fd.append('file', value);
+          else fd.append(name, value);
+        });
 
-      this.$emit('submit', fd);
+        thisCourseIsSuitableFor.forEach(str => {
+          fd.append('thisCourseIsSuitableFor[]', str);
+        });
+
+        this.$emit('submit', fd);
+      } else {
+        if (Array.isArray(this.data.photo)) delete this.data.photo;
+        this.$emit('submit', this.data);
+      }
     },
   },
   mounted() {
@@ -214,4 +200,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>

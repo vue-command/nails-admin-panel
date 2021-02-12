@@ -18,12 +18,12 @@
       <v-card-text class="pa-0 px-4 pb-4 text-start">
         {{ courseSubtitle }}
       </v-card-text>
-      <v-card-actions v-if="type === 'online'">
+      <!-- <v-card-actions v-if="type === 'online'">
         <v-btn color="buttons" rounded small outlined primary min-width="90" class="yellow-button mr-4">pay</v-btn>
-      </v-card-actions>
-      <v-card-actions v-if="type === 'offline'">
+      </v-card-actions> -->
+      <v-card-actions>
         <v-btn color="buttons" rounded small outlined primary min-width="90" class="yellow-button mr-4">pay</v-btn>
-        <v-btn color="buttons" rounded small min-width="90" dark class="yellow-button">more</v-btn>
+        <v-btn v-if="type === 'offline'" color="buttons" rounded small min-width="90" dark class="yellow-button">more</v-btn>
         <v-spacer />
         <v-btn v-if="deleteBtn" color="buttons" rounded small outlined primary @click.stop="$emit('delete', course._id)"
           >delete</v-btn
