@@ -134,10 +134,14 @@ const routes = [
       '@/views/Courses/OfflineCourse.vue'
     ),
   },
-  // { path: '/admin/:hash', redirect: '/' },
   {
     path: '*',
-    redirect: '/',
+    name: 'not-found',
+    component: () =>
+      import(
+      /* webpackChunkName: "not-found" */
+      '@/views/NotFound.vue'
+    ),
   },
 ];
 

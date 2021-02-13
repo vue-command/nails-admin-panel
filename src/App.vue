@@ -99,9 +99,15 @@ export default {
   },
   created() {
     this.$store.dispatch('shop/STORE_INIT');
+    
     const arr = this.$route?.redirectedFrom?.split('/');
     const hash = arr?.length ? arr[arr.length - 1] : '0';
-    this.$store.dispatch('user/GET_USER', hash);
+    this.$store.dispatch('user/GET_USER', hash); 
+
+    let redirectPath = localStorage.getItem('redirectPath');
+    localStorage.removeItem('redirectPath');
+    if (!redirectPath) redirectPath = '/'
+    if (this.$route.path !== redirectPath) this.$router.push(redirectPath)
   },
 };
 </script>
