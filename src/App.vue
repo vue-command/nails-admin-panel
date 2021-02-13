@@ -51,6 +51,7 @@
           </component>
         </v-container>
       </v-main>
+      <UploadFiles v-if="uploadDialog" />
       <error-message />
       <simple-message />
     </div>
@@ -77,11 +78,13 @@ export default {
     CoursesLayout,
     ShopLayout,
     DefaultLayout,
+    UploadFiles: () => import('@/components/popups/UploadFiles.vue'),
   },
   computed: {
     layout() {
       return `${this.$route.meta?.layout || 'default'}-layout`;
     },
+    ...mapState('onlineCourses', ['uploadDialog']),
     ...mapState('user', ['user']),
   },
   watch: {

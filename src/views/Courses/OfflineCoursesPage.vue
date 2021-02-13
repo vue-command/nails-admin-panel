@@ -47,7 +47,7 @@
       >
     </div>
 
-    <confirmDelete :dialog.sync="dialog" :confirmDelete="confirmDelete" />
+    <confirmDelete :dialog.sync="dialog" :confirmDelete="confirmDelete"/>
   </v-container>
 </template>
 

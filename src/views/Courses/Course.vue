@@ -12,7 +12,7 @@
       <CourseDetail v-if="editing" :course="courseData" :type="type" btnTitle="BUY THIS COURSE" />
       <div
         v-if="!loading && course && !editing"
-        class="d-flex flex-column align-center flex-sm-row justify-sm-center mt-8"
+        class="d-flex flex-column align-center flex-sm-row justify-sm-center my-8"
       >
         <v-btn
           @click="goToVideos"
@@ -21,7 +21,7 @@
           large
           dark
           min-width="160"
-          class="yellow-button"
+          class="yellow-button mr-4"
           >Videos</v-btn
         >
         <v-btn
@@ -43,7 +43,7 @@
           large
           dark
           min-width="160"
-          class="yellow-button"
+          class="yellow-button  ml-4"
           >{{ course.isPublished ? 'unpublish' : 'publish' }}</v-btn
         >
       </div>
@@ -79,7 +79,7 @@ export default {
     ...mapState('user',['user']),
     ...mapState('onlineCourses', ['courses', 'course', 'total']),
     isAdmin() {
-      return this.course.idUser === this.user._id
+      return this.course?.idUser === this.user._id
     }
   },
   watch: {

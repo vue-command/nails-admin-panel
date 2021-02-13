@@ -10,64 +10,88 @@
       <v-col cols="12" xs="12" v-if="loading">
         <Spinner />
       </v-col>
-      <v-col
-        cols="12"
-        xs="12"
-        sm="6"
-        lg="4"
-        v-for="(video, index) in videos"
-        :key="video._id"
-      >
-        <v-card v-if="!noVideos" class="my-8" @click="goToDetailVideo(video._id)">
-          <v-card-title class="d-flex justify-center"
-            ><h2>
-              {{ video.name }}
-            </h2></v-card-title
-          >
-          <CoverImage :url="coverImage(index)" :height="350" />
-        </v-card>
+      <v-col v-if="!noVideos && !showForm" cols="12" xs="12" class="d-flex justify-center flex-wrap">
+        <VideoCard
+          v-for="video in videos"
+          :key="video._id"
+          :goToDetailVideo="goToDetailVideo"
+          :video="video"
+          :removeVideo="removeVideo"
+        />
       </v-col>
 
       <v-col cols="12" xs="12" v-if="course">
         <h3 align="center">{{ course.description }}</h3>
       </v-col>
+      <v-col cols="12" v-if="isAdmin">
+        <v-row>
+          <v-col v-if="showForm" cols="12" xs="12" offset-md="3" md="6">
+            <AddVideoForm :showForm.sync="showForm" />
+          </v-col>
+          <v-col cols="12" xs="12" class="d-flex justify-center" v-if="showBtnAddVideo">
+            <v-btn rounded color="buttons" large min-width="160" class="yellow-button" @click="showForm = true">
+              add video</v-btn
+            >
+          </v-col>
+        </v-row>
+      </v-col>
     </v-row>
+     <confirmDelete :dialog.sync="dialog" :confirmDelete="confirmDelete" title="video"/>
   </v-container>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex';
 
-import CoverImage from '@/components/CoverImage.vue';
 import Spinner from '@/components/Spinner.vue';
 
 export default {
   components: {
     Spinner,
-    CoverImage,
+    VideoCard: () => import('@/components/courses/VideoCard.vue'),
+    AddVideoForm: () => import('@/components/forms/AddVideoForm.vue'),
+    confirmDelete: () => import('@/components/popups/confirmDelete.vue')
   },
   data() {
     return {
+      showForm: false,
+      dialog: false,
+      deleteId: null,
     };
   },
   computed: {
     ...mapState(['loading']),
+    ...mapState('user', ['user']),
     ...mapState('onlineCourses', ['course']),
     videos() {
-      return this.course?.videos;
+      return this.course?.videos ?? [];
     },
     noVideos() {
-      return !this.loading && !this?.course?.videos?.length;
+      return !this.loading && !this.videos.length;
+    },
+    showBtnAddVideo() {
+      return !this.showForm && this.videos.length < 5;
+    },
+    isAdmin() {
+      return this.course?.idUser === this.user._id;
     },
   },
-  watch: {
-  },
+  watch: {},
   methods: {
     ...mapActions('onlineCourses', {
       getCourse: 'GET_COURSE',
     }),
-    coverImage(index) {
-      return this.course?.videos[index].coverImg?.link || this.coverImageSrc;
+    removeVideo(id) {
+      this.dialog = true;
+      this.deleteId = id;
+    },
+    async confirmDelete() {
+      await this.$store.dispatch('onlineCourses/DELETE_VIDEO', {
+        id: this.deleteId,
+        courseId: this.$route.params.courseid,
+      });
+      this.dialog = false;
+      this.deleteId = null;
     },
     goToDetailVideo(id) {
       this.$router.push({
