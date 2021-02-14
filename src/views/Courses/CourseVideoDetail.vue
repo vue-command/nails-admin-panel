@@ -16,7 +16,7 @@
         <v-card v-if="isAdmin" flat class="d-flex justify-center mt-16 transparent">
           <VideoPdfs />
         </v-card>
-        <v-card v-if="video.pdfs.length && !isAdmin" flat class="d-flex justify-center mt-16 transparent">
+        <v-card v-if="pdfs.length && !isAdmin" flat class="d-flex justify-center mt-16 transparent">
           <a v-for="pdf in video.pdfs" :key="pdf._id" :href="pdf.link" target="_blank" class="mx-8"
             ><v-img src="@/assets/pdf.svg" width="50px"
           /></a>
@@ -134,6 +134,9 @@ export default {
     isAdmin() {
       return this.course?.idUser === this.user._id;
     },
+    pdfs() {
+      return this?.video?.pdfs ?? []
+    }
   },
   watch: {
     showForm(val) {
