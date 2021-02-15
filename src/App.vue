@@ -113,8 +113,8 @@ export default {
 
   },
   mounted() {
-    this.redirect()
-    // setTimeout(this.redirect,300)
+    // this.redirect()
+    setTimeout(this.redirect, 300)
   }
 };
 </script>
