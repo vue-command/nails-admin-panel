@@ -96,6 +96,13 @@ export default {
     goTo(name) {
       if (this.$route.name !== name) this.$router.push({ name });
     },
+    redirect() {
+      let redirectPath = localStorage.getItem('redirectPath');
+      localStorage.removeItem('redirectPath');
+      if (!redirectPath) redirectPath = '/'
+      if (this.$route.path !== redirectPath) this.$router.push(redirectPath)
+
+    }
   },
   created() {
     this.$store.dispatch('shop/STORE_INIT');
@@ -104,11 +111,11 @@ export default {
     const hash = arr?.length ? arr[arr.length - 1] : '0';
     this.$store.dispatch('user/GET_USER', hash); 
 
-    let redirectPath = localStorage.getItem('redirectPath');
-    localStorage.removeItem('redirectPath');
-    if (!redirectPath) redirectPath = '/'
-    if (this.$route.path !== redirectPath) this.$router.push(redirectPath)
   },
+  mounted() {
+    this.redirect()
+    // setTimeout(this.redirect,300)
+  }
 };
 </script>
 
