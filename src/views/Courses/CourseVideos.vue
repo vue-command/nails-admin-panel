@@ -23,7 +23,7 @@
       <v-col cols="12" xs="12" v-if="course">
         <h3 align="center">{{ course.description }}</h3>
       </v-col>
-      <v-col cols="12" v-if="isAdmin">
+      <v-col cols="12">
         <v-row>
           <v-col v-if="showForm" cols="12" xs="12" offset-md="3" md="6">
             <AddVideoForm :showForm.sync="showForm" />
@@ -72,9 +72,9 @@ export default {
     showBtnAddVideo() {
       return !this.showForm && this.videos.length < 5;
     },
-    isAdmin() {
-      return this.course?.idUser === this.user._id;
-    },
+    // isAdmin() {
+    //   return this.course?.idUser === this.user._id;
+    // },
   },
   watch: {},
   methods: {

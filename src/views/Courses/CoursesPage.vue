@@ -28,7 +28,6 @@
         type="online"
         @click="goToCourse"
         @delete="removeCourse"
-        :deleteBtn="isAdmin"
       />
     </div>
     <div v-if="loading" class="d-flex flex-wrap justify-center">

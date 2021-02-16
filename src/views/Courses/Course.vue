@@ -26,7 +26,6 @@
         >
         <v-btn
           @click="fillingForm"
-          v-if="isAdmin"
           color="buttons"
           rounded
           large
@@ -78,9 +77,9 @@ export default {
     ...mapState(['loading']),
     ...mapState('user',['user']),
     ...mapState('onlineCourses', ['courses', 'course', 'total']),
-    isAdmin() {
-      return this.course?.idUser === this.user._id
-    }
+    // isAdmin() {
+    //   return this.course?.idUser === this.user._id
+    // }
   },
   watch: {
     course(val) {
