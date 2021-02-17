@@ -21,7 +21,7 @@
         md="5"
         class="d-flex flex-column justify-space-between align-center"
       >
-        <CourseCard :course="courseData" :type="type" />
+        <CourseCard :course="courseData" :type="type" :preview="true"/>
       </v-col>
       <v-col cols="12" xs="12">
          <CourseDetail

@@ -25,7 +25,7 @@
         <v-btn color="buttons" rounded small outlined primary min-width="90" class="yellow-button mr-4">pay</v-btn>
         <v-btn v-if="type === 'offline'" color="buttons" rounded small min-width="90" dark class="yellow-button">more</v-btn>
         <v-spacer />
-        <v-btn v-if="!course.isPublished" color="buttons" rounded small outlined primary @click.stop="$emit('delete', course._id)"
+        <v-btn v-if="!course.isPublished && !preview" color="buttons" rounded small outlined primary @click.stop="$emit('delete', course._id)"
           >delete</v-btn
         >
       </v-card-actions>
@@ -50,6 +50,10 @@ export default {
       type: String,
       default: 'online',
     },
+    preview: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     CoverImage,

@@ -7,7 +7,7 @@
         <OnlineForm :course.sync="courseData" @submit="submit" mode="edit" @back="back" />
       </v-col>
       <v-col v-if="editing" cols="12" xs="12" md="5" class="d-flex flex-column justify-space-between align-center">
-        <CourseCard :course="courseData" :type="type" />
+        <CourseCard :course="courseData" :type="type" :preview="true" />
       </v-col>
       <CourseDetail v-if="editing" :course="courseData" :type="type" btnTitle="BUY THIS COURSE" />
       <div
