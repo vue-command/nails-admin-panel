@@ -9,7 +9,7 @@
       <v-col v-if="editing" cols="12" xs="12" md="5" class="d-flex flex-column justify-space-between align-center">
         <CourseCard :course="courseData" :type="type" :preview="true" />
       </v-col>
-      <CourseDetail v-if="editing" :course="courseData" :type="type" btnTitle="BUY THIS COURSE" />
+      <CourseDetail v-if="editing" :course="courseUpdate" :type="type" btnTitle="BUY THIS COURSE" />
       <div
         v-if="!loading && course && !editing"
         class="d-flex flex-column align-center flex-sm-row justify-sm-center my-8"
@@ -77,6 +77,9 @@ export default {
     ...mapState(['loading']),
     ...mapState('user',['user']),
     ...mapState('onlineCourses', ['courses', 'course', 'total']),
+    courseUpdate() {
+      return Object.assign({}, this.course, this.courseData)
+    }
     // isAdmin() {
     //   return this.course?.idUser === this.user._id
     // }
