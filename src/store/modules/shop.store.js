@@ -91,6 +91,7 @@ const actions = {
     const categoryId = state.categories[0] && state.categories[0]._id;
     if (categoryId) {
       await dispatch('SET_CATEGORY', { categoryId });
+      await dispatch('categories/SET_CATEGORY', { categoryId }, {root: true});
     }
   },
   async GET_SHOP_CATEGORIES({ commit }) {
@@ -99,6 +100,9 @@ const actions = {
       commit('SHOP_CATEGORIES', {
         categories,
       });
+      commit('categories/SHOP_CATEGORIES_ITEM', {
+        categories,
+      }, {root: true});
     } else {
       commit('ERROR', errors.oops, {
         root: true,

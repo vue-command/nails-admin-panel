@@ -25,7 +25,7 @@
             </v-list-item-content>
           </v-list-item>
         </v-card>
-        <v-card class="mx-auto ma-5" max-width="344" outlined @click="goToShop">
+        <v-card class="mx-auto ma-5" max-width="344" outlined @click="goToCategories">
           <v-list-item three-line>
             <v-list-item-content>
               <v-list-item-title class="headline mb-1"> Shop categories </v-list-item-title>
@@ -48,6 +48,9 @@ export default {
     goToOfflineCourses(nameCourses) {
       this.$router.push({ name: nameCourses });
     },
+    goToCategories() {
+      this.$router.push({ name: 'categories' });
+    }
   },
 };
 </script>

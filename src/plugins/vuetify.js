@@ -19,6 +19,12 @@ export default new Vuetify({
       shop: 'mdi-shopping',
       // shop: 'mdi-basket',
       shopCategories: 'mdi-cart',
+      edit: 'mdi-pencil',
+      delete: 'mdi-trash-can',
+      plus: 'mdi-plus',
+      // done: 'mdi-check-outline',
+      done: 'mdi-check',
+      cancel: 'mdi-close',
     },
   },
   theme: {

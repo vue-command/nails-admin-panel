@@ -1,113 +1,132 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-shadow */
-const state = {
-  onlineCourses: [],
-  onlineCourseById: null,
-  currentVideo: null,
-  totalOnlineCourses: 0,
-  loading: false,
-  onlineError: null,
-};
+const { getData, postData, putData, deleteData, getFormData } = require('@/helpers').default;
 
-const getters = {
-  onlineCoursesEndpoint: (state, getters, rootState) =>
-    `${rootState.host}/course/online/`,
-  videoCourseEndpoint: (state, getters, rootState) =>
-    `${rootState.host}/course/online/findvideo/`,
+const categoriesEndpoints = require('@/config/endpoints').default.categories;
+const errors = require('@/config/errors').default.shop;
+const messages = require('@/config/messages').default.shop;
+
+const state = {
+  isPageLoading: true,
+  categories: [],
+  fullListOfCategories: [],
+  activeCategory: null,
 };
 
 const mutations = {
-  ONLINE_COURSES: (state, { onlineCourses, total }) => {
-    state.onlineCourses = onlineCourses;
-    state.totalOnlineCourses = total;
+  SHOP_CATEGORIES_ITEM: (state, { categories }) => {
+    state.fullListOfCategories = categories.reduce((prev, curr) => {
+      prev.push(curr);
+      if (Array.isArray(curr.subcategories) && curr.subcategories.length) {
+        prev = prev.concat(curr.subcategories);
+      }
+      return prev;
+    }, []);
+    state.categories = categories;
   },
-  MORE_ONLINE_COURSES: (state, { onlineCourses, total }) => {
-    state.onlineCourses = [...state.onlineCourses, ...onlineCourses];
-    state.totalOnlineCourses = total;
+
+  ADD_NEW_SUBCATEGORY: (state, { response, id, name }) => {
+    if (state.activeCategory._id === id) {
+      const newSubcategory = response.category[0].subcategories.find((item) => item.name === name);
+      state.activeCategory.subcategories = state.activeCategory.subcategories.concat([newSubcategory]);
+    }
   },
-  ONLINE_COURSE_BY_ID: (state, { onlineCourse }) => {
-    state.onlineCourseById = onlineCourse;
+  REMOVE_SUBCATOGORY: (state, { id }) => {
+    state.activeCategory.subcategories = state.activeCategory.subcategories.filter(elem => elem._id !== id);
   },
-  ONLINE_COURSE_VIDEO_BY_ID: (state, { video }) => {
-    state.currentVideo = video;
-  },
-  ONLINE_COURSE_BY_ID_CLEAR: state => {
-    state.onlineCourseById = null;
-  },
-  ERROR: (state, payload) => {
-    state.onlineError = payload;
-  },
-  LOADING: (state, payload) => {
-    state.loading = payload;
-  },
+  UPDATE_SUBCATEGORY: (state, { response, id }) => {
+    state.activeCategory.subcategories.find((item) => item._id === id).name = response.subCategory.name;
+  }
 };
 
 const actions = {
-  async GET_ONLINE_COURSES({ state, getters, commit }, string) {
-    commit('LOADING', true);
-    commit('ERROR', null);
-    const { onlineCourses, total, error } = await (
-      await fetch(`${getters.onlineCoursesEndpoint}${string}`)
-    ).json();
+  async GET_SHOP_CATEGORIES({ commit }) {
+    state.isPageLoading = true;
+    const { categories, error } = await getData(categoriesEndpoints.categories);
     if (!error) {
-      commit('ONLINE_COURSES', { onlineCourses, total });
-      commit('LOADING', false);
+      commit('SHOP_CATEGORIES_ITEM', {
+        categories,
+      });
     } else {
-      commit('LOADING', false);
-      commit('ERROR', error);
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
+    }
+    state.isPageLoading = false;
+  },
+
+  SET_CATEGORY({ state }, { categoryId }) {
+    state.activeCategory = state.fullListOfCategories.find(cat => cat._id === categoryId);
+  },
+
+  async GET_CATEGORY({ commit }, { id, name }) {
+    const response = await getData(`${categoriesEndpoints.category}/${id}`);
+    if (!response.error) {
+      commit('ADD_NEW_SUBCATEGORY', { response, id, name });
+    } else {
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
     }
   },
-  async GET_MORE_ONLINE_COURSES({ state, getters, commit }, { string, skip }) {
-    // commit('LOADING', true);
-    commit('ERROR', null);
-    const { onlineCourses, total, error } = await (
-      await fetch(`${getters.onlineCoursesEndpoint}${string}&skip=${skip}`)
-    ).json();
-    if (!error) {
-      // commit('LOADING', false);
-      commit('MORE_ONLINE_COURSES', { onlineCourses, total });
+  async GET_SUBCATEGORY({ commit }, { id, name }) {
+    const response = await getData(`${categoriesEndpoints.subcategory}/${id}`);
+    if (!response.error) {
+      commit('UPDATE_SUBCATEGORY', { response, id });
     } else {
-      // commit('LOADING', false);
-      commit('ERROR', error);
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
     }
   },
-  async GET_ONLINE_COURSE_BY_ID({ state, getters, commit }, id) {
-    commit('LOADING', true);
-    commit('ERROR', null);
-    const { onlineCourse, error } = await (
-      await fetch(`${getters.onlineCoursesEndpoint}${id}`)
-    ).json();
+
+  async CREATE_NEW_SUBCATEGORY({ commit, dispatch }, { name, id }) {
+    const data = {
+      name: name,
+    };
+    const { response, error } = await postData(`${categoriesEndpoints.newSubcategory}/${id}`, data);
     if (!error) {
-      commit('ONLINE_COURSE_BY_ID', { onlineCourse });
-      commit('LOADING', false);
+      dispatch('GET_CATEGORY', { id, name });
     } else {
-      commit('LOADING', false);
-      commit('ERROR', error);
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
     }
   },
-  async GET_ONLINE_COURSE_VIDEO_BY_ID({ state, getters, commit }, id) {
-    commit('LOADING', true);
-    commit('ERROR', null);
-    const { video, error } = await (
-      await fetch(`${getters.videoCourseEndpoint}${id}`)
-    ).json();
+
+  async DELETE_SUBCATOGORY({ commit }, { id }) {
+    const { deleted, error } = await deleteData(`${categoriesEndpoints.subcategory}/${id}`);
     if (!error) {
-      commit('ONLINE_COURSE_VIDEO_BY_ID', { video });
-      commit('LOADING', false);
+      commit('REMOVE_SUBCATOGORY', {
+        id,
+      });
     } else {
-      commit('LOADING', false);
-      commit('ERROR', error);
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
     }
   },
-  async CLEAR_ONLINE_COURSE_BY_ID({ commit }) {
-    commit('ONLINE_COURSE_BY_ID_CLEAR');
-  },
+  async CHANGE_SUBCATOGORY_NAME({ commit, dispatch }, { id, name }) {
+    const data = {
+      name: name,
+    };
+    const { response, error } = await putData(`${categoriesEndpoints.subcategory}/${id}`, data);
+    if (!error) {
+      dispatch('GET_SUBCATEGORY', { id, name });
+    } else {
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
+    }
+  }
 };
 
 export default {
   namespaced: true,
   state,
-  getters,
   actions,
   mutations,
 };
