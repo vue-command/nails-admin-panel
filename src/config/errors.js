@@ -1,4 +1,11 @@
 export default {
+  user: {
+    get: {
+      error: true,
+      errorType: 'Get admin',
+      errorMessage: 'Process failed... Data was not received',
+    },
+  },
   offline: {
     get: {
       error: true,
@@ -47,6 +54,11 @@ export default {
       error: true,
       errorType: 'Publish course',
       errorMessage: 'Publishing course error',
+    },
+    delete: {
+      error: true,
+      errorType: 'Delete online course',
+      errorMessage: 'Process failed....',
     },
    unpublish: {
       error: true,

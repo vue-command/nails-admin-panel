@@ -68,6 +68,26 @@ export default {
           text: 'Online Courses',
           href: '/online-courses',
         },
+      ];
+        const off = [
+          {
+            text: 'Offline Courses',
+            href: '/offline-courses',
+          },
+        ];
+        const createOn = [
+         {
+           text: 'Create online course',
+           href: '#',
+         },
+       ];
+       const createOff = [
+         {
+           text: 'Create offline course',
+           href: '#',
+         },
+       ];
+      const courseOn = [
         {
           text: this.courseName,
           href: `/online-courses/${this.courseId}`,
@@ -81,29 +101,28 @@ export default {
           href: '#',
         },
       ];
-      const off = [
-        {
-          text: 'Offline Courses',
-          href: '/offline-courses',
-        },
-      ];
-      const course = [
+      const courseOff = [
         {
           text: this.courseName,
-          href: '#',
+          href: `/offline-courses/${this.courseId}`,
         },
       ];
-      const create = [
-        {
-          text: 'Create offline course',
-          href: '#',
-        },
-      ];
-      if (this.type === 'online-courses') return option.concat(on);
+      // const course = [
+      //   {
+      //     text: this.courseName,
+      //     href: '#',
+      //   },
+      // ];
+      // if (this.type === 'online-courses') return option.concat(on);
+       if (this.type === 'online-courses') {
+        return this.$route.fullPath.includes('create-online-course')
+          ? option.concat(on).concat(createOn)
+          : option.concat(on).concat(courseOn);
+      }
       if (this.type === 'offline-courses') {
         return this.$route.fullPath.includes('create-offline-course')
-          ? option.concat(off).concat(create)
-          : option.concat(off).concat(course);
+          ? option.concat(off).concat(createOff)
+          : option.concat(off).concat(courseOff);
       }
       return option;
     },

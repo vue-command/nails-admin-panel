@@ -1,4 +1,7 @@
 export default {
+  user: {
+    findByHash: 'user/findByHash',
+  },
   offline: {
     get: 'course/offline',
     post: 'course/new/offline',
@@ -7,12 +10,13 @@ export default {
   },
   online: {
     get: 'course/online',
-    get_videos: 'course/online/video',
-    get_video: 'course/online/findvideo',
-    post: '',
-    put: '',
+    findvideo: 'course/online/findvideo',
+    post: 'course/new/online',
+    put: 'course/online',
     patch: 'course/online/set-published',
-    delete: '',
+    delete: 'course/online',
+    video: 'course/online/video',
+    pdf: 'course/online/pdf',
   },
   categories: {
     categories: 'shop/categories',

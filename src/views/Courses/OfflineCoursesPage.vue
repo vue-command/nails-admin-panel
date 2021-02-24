@@ -14,9 +14,7 @@
     </div>
 
     <!-- <Spiner v-if="loading" /> -->
-    <h3 v-if="emtyCourses" class="text-center">
-      No courses have been added yet.
-    </h3>
+    <h3 v-if="emtyCourses" class="text-center">No courses have been added yet.</h3>
     <div class="d-flex flex-wrap justify-center">
       <CourseCard
         v-for="course in courses"
@@ -29,30 +27,27 @@
       />
     </div>
     <div v-if="loading" class="d-flex flex-wrap justify-center">
-      <v-card
-        v-for="(item, index) in 4"
-        :key="index"
-        width="400"
-        height="350"
-        class="ma-4"
-      >
+      <v-card v-for="(item, index) in 4" :key="index" width="400" height="350" class="ma-4">
         <v-skeleton-loader type="card"></v-skeleton-loader>
       </v-card>
     </div>
-    <v-btn
-      v-if="!emtyCourses && isHideMoreBtn"
-      color="buttons"
-      rounded
-      outlined
-      primary
-      @click="
-        getMoreCourses({
-          skip: courses.length,
-        })
-      "
-      >More</v-btn
-    >
-    <confirmDelete :dialog.sync="dialog" :confirmDelete="confirmDelete" />
+    <div class="text-center">
+      <v-btn
+        v-if="!emtyCourses && isHideMoreBtn"
+        color="buttons"
+        rounded
+        outlined
+        primary
+        @click="
+          getMoreCourses({
+            skip: courses.length,
+          })
+        "
+        >More</v-btn
+      >
+    </div>
+
+    <confirmDelete :dialog.sync="dialog" :confirmDelete="confirmDelete"/>
   </v-container>
 </template>
 

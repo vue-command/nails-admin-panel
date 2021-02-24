@@ -63,6 +63,18 @@ const routes = [
       ),
   },
   {
+    path: '/online-courses/create-online-course',
+    name: 'create-online-course',
+    meta: {
+      layout: 'courses',
+    },
+    component: () =>
+      import(
+      /* webpackChunkName: "offline-courses" */
+      '@/views/Courses/OnlineCourseCreate.vue'
+    ),
+  },
+  {
     path: '/online-courses/:courseid',
     name: 'online-course',
     meta: {
@@ -134,10 +146,14 @@ const routes = [
         '@/views/Courses/OfflineCourse.vue'
       ),
   },
-  // { path: '/admin/:hash', redirect: '/' },
   {
     path: '*',
-    redirect: '/',
+    name: 'not-found',
+    component: () =>
+      import(
+      /* webpackChunkName: "not-found" */
+      '@/views/NotFound.vue'
+    ),
   },
 ];
 
