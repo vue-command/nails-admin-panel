@@ -206,7 +206,7 @@
           </v-row>
         </v-col>
       </v-row>
-      <confirm-delete :confirmDelete="deleteCommodityHandler" :dialog="showDialog"> </confirm-delete>
+      <confirm-delete :confirmDelete="deleteCommodityHandler" :dialog.sync="showDialog" :title="title"> </confirm-delete>
       <v-divider class="my-10"></v-divider>
       <v-row justify="space-between">
         <v-btn color="error" large min-width="90" class="mt-4" @click="showDialog = true" :disabled="!commodity"
@@ -244,6 +244,7 @@ export default {
     return {
       noImage: require('@/views/Shop/assets/no-image.png'),
       showDialog: false,
+      title: 'commodity',
       valid: true,
       currentCommodity: {
         categoryId: '',
