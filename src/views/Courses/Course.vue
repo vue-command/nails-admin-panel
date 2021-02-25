@@ -36,7 +36,7 @@
         >
         <v-btn
           @click="() => publish({ id: course._id, publish: !course.isPublished })"
-          :disabled="!course.isPaid"
+          :disabled="!course.isPaid || !lessonsCounter"
           color="buttons"
           rounded
           large
@@ -79,7 +79,10 @@ export default {
     ...mapState('onlineCourses', ['courses', 'course', 'total']),
     courseUpdate() {
       return Object.assign({}, this.course, this.courseData)
-    }
+    },
+     lessonsCounter() {
+      return this?.course?.videos?.length ?? 0;
+    },
     // isAdmin() {
     //   return this.course?.idUser === this.user._id
     // }
