@@ -12,8 +12,6 @@
         >add new offline course</v-btn
       >
     </div>
-
-    <!-- <Spiner v-if="loading" /> -->
     <h3 v-if="emtyCourses" class="text-center">No courses have been added yet.</h3>
     <div class="d-flex flex-wrap justify-center">
       <CourseCard
@@ -27,7 +25,7 @@
       />
     </div>
     <div v-if="loading" class="d-flex flex-wrap justify-center">
-      <v-card v-for="(item, index) in 4" :key="index" width="400" height="350" class="ma-4">
+      <v-card v-for="(item, index) in 4" :key="index" width="300" height="400" class="ma-4">
         <v-skeleton-loader type="card"></v-skeleton-loader>
       </v-card>
     </div>
@@ -57,14 +55,12 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 
-// import Spiner from '@/components/Spinner.vue';
 import CourseCard from '@/components/courses/CourseCard.vue';
 import confirmDelete from '@/components/popups/confirmDelete.vue';
 
 export default {
   name: 'OfflineCoursesPage',
   components: {
-    // Spiner,
     CourseCard,
     confirmDelete,
   },

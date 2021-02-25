@@ -3,17 +3,17 @@
     <v-card
       :elevation="hover ? 16 : 2"
       :class="{ 'on-hover': hover }"
-      width="500"
+      :width="width"
       max-height="450"
       class="ma-4"
       @click="detailHandler"
     >
-      <h2 class="text-center">
-        {{ videoName }}
+      <h2 class="text-center items-text mx-4">
+        {{ video.name }}
       </h2>
-      <CoverImage :url="linkCheck(video)" :height="250" />
-      <v-card-actions class="d-flex justify-end">
-        <v-btn rounded color="buttons" large min-width="160" class="yellow-button" @click.stop="removeHandler"
+      <CoverImage :url="linkCheck(video)" />
+      <v-card-actions class="d-flex justify-end pa-4">
+        <v-btn rounded color="buttons"  class="yellow-button pa-4" @click.stop="removeHandler"
           >Delete</v-btn
         >
       </v-card-actions>
@@ -25,8 +25,25 @@
 import CoverImage from '@/components/CoverImage.vue';
 import checkVideoLink from '@/helpers/checkVideoLink';
 export default {
-  props: ['goToDetailVideo', 'video', 'removeVideo'],
   name: 'VideoCard',
+  props: {
+    video: {
+      type: Object,
+      required: true,
+    },
+    goToDetailVideo: {
+      type: Function,
+      required: true,
+    },
+    removeVideo: {
+      type: Function,
+      required: true,
+    },
+    width: {
+      type: String,
+      default: '300',
+    },
+  },
   components: {
     CoverImage,
   },
@@ -34,9 +51,6 @@ export default {
     return {};
   },
   computed: {
-    videoName() {
-      return this.video?.name?.length < 20 ? this.video?.name : this.video?.name?.slice(0, 17) + '...';
-    },
   },
   methods: {
     linkCheck(video) {
@@ -52,5 +66,12 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.items-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
 </style>

@@ -5,15 +5,14 @@
         <Spinner />
       </v-col> -->
       <v-col v-if="video" cols="12" xs="12" offset-md="2" md="8" class="player-container">
-        <!-- <vue-core-video-player :src="video.link" /> -->
         <video-player class="vjs-custom-skin" ref="videoPlayer" :options="playerOptions"> </video-player>
       </v-col>
       <v-col v-if="video" cols="12" xs="12" offset-md="2" md="8">
         <v-card-title>{{ video.description }}</v-card-title>
       </v-col>
       <v-col v-if="video" cols="12" xs="12" offset-md="2" md="8">
-        <CoverImage :url="checkVideoLink(video)" :height="500" />
-        <v-card flat class="d-flex justify-center mt-16 transparent">
+        <CoverImage :url="checkVideoLink(video)" :width="'100%'" :height="'auto'" />
+        <v-card flat class="d-flex justify-center my-16 transparent">
           <VideoPdfs />
         </v-card>
         <!-- <v-card v-if="pdfs.length && !isAdmin" flat class="d-flex justify-center mt-16 transparent">

@@ -1,16 +1,28 @@
 <template>
-  <div>
-    <v-img :src="imgUrl" :width="width" :height="height" contain @error="error = true"></v-img>
-  </div>
+  <v-img :src="imgUrl" :width="width" :height="height" contain @error="error = true"></v-img>
 </template>
 
 <script>
 export default {
-  props: ['url', 'height', 'width'],
+  props: {
+    url: {
+      type: String,
+      required: true,
+    },
+    height: {
+      type: String,
+      default: '300',
+    },
+    width: {
+      type: String,
+      default: '300',
+    },
+  },
   data() {
     return {
       error: false,
-      coverImageSrc: `${process.env.BASE_URL}/img/noImage.jpg`,
+      coverImageSrc: `${process.env.BASE_URL}/img/noImage300x300.png`,
+      // coverImageSrc: `${process.env.VUE_APP_LOCAL_URL}/img/noImage300x300.png`,
     };
   },
   computed: {
@@ -24,10 +36,8 @@ export default {
       this.error = false;
     },
   },
-  methods: {
-  },
-  mounted() {
-  }
+  methods: {},
+  mounted() {},
 };
 </script>
 
