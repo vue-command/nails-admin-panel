@@ -12,7 +12,7 @@
         />
       </v-col>
        <v-col cols="12" xs="12" md="7" v-if="editing">
-        <OfflineForm :course.sync="courseData" mode="edit" @submit="submit" @back="back" />
+        <OfflineForm :course.sync="courseData" :schema="schema" mode="edit" @submit="submit" @back="back" />
       </v-col>
       <v-col
         v-if="editing"
@@ -58,6 +58,9 @@ import CourseDetail from '@/components/courses/CourseDetail.vue';
 import CourseCard from '@/components/courses/CourseCard.vue';
 import OfflineForm from '@/components/forms/OfflineForm.vue';
 
+const schema = require('@/config/editOfflineCourseSchema').default;
+
+
 export default {
   name: 'OfflineCourse',
   components: {
@@ -68,6 +71,7 @@ export default {
   },
   data() {
     return {
+      schema,
       courseData: null,
       editing: false,
       type: 'offline',

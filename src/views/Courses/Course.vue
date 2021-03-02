@@ -4,7 +4,7 @@
       <Spinner v-if="loading" />
       <CourseDetail v-if="!loading && course && !editing" :course="course" :type="type" btnTitle="BUY THIS COURSE" />
       <v-col cols="12" xs="12" md="7" v-if="editing">
-        <OnlineForm :course.sync="courseData" @submit="submit" mode="edit" @back="back" />
+        <OnlineForm :course.sync="courseData" :schema="schema" @submit="submit" mode="edit" @back="back" />
       </v-col>
       <v-col v-if="editing" cols="12" xs="12" md="5" class="d-flex flex-column justify-space-between align-center">
         <CourseCard :course="courseData" :type="type" :preview="true" />
@@ -58,6 +58,9 @@ import CourseCard from '@/components/courses/CourseCard.vue';
 import Spinner from '@/components/Spinner.vue';
 import OnlineForm from '@/components/forms/OnlineForm.vue';
 
+const schema = require('@/config/editOnlineCourseSchema').default;
+
+
 export default {
   name: 'Course',
   components: {
@@ -68,6 +71,7 @@ export default {
   },
   data() {
     return {
+      schema,
       type: 'online',
       courseData: null,
       editing: false,
@@ -83,9 +87,6 @@ export default {
      lessonsCounter() {
       return this?.course?.videos?.length ?? 0;
     },
-    // isAdmin() {
-    //   return this.course?.idUser === this.user._id
-    // }
   },
   watch: {
     course(val) {

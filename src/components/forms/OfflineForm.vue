@@ -110,7 +110,7 @@ import SuitableInputs from '@/components/inputs/SuitableInputs.vue';
 import TextAreaInput from '@/components/inputs/TextAreaInput.vue';
 import FileInput from '@/components/inputs/FileInput.vue';
 
-const schema = require('@/config/offlineCourseSchema').default;
+// const schema = require('@/config/offlineCourseSchema').default;
 
 export default {
   name: 'OfflineForm',
@@ -118,6 +118,10 @@ export default {
     course: {
       type: Object,
       default: undefined,
+    },
+    schema: {
+      type: Object,
+      required: true,
     },
     mode: {
       type: String,
@@ -134,13 +138,12 @@ export default {
   },
   data() {
     return {
-      schema,
-      data: Object.keys({ ...schema.sideLeft, ...schema.sideRight }).reduce((acc, key) => {
+      data: Object.keys({ ...this.schema.sideLeft, ...this.schema.sideRight }).reduce((acc, key) => {
         const obj = { [key]: '' };
-        if (schema.sideLeft[key]?.type === 'suitable' || schema.sideRight[key]?.type === 'suitable') {
+        if (this.schema.sideLeft[key]?.type === 'suitable' || this.schema.sideRight[key]?.type === 'suitable') {
           obj[key] = [''];
         }
-        if (schema.sideLeft[key]?.type === 'dateCourse' || schema.sideRight[key]?.type === 'dateCourse') {
+        if (this.schema.sideLeft[key]?.type === 'dateCourse' || this.schema.sideRight[key]?.type === 'dateCourse') {
           obj[key] = [
             {
               date: '',
@@ -148,7 +151,7 @@ export default {
             },
           ];
         }
-        if (schema.sideLeft[key]?.type === 'file' || schema.sideRight[key]?.type === 'file') {
+        if (this.schema.sideLeft[key]?.type === 'file' || this.schema.sideRight[key]?.type === 'file') {
           obj[key] = null;
         }
         return Object.assign(acc, obj);
