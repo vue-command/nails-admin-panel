@@ -1,14 +1,14 @@
 <template>
-  <v-container fluid>
+  <v-container v-if="show">
     <v-row>
       <v-col cols="12" xs="12">
         <v-breadcrumbs :items="items">
           <template v-slot:item="{ item }">
             <v-breadcrumbs-item :disabled="item.disabled">
               <router-link
-                :to="item.href"
+                :to="item.path"
                 class="uppercase"
-                :class="{ 'disabled-link': item.disabled }"
+                :class="{ 'disabledPathBreadcrumbs--text': item.disabled }"
               >
                 {{ item.text }}
               </router-link>
@@ -22,6 +22,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import { breadcrumbsFactory } from '@/helpers/breadcrumbs';
 
 export default {
   name: 'Breadcrumbs',
@@ -30,119 +31,45 @@ export default {
     return {};
   },
   computed: {
-    ...mapState('onlineCourses', {
-      onlineCourses: 'courses',
-      onlineCourse: 'course',
-      video: 'video',
-    }),
-    ...mapState('offlineCourses', {
-      offlineCourses: 'courses',
-      offlineCourse: 'course',
-    }),
+    ...mapState('onlineCourses', ['course', 'video']),
+    ...mapState('auth', ['user']),
+    ...mapState('offlineCourses', {offlineCourse:'course'}),
     courseId() {
-      return this.$route.params.courseid;
+      return this.$route.params.courseid ?? '';
     },
-    course() {
-      if (this.type === 'online-courses') return this.onlineCourse;
-      if (this.type === 'offline-courses') return this.offlineCourse;
-      return {};
+    lessonId() {
+      return this.$route.params.lessonid ?? '';
+    },
+    userName() {
+      return this?.user?.firstName ?? '';
     },
     courseName() {
-      return this.course?.nameOfCourse;
+      return this?.course?.nameOfCourse ?? '';
     },
-    videoId() {
-      return this.$route.params.videoid;
+    purchasedCourseName() {
+      return this?.purchasedCourse?.nameOfCourse ?? '';
     },
-    route() {
-      return this.$route;
+    offlineCourseName() {
+      return this?.offlineCourse?.nameOfCourse ?? '';
     },
-    itemsOption() {
-      const option = [
-        {
-          text: 'Home',
-          href: '/',
-        },
-      ];
-      const on = [
-        {
-          text: 'Online Courses',
-          href: '/online-courses',
-        },
-      ];
-        const off = [
-          {
-            text: 'Offline Courses',
-            href: '/offline-courses',
-          },
-        ];
-        const createOn = [
-         {
-           text: 'Create online course',
-           href: '#',
-         },
-       ];
-       const createOff = [
-         {
-           text: 'Create offline course',
-           href: '#',
-         },
-       ];
-      const courseOn = [
-        {
-          text: this.courseName,
-          href: `/online-courses/${this.courseId}`,
-        },
-        {
-          text: 'videos',
-          href: `/online-courses/${this.courseId}/videos`,
-        },
-        {
-          text: this.video?.name,
-          href: '#',
-        },
-      ];
-      const courseOff = [
-        {
-          text: this.courseName,
-          href: `/offline-courses/${this.courseId}`,
-        },
-      ];
-      // const course = [
-      //   {
-      //     text: this.courseName,
-      //     href: '#',
-      //   },
-      // ];
-      // if (this.type === 'online-courses') return option.concat(on);
-       if (this.type === 'online-courses') {
-        return this.$route.fullPath.includes('create-online-course')
-          ? option.concat(on).concat(createOn)
-          : option.concat(on).concat(courseOn);
-      }
-      if (this.type === 'offline-courses') {
-        return this.$route.fullPath.includes('create-offline-course')
-          ? option.concat(off).concat(createOff)
-          : option.concat(off).concat(courseOff);
-      }
-      return option;
+    lessonName() {
+      return this?.video?.name ?? '';
+    },
+    routeName() {
+      return this.$route.name;
+    },
+    show() {
+      const paths = ['online-courses', 'offline-courses'];
+      return paths.some(path => this.$route.path.includes(path));
     },
     items() {
-      return this.itemsOption.slice(0, this.paths.length).map((item, index, arr) => {
-        // eslint-disable-next-line no-param-reassign
-        item.disabled = index === arr.length - 1;
-        return item;
-      });
+      return this.breadcrumbs.map((route, index) => Object.assign({ disabled: index === 0 }, route)).reverse();
     },
-    type() {
-      return this.paths[1];
-    },
-    paths() {
-      return this.$route.fullPath.split('/');
-    },
+    breadcrumbs: breadcrumbsFactory(),
   },
   watch: {},
   methods: {},
-  created() {},
+  mounted() {},
 };
 </script>
 

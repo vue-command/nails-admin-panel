@@ -99,7 +99,7 @@ const routes = [
       ),
   },
   {
-    path: '/online-courses/:courseid/videos/:videoid',
+    path: '/online-courses/:courseid/videos/:lessonid',
     name: 'online-course-video',
     meta: {
       layout: 'courses',

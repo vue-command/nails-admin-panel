@@ -170,24 +170,22 @@ const actions = {
       commit('ERROR', publish ? errors.publish : errors.unpublish, { root: true });
     }
   },
-  async ADD_PDF({ commit, dispatch }, { fd, videoId }) {
-    // async ADD_PDF({ commit, dispatch }, { fd, videoId, currentCourseId }) {
-    const { error } = await postData(`${endpoints.pdf}/${videoId}`, fd);
+  async ADD_PDF({ commit, dispatch }, { fd, lessonId }) {
+    const { error } = await postData(`${endpoints.pdf}/${lessonId}`, fd);
     if (!error) {
       // dispatch('GET_COURSES');
       // dispatch('GET_COURSE', currentCourseId);
-      dispatch('GET_VIDEO', videoId);
+      dispatch('GET_VIDEO', lessonId);
     }else {
       commit('ERROR', errors.addPdf, { root: true })
     }
   },
-  async REMOVE_PDF({ commit, dispatch }, { id, videoId }) {
-    // async REMOVE_PDF({ commit, dispatch }, { id, videoId, currentCourseId }) {
+  async REMOVE_PDF({ commit, dispatch }, { id, lessonId }) {
     const { error } = await deleteData(`${endpoints.pdf}/${id}`);
     if (!error) {
       // dispatch('GET_COURSES');
       // dispatch('GET_COURSE', currentCourseId);
-      dispatch('GET_VIDEO', videoId);
+      dispatch('GET_VIDEO', lessonId);
     } else {
       commit('ERROR', errors.delete, { root: true })
     }

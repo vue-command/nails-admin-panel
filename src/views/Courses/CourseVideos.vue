@@ -97,7 +97,7 @@ export default {
       this.$router.push({
         name: 'online-course-video',
         params: {
-          videoid: id,
+          lessonid: id,
         },
       });
     },

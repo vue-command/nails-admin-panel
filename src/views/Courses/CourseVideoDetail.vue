@@ -180,13 +180,13 @@ export default {
       });
       this.putVideo({
         fd,
-        id: this.$route.params.videoid,
+        id: this.$route.params.lessonid,
       });
       this.showForm = false;
     },
   },
   created() {
-    this.getVideo(this.$route.params.videoid);
+    this.getVideo(this.$route.params.lessonid);
     this.getCourse(this.$route.params.courseid);
   },
 };
