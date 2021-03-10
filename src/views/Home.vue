@@ -2,14 +2,14 @@
   <v-container>
     <v-row class="text-center">
       <v-col cols="6" lg="6">
-        <v-card class="mx-auto ma-5" max-width="344" outlined @click="goToOfflineCourses('offline-courses')">
+        <v-card class="mx-auto ma-5" max-width="344" outlined @click="goToCourses('offline-courses')">
           <v-list-item three-line>
             <v-list-item-content>
               <v-list-item-title class="headline mb-1"> OFFLINE COURSES </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-card>
-        <v-card class="mx-auto ma-5" max-width="344" outlined @click="goToOfflineCourses('online-courses')">
+        <v-card class="mx-auto ma-5" max-width="344" outlined @click="goToCourses('online-courses')">
           <v-list-item three-line>
             <v-list-item-content>
               <v-list-item-title class="headline mb-1"> ONLINE COURSES </v-list-item-title>
@@ -32,6 +32,13 @@
             </v-list-item-content>
           </v-list-item>
         </v-card>
+        <v-card class="mx-auto ma-5" max-width="344" outlined @click="goToDelivery">
+          <v-list-item three-line>
+            <v-list-item-content>
+              <v-list-item-title class="headline mb-1"> Delivery </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
@@ -45,12 +52,15 @@ export default {
     goToShop() {
       this.$router.push({ name: 'shop' });
     },
-    goToOfflineCourses(nameCourses) {
+    goToCourses(nameCourses) {
       this.$router.push({ name: nameCourses });
+    },
+    goToDelivery() {
+      this.$router.push({ name: 'delivery' });
     },
     goToCategories() {
       this.$router.push({ name: 'categories' });
-    }
+    },
   },
 };
 </script>

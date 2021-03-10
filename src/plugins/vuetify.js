@@ -53,9 +53,11 @@ export default new Vuetify({
         notPaidAndPublished: '#369ab3',
         disabledPathBreadcrumbs: '#262624',
         error: '#f5420d',
+        deliveryItem: '#e5e5e5',
       },
       dark: {
         // orange
+        orange: '#FFC44A',
         primary: '#FFC44A',
         // light gray
         secondary: '#dde',

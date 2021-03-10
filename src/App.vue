@@ -1,7 +1,7 @@
 <template>
   <v-app dark>
     <div v-if="user">
-      <v-app-bar color="indigo" dark>
+      <v-app-bar color="orange" dark>
         <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
 
         <v-toolbar-title><a class="white--text" :href="baseUrl">Nails AUSTRALIA</a></v-toolbar-title>

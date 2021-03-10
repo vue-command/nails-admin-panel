@@ -147,6 +147,18 @@ const routes = [
       ),
   },
   {
+    path: '/delivery',
+    name: 'delivery',
+    meta: {
+      // layout: 'shop',
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "online-course" */
+        '@/views/Delivery/Delivery.vue'
+      ),
+  },
+  {
     path: '*',
     name: 'not-found',
     component: () =>

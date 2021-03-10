@@ -34,4 +34,8 @@ export default {
     files: 'shop/commodity/files',
     file: 'shop/file',
   },
+  delivery: {
+    get: 'delivery-prices',
+    put: 'delivery-prices'
+  }
 };

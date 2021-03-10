@@ -1,21 +1,21 @@
 <template>
   <v-text-field
+    ref="num"
+    type="number"
+    v-model.number="localValue"
     :label="label"
-    v-model="localValue"
     :disabled="disabled"
-    :prepend-icon="icon"
-    :prepend-inner-icon="innerIcon"
-    :rules="[rules.required, rules.limit, rules.noRepeat]"
-    outlined
+    :rules="[rules.required, rules.onlyPositive, rules.limit]"
+    :outlined="outlined"
   />
 </template>
 
 <script>
 export default {
-  name: 'TextInput',
+  name: 'FloatInput',
   props: {
     value: {
-      type: String,
+      type: Number,
       required: true,
     },
     label: {
@@ -24,7 +24,7 @@ export default {
     },
     limit: {
       type: Number,
-      default: 25,
+      default: 10,
     },
     disabled: {
       type: Boolean,
@@ -34,17 +34,13 @@ export default {
       type: Boolean,
       default: false,
     },
-    noRepeat: {
-      type: String,
-      default: '',
+    positive: {
+      type: Boolean,
+      default: true,
     },
-    icon: {
-      type: String,
-      default: '',
-    },
-    innerIcon: {
-      type: String,
-      default: '',
+    outlined: {
+      type: Boolean,
+      default: true,
     },
   },
   data() {
@@ -57,8 +53,14 @@ export default {
           const res = !(a && b) && (a || b);
           return res || 'Input is required';
         },
-        limit: v => v.length <= this.limit || `Max ${this.limit} characters`,
-        noRepeat: value => !this.noRepeat || value !== this.noRepeat || 'Text must not match',
+        onlyPositive: v => {
+          const a = this.positive && v >= 0;
+          const b = !this.positive;
+          // res = a XOR b
+          const res = !(a && b) && (a || b);
+          return res || 'only positive';
+        },
+        limit: v => v <= this.limit || `Max value: ${this.limit}`,
       },
     };
   },
@@ -68,8 +70,18 @@ export default {
         return this.value;
       },
       set(val) {
-        this.$emit('update:value', val);
+        if (typeof val == 'string') return
+        if (Number.isNaN(Number(val))) {
+          this.$emit('update:value', 0);
+        } else {
+          this.$emit('update:value', val);
+        }
       },
+    },
+  },
+  watch: {
+    noRepeat() {
+      this.$refs.num.validate();
     },
   },
   methods: {
@@ -80,4 +92,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>
