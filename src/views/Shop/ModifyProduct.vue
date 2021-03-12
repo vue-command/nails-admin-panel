@@ -50,16 +50,32 @@
                   label="Speciﬁcation"
                   outlined
                 ></v-textarea>
-                <v-col cols="6">
-                  <v-text-field
-                    v-model="currentCommodity.price"
-                    :rules="[rules.required]"
-                    label="Price"
-                    type="number"
-                    min="0"
-                    outlined
-                  ></v-text-field>
-                </v-col>
+                <v-row>
+                  <v-col cols="12">
+                    <v-row>
+                      <v-col cols="6">
+                        <v-text-field
+                          v-model="currentCommodity.price"
+                          :rules="[rules.required]"
+                          label="Price"
+                          type="number"
+                          min="0"
+                          outlined
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="6">
+                        <v-text-field
+                          v-model="currentCommodity.amount"
+                          :rules="[rules.required]"
+                          label="Amount"
+                          type="number"
+                          min="0"
+                          outlined
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                </v-row>
               </v-col>
               <v-col cols="12" xl="6" md="6" lg="6" sm="12">
                 <v-text-field
@@ -206,7 +222,8 @@
           </v-row>
         </v-col>
       </v-row>
-      <confirm-delete :confirmDelete="deleteCommodityHandler" :dialog.sync="showDialog" :title="title"> </confirm-delete>
+      <confirm-delete :confirmDelete="deleteCommodityHandler" :dialog.sync="showDialog" :title="title">
+      </confirm-delete>
       <v-divider class="my-10"></v-divider>
       <v-row justify="space-between">
         <v-btn color="error" large min-width="90" class="mt-4" @click="showDialog = true" :disabled="!commodity"
@@ -251,6 +268,7 @@ export default {
         subCategoryId: '',
         brand: '',
         name: '',
+        amount: '',
         codeOfProduct: '',
         speciﬁcations: '',
         isPublished: false,
@@ -301,14 +319,14 @@ export default {
       });
     },
     setCommodity(commodity) {
-      const { categoryId, subCategoryId, brand, name, codeOfProduct, speciﬁcations, isPublished, price } = {
-        ...commodity,
-      };
+      const { categoryId, subCategoryId, brand, name, amount, codeOfProduct, speciﬁcations, isPublished, price } = commodity
+      
       this.currentCommodity = {
         categoryId,
         subCategoryId,
         brand,
         name,
+        amount,
         codeOfProduct,
         speciﬁcations,
         isPublished,
