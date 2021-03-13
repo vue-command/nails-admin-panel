@@ -46,6 +46,7 @@ import { mapState, mapActions } from 'vuex';
 import Spinner from '@/components/Spinner.vue';
 
 export default {
+  name: 'CourseVideos',
   components: {
     Spinner,
     VideoCard: () => import('@/components/courses/VideoCard.vue'),

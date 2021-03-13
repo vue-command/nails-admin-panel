@@ -1,10 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
-// import Courses from '../views/Courses/Courses.vue'
-// import OnlineCourses from '../views/Courses/OnlineCourses.vue'
-// import OfflineCoursesPage from '../views/Courses/OfflineCoursesPage.vue';
-// import OnlineCoursesPage from '../views/Courses/OnlineCoursesPage.vue';
+import Home from '@/views/Home.vue';
 
 Vue.use(VueRouter);
 
@@ -23,7 +19,7 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "shop" */
-        '@/views/Shop/Shop.vue'
+        '@/views/shop/Shop.vue'
       ),
   },
   {
@@ -34,8 +30,8 @@ const routes = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "shop" */
-        '@/views/Shop/ModifyProduct.vue'
+        /* webpackChunkName: "commodity-edit" */
+        '@/views/shop/ModifyProduct.vue'
       ),
   },
   {
@@ -46,7 +42,7 @@ const routes = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "shop" */
+        /* webpackChunkName: "categories" */
         '@/views/CategoriesPage.vue'
       ),
   },
@@ -59,7 +55,7 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "online-courses" */
-        '@/views/Courses/CoursesPage.vue'
+        '@/views/courses/CoursesPage.vue'
       ),
   },
   {
@@ -70,9 +66,9 @@ const routes = [
     },
     component: () =>
       import(
-      /* webpackChunkName: "offline-courses" */
-      '@/views/Courses/OnlineCourseCreate.vue'
-    ),
+        /* webpackChunkName: "create-online-course" */
+        '@/views/courses/OnlineCourseCreate.vue'
+      ),
   },
   {
     path: '/online-courses/:courseid',
@@ -83,7 +79,7 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "online-course" */
-        '@/views/Courses/Course.vue'
+        '@/views/courses/Course.vue'
       ),
   },
   {
@@ -95,7 +91,7 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "online-course-videos" */
-        '@/views/Courses/CourseVideos.vue'
+        '@/views/courses/CourseVideos.vue'
       ),
   },
   {
@@ -107,7 +103,7 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "online-course-video" */
-        '@/views/Courses/CourseVideoDetail.vue'
+        '@/views/courses/CourseVideoDetail.vue'
       ),
   },
   {
@@ -119,7 +115,7 @@ const routes = [
     component: () =>
       import(
         /* webpackChunkName: "offline-courses" */
-        '@/views/Courses/OfflineCoursesPage.vue'
+        '@/views/courses/OfflineCoursesPage.vue'
       ),
   },
   {
@@ -130,8 +126,8 @@ const routes = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "offline-courses" */
-        '@/views/Courses/OfflineCourseCreate.vue'
+        /* webpackChunkName: "create-offline-course" */
+        '@/views/courses/OfflineCourseCreate.vue'
       ),
   },
   {
@@ -142,8 +138,8 @@ const routes = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "online-course" */
-        '@/views/Courses/OfflineCourse.vue'
+        /* webpackChunkName: "offline-course" */
+        '@/views/courses/OfflineCourse.vue'
       ),
   },
   {
@@ -154,8 +150,8 @@ const routes = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "online-course" */
-        '@/views/Delivery/Delivery.vue'
+        /* webpackChunkName: "delivery" */
+        '@/views/delivery/Delivery.vue'
       ),
   },
   {
@@ -163,9 +159,9 @@ const routes = [
     name: 'not-found',
     component: () =>
       import(
-      /* webpackChunkName: "not-found" */
-      '@/views/NotFound.vue'
-    ),
+        /* webpackChunkName: "not-found" */
+        '@/views/NotFound.vue'
+      ),
   },
 ];
 

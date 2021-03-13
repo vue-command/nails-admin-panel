@@ -252,14 +252,14 @@
 
 <script>
 import { mapState } from 'vuex';
-import confirmDelete from '../../components/popups/confirmDelete.vue';
+import confirmDelete from '@/components/popups/confirmDelete.vue';
 
 export default {
   components: { confirmDelete },
   name: 'ModifyProduct',
   data() {
     return {
-      noImage: require('@/views/Shop/assets/no-image.png'),
+      noImage: require('@/views/shop/assets/no-image.png'),
       showDialog: false,
       title: 'commodity',
       valid: true,

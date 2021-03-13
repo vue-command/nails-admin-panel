@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import debounce from '../../utils/debounce';
+import debounce from '@/utils/debounce';
 
 import { mapState } from 'vuex';
 
@@ -131,7 +131,7 @@ export default {
   data() {
     return {
       search: '',
-      noImage: require('@/views/Shop/assets/no-image.png'),
+      noImage: require('@/views/shop/assets/no-image.png'),
     };
   },
   computed: {

@@ -24,7 +24,7 @@
 import { mapState, mapMutations } from 'vuex'
 
 export default {
-  name: 'MessagePopup',
+  name: 'Message',
   computed: {
     ...mapState(['message', 'messageText', 'messageType']),
     dialog: {

@@ -49,7 +49,7 @@ import DeliveryItem from '@/components/delivery/DeliveryItem.vue';
 import TextInput from '@/components/inputs/TextInput.vue';
 
 export default {
-  name: 'DeliveryPage',
+  name: 'Delivery',
   components: {
     DeliveryItem,
     TextInput,

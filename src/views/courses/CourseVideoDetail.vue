@@ -91,6 +91,7 @@ import VideoPdfs from '@/components/courses/VideoPdfs.vue';
 const schema = require('@/config/editLessonSchema').default;
 
 export default {
+  name: 'CourseVideoDetail',
   components: {
     CoverImage,
     // Spinner,

@@ -21,7 +21,7 @@
 
 <script>
 export default {
-  name: 'spiner',
+  name: 'Spiner',
   props: [],
   data: () => ({}),
   methods: {},

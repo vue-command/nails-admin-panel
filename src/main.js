@@ -4,15 +4,14 @@ import ErrorMessage from '@/components/popups/error.vue';
 import ConfirmDelete from '@/components/popups/confirmDelete.vue';
 import Message from '@/components/popups/message.vue';
 import App from './App.vue';
-import router from './router';
-import store from './store';
-import vuetify from './plugins/vuetify';
-// import '@babel/polyfill';
+import router from '@/router';
+import store from '@/store';
+import vuetify from '@/plugins/vuetify';
+
 import '@/css/fonts.scss';
+import 'video.js/dist/video-js.css'
 
 Vue.config.productionTip = false;
-
-import 'video.js/dist/video-js.css'
 
 Vue.use(VueVideoPlayer)
 

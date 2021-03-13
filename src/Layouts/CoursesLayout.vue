@@ -8,6 +8,7 @@
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 
 export default {
+  name: 'CoursesLayout',
   components: {
     Breadcrumbs,
   },

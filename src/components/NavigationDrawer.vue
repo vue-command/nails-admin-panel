@@ -15,23 +15,33 @@
           </v-list-item-icon>
           <v-list-item-title>Offline courses</v-list-item-title>
         </v-list-item>
+
         <v-list-item @click="goTo('online-courses')">
           <v-list-item-icon>
             <v-icon>$onlineCourse</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Online courses</v-list-item-title>
         </v-list-item>
+
         <v-list-item @click="goTo('shop')">
           <v-list-item-icon>
             <v-icon>$shop</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Shop</v-list-item-title>
         </v-list-item>
+
         <v-list-item @click="goTo('shop-categories')">
           <v-list-item-icon>
             <v-icon>$shopCategories</v-icon>
           </v-list-item-icon>
           <v-list-item-title>Shop categories</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item @click="goTo('delivery')">
+          <v-list-item-icon>
+            <v-icon>$deliveryPrices</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Delivery prices</v-list-item-title>
         </v-list-item>
       </v-list-item-group>
     </v-list>
@@ -40,39 +50,39 @@
 
 <script>
 export default {
+  name: 'NavigationDrawer',
   props: {
-    drawer:{
+    drawer: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
-    return{
+    return {
       group: null,
-    }
+    };
   },
-  computed:{
+  computed: {
     localDrawer: {
-      get(){
-        return this.drawer
+      get() {
+        return this.drawer;
       },
-      set(val){
-        this.$emit('update:drawer', val)
-      }
-    }
+      set(val) {
+        this.$emit('update:drawer', val);
+      },
+    },
   },
-   watch: {
+  watch: {
     group() {
       this.localDrawer = false;
     },
   },
-  methods:{
+  methods: {
     goTo(name) {
       if (this.$route.name !== name) this.$router.push({ name });
     },
-  }
-
-}
+  },
+};
 </script>
 
 <style>

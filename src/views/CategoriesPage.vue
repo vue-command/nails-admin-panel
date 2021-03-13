@@ -94,7 +94,7 @@
 import { mapState } from 'vuex';
 
 export default {
-  name: 'categories',
+  name: 'CategoriesPage',
   components: {
     AddSubcategory: () => import('@/components/inputs/AddSubcategory.vue'),
     confirmDelete: () => import('@/components/popups/confirmDelete.vue'),

@@ -24,7 +24,7 @@
 import { mapState, mapMutations } from 'vuex'
 
 export default {
-  name: 'ErrorMessage',
+  name: 'Error',
   computed: {
     ...mapState(['error', 'errorMessage', 'errorType']),
     dialog: {

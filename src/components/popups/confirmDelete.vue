@@ -26,7 +26,7 @@
 
 <script>
 export default {
-  name: 'confirmDelete',
+  name: 'ConfirmDelete',
   props: ['dialog', 'confirmDelete', 'title'],
   computed: {
     localDialog: {
