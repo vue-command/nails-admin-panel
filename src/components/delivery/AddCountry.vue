@@ -2,6 +2,7 @@
   <v-dialog v-model="localDialog" max-width="480px" height="0.8vh">
     <v-card flat class="pa-4">
       <TextInput :value.sync="filterStr" innerIcon="mdi-magnify" />
+
       <v-card flat height="600">
         <v-card flat style="overflow: scroll" class="" outlined height="350">
           <v-card
@@ -10,16 +11,15 @@
             class="ma-4 pa-4 d-flex"
             @click="selectId = country._id"
           >
-          <v-card-actions>
-            <v-img :src="country.flag" width="60" height="40" contain></v-img>
-            <v-spacer/>
-            <h4 class="pl-8">{{ country.country }}</h4>
-          </v-card-actions>
-          
+            <v-card-actions>
+              <v-img :src="country.flag" width="60" height="40" contain></v-img>
+              <v-spacer />
+              <h4 class="pl-8">{{ country.country }}</h4>
+            </v-card-actions>
           </v-card>
         </v-card>
 
-        <v-card v-if="currentCountry" class="ma-4 pa-4  d-flex flex-column align-center deliveryItem">
+        <v-card v-if="currentCountry" class="ma-4 pa-4 d-flex flex-column align-center deliveryItem">
           <v-img :src="currentCountry.flag" width="60" height="40" contain></v-img>
           <h4>{{ currentCountry.country }}</h4>
           <p>{{ currentCountry.countryCode }}</p>
@@ -28,6 +28,7 @@
           </v-form>
         </v-card>
       </v-card>
+
       <v-card>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -81,6 +82,11 @@ export default {
     },
     currentCountry() {
       return this.countries.find(country => country._id === this.selectId);
+    },
+  },
+  watch: {
+    localDialog() {
+      this.filterStr = '';
     },
   },
   methods: {

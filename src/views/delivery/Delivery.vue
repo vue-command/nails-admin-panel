@@ -10,28 +10,30 @@
       </v-card-actions>
     </v-card>
 
-    <v-card flat v-if="type === 'standart'" class="d-flex flex-column align-center">
+    <v-card flat v-if="type === 'standart' && standart" class="d-flex flex-column align-center">
       <h2>Standart delivery</h2>
       <DeliveryItem :country="standart" @changePrice="changePriceId = standart._id" />
     </v-card>
 
-    <v-card flat v-if="type === 'express'" class="d-flex flex-column align-center">
+    <v-card flat v-if="type === 'express' && express" class="d-flex flex-column align-center">
       <h2>Express delivery</h2>
       <DeliveryItem :country="express" @changePrice="changePriceId = express._id" />
     </v-card>
 
-    <v-card flat v-if="type === 'international'"  class="d-flex flex-column align-center">
+    <v-card flat v-if="type === 'international'" class="d-flex flex-column align-center">
       <h2>International delivery</h2>
       <v-card-actions class="my-8">
         <v-btn @click="addCountryDialog = true">Add country</v-btn>
       </v-card-actions>
-        <TextInput :value.sync="filterStr" innerIcon="mdi-magnify" />
+      <TextInput :value.sync="filterStr" innerIcon="mdi-magnify" />
       <v-card flat class="d-flex justify-center flex-wrap">
         <DeliveryItem
           v-for="country in filteredInternationals"
           :key="country._id"
           :country="country"
+          international
           @changePrice="changePriceId = country._id"
+          @deleteCountry="deleteCountry(country._id)"
         />
       </v-card>
     </v-card>
@@ -85,17 +87,19 @@ export default {
       this.changePriceDialog = true;
     },
     changePriceDialog(val) {
-      if (!val) this.changePriceId= '';
-    }
+      if (!val) this.changePriceId = '';
+    },
   },
   methods: {
     ...mapActions('delivery', {
       getCountries: 'GET_COUNTRIES',
       updateCountryPrice: 'UPDATE_COUNTRY_PRICE',
     }),
-
+    deleteCountry(id) {
+      this.updateCountryPrice({ id, price: 0 });
+      this.changePriceDialog = false;
+    },
     changePrice(price) {
-      console.log(this.changePriceId, price);
       this.updateCountryPrice({ id: this.changePriceId, price });
       this.changePriceDialog = false;
     },
