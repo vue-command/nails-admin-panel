@@ -43,6 +43,20 @@
           </v-list-item-icon>
           <v-list-item-title>Delivery prices</v-list-item-title>
         </v-list-item>
+
+        <v-list-item @click="goTo('orders')">
+          <v-list-item-icon>
+            <v-icon>$orders</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Orders</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item @click="goTo('users')">
+          <v-list-item-icon>
+            <v-icon>$users</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Users</v-list-item-title>
+        </v-list-item>
       </v-list-item-group>
     </v-list>
   </v-navigation-drawer>

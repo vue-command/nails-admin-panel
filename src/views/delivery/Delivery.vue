@@ -2,7 +2,7 @@
   <v-container>
     <v-card flat class="mb-16">
       <v-card-actions class="justify-center">
-        <v-btn @click="type = 'standart'" :class="{ active: type === 'standart' }">Standart</v-btn>
+        <v-btn @click="type = 'standard'" :class="{ active: type === 'standard' }">Standard</v-btn>
         <v-btn @click="type = 'express'" :class="{ active: type === 'express' }" class="mx-12">Express</v-btn>
         <v-btn @click="type = 'international'" :class="{ active: type === 'international' }" class="ml-0"
           >International</v-btn
@@ -10,9 +10,9 @@
       </v-card-actions>
     </v-card>
 
-    <v-card flat v-if="type === 'standart' && standart" class="d-flex flex-column align-center">
-      <h2>Standart delivery</h2>
-      <DeliveryItem :country="standart" @changePrice="changePriceId = standart._id" />
+    <v-card flat v-if="type === 'standard' && standard" class="d-flex flex-column align-center">
+      <h2>Standard delivery</h2>
+      <DeliveryItem :country="standard" @changePrice="changePriceId = standard._id" />
     </v-card>
 
     <v-card flat v-if="type === 'express' && express" class="d-flex flex-column align-center">
@@ -68,7 +68,7 @@ export default {
   computed: {
     ...mapState(['loading']),
     ...mapState('delivery', ['prices']),
-    ...mapGetters('delivery', ['countries', 'express', 'standart', 'internationals']),
+    ...mapGetters('delivery', ['countries', 'express', 'standard', 'internationals']),
     isCountries() {
       return this?.countries?.length;
     },

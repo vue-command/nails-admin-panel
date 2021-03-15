@@ -116,7 +116,7 @@ export default {
   },
   computed: {
     // ...mapState(['loading']),
-    ...mapState('user', ['user']),
+    ...mapState('users', ['user']),
     ...mapState('onlineCourses', ['course', 'video']),
     playerOptions() {
       return {
@@ -135,8 +135,8 @@ export default {
     //   return this.course?.idUser === this.user._id;
     // },
     pdfs() {
-      return this?.video?.pdfs ?? []
-    }
+      return this?.video?.pdfs ?? [];
+    },
   },
   watch: {
     showForm(val) {

@@ -1,5 +1,5 @@
 export default {
-  user: {
+  users: {
     get: {
       error: true,
       errorType: 'Get admin',
@@ -60,7 +60,7 @@ export default {
       errorType: 'Delete online course',
       errorMessage: 'Process failed....',
     },
-   unpublish: {
+    unpublish: {
       error: true,
       errorType: 'Unublish course',
       errorMessage: 'Unpublishing course error',

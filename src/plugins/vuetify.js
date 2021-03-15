@@ -26,6 +26,8 @@ export default new Vuetify({
       done: 'mdi-check',
       cancel: 'mdi-close',
       deliveryPrices: 'mdi-truck-delivery',
+      orders: 'mdi-cart-check',
+      users: 'mdi-account-multiple ',
     },
   },
   theme: {

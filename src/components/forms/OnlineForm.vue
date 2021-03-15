@@ -106,7 +106,6 @@ import SuitableInputs from '@/components/inputs/SuitableInputs.vue';
 import TextAreaInput from '@/components/inputs/TextAreaInput.vue';
 import FileInput from '@/components/inputs/FileInput.vue';
 
-
 export default {
   name: 'OnlineForm',
   props: {
@@ -145,7 +144,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('user', ['user']),
+    ...mapState('users', ['user']),
   },
   watch: {
     data: {

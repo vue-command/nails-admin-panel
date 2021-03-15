@@ -10,11 +10,11 @@ const state = {
 const getters = {
   countries: state => state.prices.filter(item => item.price === 0),
   express: state => state.prices.find(item => item.type === 'express'),
-  standart: state => state.prices.find(item => item.type === 'standart'),
+  standard: state => state.prices.find(item => item.type === 'standard'),
   internationals: state =>
     state.prices.filter(item => {
       if (item.type === 'express') return false;
-      if (item.type === 'standart') return false;
+      if (item.type === 'standard') return false;
       if (item.price === 0) return false;
       return true;
     }),

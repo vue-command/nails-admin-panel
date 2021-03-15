@@ -47,6 +47,24 @@ const routes = [
       ),
   },
   {
+    path: '/orders',
+    name: 'orders',
+    component: () =>
+      import(
+        /* webpackChunkName: "orders" */
+        '@/views/Orders.vue'
+      ),
+  },
+  {
+    path: '/users',
+    name: 'users',
+    component: () =>
+      import(
+        /* webpackChunkName: "users" */
+        '@/views/Users.vue'
+      ),
+  },
+  {
     path: '/online-courses',
     name: 'online-courses',
     meta: {

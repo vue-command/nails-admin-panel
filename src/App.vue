@@ -6,7 +6,7 @@
 
         <v-toolbar-title><a class="white--text" :href="baseUrl">Nails AUSTRALIA</a></v-toolbar-title>
       </v-app-bar>
-      <NavigationDrawer :drawer.sync="drawer"/>
+      <NavigationDrawer :drawer.sync="drawer" />
       <v-main class="homefone main-content">
         <v-container>
           <component :is="layout">
@@ -44,34 +44,32 @@ export default {
       return `${this.$route.meta?.layout || 'default'}-layout`;
     },
     ...mapState('onlineCourses', ['uploadDialog']),
-    ...mapState('user', ['user']),
+    ...mapState('users', ['user']),
     baseUrl() {
-      return process.env.BASE_URL
+      return process.env.BASE_URL;
       // return process.env.VUE_APP_API_URL
-    }
+    },
   },
 
   methods: {
     redirect() {
       let redirectPath = localStorage.getItem('redirectPath');
       localStorage.removeItem('redirectPath');
-      if (!redirectPath) redirectPath = '/'
-      if (this.$route.path !== redirectPath) this.$router.push(redirectPath)
-
-    }
+      if (!redirectPath) redirectPath = '/';
+      if (this.$route.path !== redirectPath) this.$router.push(redirectPath);
+    },
   },
   created() {
     this.$store.dispatch('shop/STORE_INIT');
-    
+
     const arr = this.$route?.redirectedFrom?.split('/');
     const hash = arr?.length ? arr[arr.length - 1] : '0';
-    this.$store.dispatch('user/GET_USER', hash); 
-
+    this.$store.dispatch('users/GET_USER', hash);
   },
   mounted() {
     // this.redirect()
-    setTimeout(this.redirect, 500)
-  }
+    setTimeout(this.redirect, 500);
+  },
 };
 </script>
 

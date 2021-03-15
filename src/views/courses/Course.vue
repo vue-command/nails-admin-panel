@@ -14,14 +14,7 @@
         v-if="!loading && course && !editing"
         class="d-flex flex-column align-center flex-sm-row justify-sm-center my-8"
       >
-        <v-btn
-          @click="goToVideos"
-          color="buttons"
-          rounded
-          large
-          dark
-          min-width="160"
-          class="yellow-button mr-4"
+        <v-btn @click="goToVideos" color="buttons" rounded large dark min-width="160" class="yellow-button mr-4"
           >Videos</v-btn
         >
         <v-btn
@@ -42,7 +35,7 @@
           large
           dark
           min-width="160"
-          class="yellow-button  ml-4"
+          class="yellow-button ml-4"
           >{{ course.isPublished ? 'unpublish' : 'publish' }}</v-btn
         >
       </div>
@@ -59,7 +52,6 @@ import Spinner from '@/components/Spinner.vue';
 import OnlineForm from '@/components/forms/OnlineForm.vue';
 
 const schema = require('@/config/editOnlineCourseSchema').default;
-
 
 export default {
   name: 'Course',
@@ -79,12 +71,12 @@ export default {
   },
   computed: {
     ...mapState(['loading']),
-    ...mapState('user',['user']),
+    ...mapState('users', ['user']),
     ...mapState('onlineCourses', ['courses', 'course', 'total']),
     courseUpdate() {
-      return Object.assign({}, this.course, this.courseData)
+      return Object.assign({}, this.course, this.courseData);
     },
-     lessonsCounter() {
+    lessonsCounter() {
       return this?.course?.videos?.length ?? 0;
     },
   },

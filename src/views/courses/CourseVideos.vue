@@ -36,7 +36,7 @@
         </v-row>
       </v-col>
     </v-row>
-     <confirmDelete :dialog.sync="dialog" :confirmDelete="confirmDelete" title="video"/>
+    <confirmDelete :dialog.sync="dialog" :confirmDelete="confirmDelete" title="video" />
   </v-container>
 </template>
 
@@ -51,7 +51,7 @@ export default {
     Spinner,
     VideoCard: () => import('@/components/courses/VideoCard.vue'),
     AddVideoForm: () => import('@/components/forms/AddVideoForm.vue'),
-    confirmDelete: () => import('@/components/popups/confirmDelete.vue')
+    confirmDelete: () => import('@/components/popups/confirmDelete.vue'),
   },
   data() {
     return {
@@ -62,7 +62,7 @@ export default {
   },
   computed: {
     ...mapState(['loading']),
-    ...mapState('user', ['user']),
+    ...mapState('users', ['user']),
     ...mapState('onlineCourses', ['course']),
     videos() {
       return this.course?.videos ?? [];

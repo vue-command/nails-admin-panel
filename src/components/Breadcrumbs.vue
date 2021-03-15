@@ -32,16 +32,12 @@ export default {
   },
   computed: {
     ...mapState('onlineCourses', ['course', 'video']),
-    ...mapState('auth', ['user']),
-    ...mapState('offlineCourses', {offlineCourse:'course'}),
+    ...mapState('offlineCourses', { offlineCourse: 'course' }),
     courseId() {
       return this.$route.params.courseid ?? '';
     },
     lessonId() {
       return this.$route.params.lessonid ?? '';
-    },
-    userName() {
-      return this?.user?.firstName ?? '';
     },
     courseName() {
       return this?.course?.nameOfCourse ?? '';
