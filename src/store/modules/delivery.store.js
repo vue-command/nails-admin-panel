@@ -8,16 +8,11 @@ const state = {
   prices: [],
 };
 const getters = {
-  countries: state => state.prices.filter(item => item.price === 0),
+  countries: state => state.prices.filter(item => item.type === 'international' && item.price === 0),
+  pickup: state => state.prices.find(item => item.type === 'pickup'),
   express: state => state.prices.find(item => item.type === 'express'),
   standard: state => state.prices.find(item => item.type === 'standard'),
-  internationals: state =>
-    state.prices.filter(item => {
-      if (item.type === 'express') return false;
-      if (item.type === 'standard') return false;
-      if (item.price === 0) return false;
-      return true;
-    }),
+  internationals: state => state.prices.filter(item => item.type === 'international' && item.price !== 0),
 };
 const mutations = {
   PRICES: (state, payload) => {
