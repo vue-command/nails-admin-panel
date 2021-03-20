@@ -49,10 +49,6 @@ export default {
       limit: 250,
       required: true,
     },
-    dateOfCourses: {
-      label: 'Date of course',
-      type: 'dateCourse',
-    },
   },
   sideRight: {
     thisCourseIsSuitableFor: {
@@ -74,6 +70,12 @@ export default {
       accept: 'image/png, image/jpeg, image/bmp',
       size: 10000,
       required: false,
+    },
+  },
+  bottom: {
+    dateOfCourses: {
+      label: 'Date of course',
+      type: 'dateCourse',
     },
   },
 };

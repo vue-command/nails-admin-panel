@@ -14,8 +14,8 @@
         v-if="!loading && course && !editing"
         class="d-flex flex-column align-center flex-sm-row justify-sm-center my-8"
       >
-        <v-btn @click="goToVideos" color="buttons" rounded large dark min-width="160" class="yellow-button mr-4"
-          >Videos</v-btn
+        <v-btn @click="goTo('online-course-lessons')" color="buttons" rounded large dark min-width="160" class="yellow-button mr-4"
+          >Lessons</v-btn
         >
         <v-btn
           @click="fillingForm"
@@ -29,7 +29,7 @@
         >
         <v-btn
           @click="() => publish({ id: course._id, publish: !course.isPublished })"
-          :disabled="!course.isPaid || !lessonsCounter"
+          :disabled="(!course.isPaid || !lessonsCounter) && !course.isPublished"
           color="buttons"
           rounded
           large
@@ -121,10 +121,8 @@ export default {
         });
       }
     },
-    goToVideos() {
-      if (this.$route.name !== 'online-course-videos') {
-        this.$router.push({ name: 'online-course-videos' });
-      }
+    goTo(name) {
+        this.$router.push({ name });
     },
   },
   created() {

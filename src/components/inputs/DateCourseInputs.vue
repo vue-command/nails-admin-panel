@@ -1,36 +1,14 @@
 <template>
   <div>
     <p>{{ label }}</p>
-    <div
-      v-for="(textField, i) in localValue"
-      :key="i"
-      class="d-flex input-container"
-    >
-    <v-row>
-      <v-col cols="8">
-      <TextInput
-        label="Date"
-        :value.sync="localValue[i].date"
-        :limit="35"
-        :required="true"
-        
-      />
-      </v-col>
-      <v-col cols="4">
-      <NumberInput
-        label="Available of spots"
-        :value.sync="localValue[i].availableSpots"
-        :limit="3"
-        :required="true"
-      />
-      </v-col>
-    </v-row>
-      <v-btn @click="removeField(i)" v-if="localValue.length > 1" class="remove">
+    <div v-for="(textField, i) in localValue" :key="i" class="d-flex input-container">
+      <DateCourseInput label="Available of spots" :value.sync="localValue[i]" :limit="3" :required="true" />
+      <v-btn icon large @click="removeField(i)" v-if="localValue.length > 1">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </div>
     <div v-if="localValue.length < 5" class="d-flex justify-end mb-8">
-      <v-btn @click="addField">
+      <v-btn large icon @click="addField">
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </div>
@@ -38,8 +16,7 @@
 </template>
 
 <script>
-import TextInput from '@/components/inputs/TextInput.vue';
-import NumberInput from '@/components/inputs/NumberInput.vue';
+import DateCourseInput from '@/components/inputs/DateCourseInput.vue';
 
 export default {
   name: 'DateCourseInputs',
@@ -54,8 +31,7 @@ export default {
     },
   },
   components: {
-    TextInput,
-    NumberInput,
+    DateCourseInput,
   },
   data() {
     return {};
@@ -70,8 +46,7 @@ export default {
       },
     },
   },
-  watch: {
-  },
+  watch: {},
   methods: {
     addField() {
       this.localValue.push({
@@ -86,5 +61,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

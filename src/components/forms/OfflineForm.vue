@@ -71,6 +71,18 @@
           </div>
         </div>
       </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
+        <div v-for="(field, name) in schema.bottom" :key="name">
+          <DateCourseInputs
+            v-if="field.type === 'dateCourse'"
+            :value.sync="data[name]"
+            :label="field.label"
+            :required="field.required"
+          />
+        </div>
+      </v-col>
       <v-col cols="12" xs="12">
         <div class="d-flex justify-center">
           <v-btn
@@ -138,24 +150,27 @@ export default {
   },
   data() {
     return {
-      data: Object.keys({ ...this.schema.sideLeft, ...this.schema.sideRight }).reduce((acc, key) => {
-        const obj = { [key]: '' };
-        if (this.schema.sideLeft[key]?.type === 'suitable' || this.schema.sideRight[key]?.type === 'suitable') {
-          obj[key] = [''];
-        }
-        if (this.schema.sideLeft[key]?.type === 'dateCourse' || this.schema.sideRight[key]?.type === 'dateCourse') {
-          obj[key] = [
-            {
-              date: '',
-              availableSpots: '',
-            },
-          ];
-        }
-        if (this.schema.sideLeft[key]?.type === 'file' || this.schema.sideRight[key]?.type === 'file') {
-          obj[key] = null;
-        }
-        return Object.assign(acc, obj);
-      }, {}),
+      data: Object.keys({ ...this.schema.sideLeft, ...this.schema.sideRight, ...this.schema.bottom }).reduce(
+        (acc, key) => {
+          const obj = { [key]: '' };
+          if (this.schema.sideRight[key]?.type === 'suitable') {
+            obj[key] = [''];
+          }
+          if (this.schema.bottom[key]?.type === 'dateCourse') {
+            obj[key] = [
+              {
+                date: '',
+                availableSpots: '',
+              },
+            ];
+          }
+          if (this.schema.sideRight[key]?.type === 'file') {
+            obj[key] = null;
+          }
+          return Object.assign(acc, obj);
+        },
+        {}
+      ),
     };
   },
   watch: {

@@ -6,7 +6,8 @@
     :prepend-icon="icon"
     :prepend-inner-icon="innerIcon"
     :rules="[rules.required, rules.limit, rules.noRepeat]"
-    outlined
+    :readonly="readonly"
+    :outlined="outlined"
   />
 </template>
 
@@ -46,6 +47,14 @@ export default {
       type: String,
       default: '',
     },
+    readonly: {
+      type: Boolean,
+      default: false
+    },
+    outlined:{
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     return {

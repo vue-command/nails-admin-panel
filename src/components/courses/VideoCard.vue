@@ -13,7 +13,7 @@
       </h2>
       <CoverImage :url="linkCheck(video)" />
       <v-card-actions class="d-flex justify-end pa-4">
-        <v-btn rounded color="buttons"  class="yellow-button pa-4" @click.stop="removeHandler"
+        <v-btn rounded color="buttons" :disabled="published" class="yellow-button pa-4" @click.stop="removeHandler"
           >Delete</v-btn
         >
       </v-card-actions>
@@ -43,6 +43,10 @@ export default {
       type: String,
       default: '300',
     },
+    published:{
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     CoverImage,

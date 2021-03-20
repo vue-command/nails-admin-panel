@@ -102,25 +102,25 @@ const routes = [
   },
   {
     path: '/online-courses/:courseid/videos',
-    name: 'online-course-videos',
+    name: 'online-course-lessons',
     meta: {
       layout: 'courses',
     },
     component: () =>
       import(
-        /* webpackChunkName: "online-course-videos" */
+        /* webpackChunkName: "online-course-lessons" */
         '@/views/courses/CourseVideos.vue'
       ),
   },
   {
     path: '/online-courses/:courseid/videos/:lessonid',
-    name: 'online-course-video',
+    name: 'online-course-lesson',
     meta: {
       layout: 'courses',
     },
     component: () =>
       import(
-        /* webpackChunkName: "online-course-video" */
+        /* webpackChunkName: "online-course-lesson" */
         '@/views/courses/CourseVideoDetail.vue'
       ),
   },

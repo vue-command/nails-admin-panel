@@ -35,14 +35,14 @@ export function breadcrumbsFactory() {
         id: 24,
         parentId: 23,
         path: `/online-courses/${this.courseId}/videos`,
-        name: 'online-course-videos',
-        text: `Online course videos`,
+        name: 'online-course-lessons',
+        text: `Online course lessons`,
       },
       {
         id: 25,
         parentId: 24,
         path: `/online-courses/${this.courseId}/videos/${this.lessonId}`,
-        name: 'online-course-video',
+        name: 'online-course-lesson',
         text: `${this.lessonName}`,
       },
       //! Offline courses

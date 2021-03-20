@@ -17,6 +17,7 @@
           :goToDetailVideo="goToDetailVideo"
           :video="video"
           :removeVideo="removeVideo"
+          :published="course.isPublished"
         />
       </v-col>
 
@@ -73,9 +74,6 @@ export default {
     showBtnAddVideo() {
       return !this.showForm && this.videos.length < 5;
     },
-    // isAdmin() {
-    //   return this.course?.idUser === this.user._id;
-    // },
   },
   watch: {},
   methods: {
@@ -96,7 +94,7 @@ export default {
     },
     goToDetailVideo(id) {
       this.$router.push({
-        name: 'online-course-video',
+        name: 'online-course-lesson',
         params: {
           lessonid: id,
         },
