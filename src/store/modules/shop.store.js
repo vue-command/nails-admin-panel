@@ -115,7 +115,6 @@ const actions = {
     const { commodities, total, error } = await getData(
       `${commoditiesEndpoints.search}?query=${state.searchParams}&skip=${state.skip}&withHidden=${state.filterShow}`
     );
-    console.log(commodities);
     if (!error) {
       commit('SHOP_COMMODITIES', { commodities, total });
     } else {
@@ -187,7 +186,6 @@ const actions = {
     state.isCommodityLoading = true;
     const formData = getFormData(form);
     const { data, error } = await postData(commoditiesEndpoints.newCommodity, formData);
-    console.log('data', data);
     if (!error) {
       commit('ADD_NEW_COMMODITY', {
         data,

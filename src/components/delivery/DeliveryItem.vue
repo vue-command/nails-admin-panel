@@ -26,9 +26,7 @@ export default {
       default: false,
     },
   },
-  mounted() {
-    console.log(this.international);
-  },
+  mounted() {},
 };
 </script>
 

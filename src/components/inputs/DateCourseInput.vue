@@ -89,9 +89,6 @@ export default {
     },
   },
   methods: {
-    validate() {
-      console.log('text validare');
-    },
     send() {
       if (!this.ready) return;
       this.localValue = {

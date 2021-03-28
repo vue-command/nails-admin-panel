@@ -1,22 +1,30 @@
 <template>
-  <v-container></v-container>
+  <v-data-table
+    item-key="name"
+    class="elevation-1"
+    :loading="true"
+    loading-text="Loading... Please wait"
+  ></v-data-table>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+
 export default {
   name: 'CommodityOrders',
-  props: {
-    data: {
-      type: Array,
-      requared: true,
-    },
-  },
   components: {},
   data() {
     return {};
   },
-  computed: {},
-  methods: {},
-  mounted() {},
+  computed: {
+    ...mapState('orders', ['commodityOrders']),
+    ...mapState('users', ['users']),
+  },
+  methods: {
+    ...mapActions('orders', { getOrders: 'GET_ORDERS' }),
+  },
+  mounted() {
+    this.getOrders('commodity');
+  },
 };
 </script>

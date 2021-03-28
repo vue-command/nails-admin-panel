@@ -2,17 +2,24 @@
   <v-container>
     <v-row class="">
       <v-col cols="12" class="">
-        <v-select v-model="type" :items="types" label="Type" outlined></v-select>
-        <OnlineOrders v-if="type === 'online'" :data="extendOnlineOrders" />
-        <OfflineOrders v-if="type === 'offline'" :data="offlineOrders" />
-        <CommodityOrders v-if="type === 'commodity'" :data="commodityOrders" />
+        <v-card flat class="mb-8">
+          <v-card-actions class="justify-center">
+            <v-btn @click="type = 'commodity'" :class="{ active: type === 'commodity' }">Commodity</v-btn>
+            <v-btn @click="type = 'online'" :class="{ active: type === 'online' }" class="mx-12">Online</v-btn>
+            <v-btn @click="type = 'offline'" :class="{ active: type === 'offline' }" class="ml-0">Offline</v-btn>
+          </v-card-actions>
+        </v-card>
+
+        <CommodityOrders v-if="type === 'commodity'" />
+        <OnlineOrders v-if="type === 'online'" />
+        <OfflineOrders v-if="type === 'offline'" />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'Orders',
@@ -24,7 +31,6 @@ export default {
   data() {
     return {
       type: 'commodity',
-      types: ['commodity', 'online', 'offline'],
     };
   },
   computed: {
@@ -36,17 +42,9 @@ export default {
       );
     },
   },
-  watch: {
-    type(type) {
-      this.getOrders(type);
-    },
-  },
-  methods: {
-    ...mapActions('orders', { getOrders: 'GET_ORDERS' }),
-  },
-  mounted() {
-    this.getOrders(this.type);
-  },
+  watch: {},
+  methods: {},
+  mounted() {},
 };
 </script>
 
