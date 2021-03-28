@@ -4,6 +4,7 @@
     <router-view />
   </v-container>
 </template>
+
 <script>
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 

@@ -6,7 +6,9 @@
 
         <v-toolbar-title><a class="white--text" :href="baseUrl">Nails AUSTRALIA</a></v-toolbar-title>
       </v-app-bar>
+
       <NavigationDrawer :drawer.sync="drawer" />
+
       <v-main class="homefone main-content">
         <v-container>
           <component :is="layout">
@@ -14,10 +16,12 @@
           </component>
         </v-container>
       </v-main>
+
       <UploadFiles v-if="uploadDialog" />
       <error-message />
       <simple-message />
     </div>
+    
     <h2 v-else class="text-center">User does not found</h2>
   </v-app>
 </template>
@@ -67,7 +71,6 @@ export default {
     this.$store.dispatch('users/GET_USER', hash);
   },
   mounted() {
-    // this.redirect()
     setTimeout(this.redirect, 500);
   },
 };

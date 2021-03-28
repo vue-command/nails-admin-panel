@@ -33,6 +33,7 @@ export default {
   computed: {
     ...mapState('onlineCourses', ['course', 'video']),
     ...mapState('offlineCourses', { offlineCourse: 'course' }),
+    ...mapState('shop', ['fullListOfCategories', 'commodity', 'categories', 'isCommodityLoading']),
     courseId() {
       return this.$route.params.courseid ?? '';
     },
@@ -51,12 +52,15 @@ export default {
     lessonName() {
       return this?.video?.name ?? '';
     },
+    commodityName() {
+      if(this.$route.params.commodityId == 'new') return  'New commodity';
+      return this?.commodity?.name ?? '';
+    },
     routeName() {
       return this.$route.name;
     },
     show() {
-      const paths = ['online-courses', 'offline-courses'];
-      return paths.some(path => this.$route.path.includes(path));
+      return this.$route.name !== 'home'
     },
     items() {
       return this.breadcrumbs.map((route, index) => Object.assign({ disabled: index === 0 }, route)).reverse();

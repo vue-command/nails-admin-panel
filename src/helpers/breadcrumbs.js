@@ -6,7 +6,7 @@ export function breadcrumbsFactory() {
         id: 0,
         parentId: null,
         path: '/',
-        name: 'Home',
+        name: 'home',
         text: `Home`,
       },
       //! Online courses
@@ -66,6 +66,60 @@ export function breadcrumbsFactory() {
         path: `/courses-offline/${this.courseId}`,
         name: 'offline-course',
         text: `${this.offlineCourseName}`,
+      },
+      //! Users
+      {
+        id: 40,
+        parentId: 0,
+        path: '/users',
+        name: 'users',
+        text: `Users`,
+      },
+      //! Orders
+      {
+        id: 50,
+        parentId: 0,
+        path: '/orders',
+        name: 'orders',
+        text: `Orders`,
+      },
+      //! Delivery
+      {
+        id: 50,
+        parentId: 0,
+        path: '/delivery',
+        name: 'delivery',
+        text: `Delivery`,
+      },
+      //! Shop
+      {
+        id: 60,
+        parentId: 0,
+        path: '/shop',
+        name: 'shop',
+        text: `Shop`,
+      },
+      {
+        id: 61,
+        parentId: 60,
+        path: '/shop',
+        name: 'shop',
+        text: `Commodity`,
+      },
+      {
+        id: 62,
+        parentId: 61,
+        path: '/shop/commodity/new',
+        name: 'commodity-edit',
+        text: this.commodityName,
+      },
+      //! Categories
+      {
+        id: 70,
+        parentId: 0,
+        path: '/categories',
+        name: 'categories',
+        text: `Categories`,
       },
     ];
 

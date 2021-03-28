@@ -2,7 +2,7 @@
   <v-navigation-drawer v-model="localDrawer" absolute temporary>
     <v-list nav dense>
       <v-list-item-group v-model="group" active-class="red--text text--accent-4">
-        <v-list-item @click="goTo('Home')">
+        <v-list-item @click="goTo('home')">
           <v-list-item-icon>
             <v-icon>mdi-home</v-icon>
           </v-list-item-icon>

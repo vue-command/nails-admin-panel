@@ -6,7 +6,7 @@
       The page you are looking for does not exist. How you got here is a mystery. But you can click the button below to
       go back to the homepage.
     </p>
-    <v-btn @click="$router.push({ name: 'Home' })" color="buttons" rounded large >HOME Page</v-btn>
+    <v-btn @click="$router.push({ name: 'home' })" color="buttons" rounded large >HOME Page</v-btn>
   </div>
 </template>
 <style scoped>
