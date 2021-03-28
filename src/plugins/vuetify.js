@@ -11,6 +11,7 @@ export default new Vuetify({
     values: {
       expand: 'mdi-expand-more',
       home: 'mdi-home-circle',
+      home2: 'mdi-home',
       back: 'mdi-arrow-left',
       onlineCourse: 'mdi-laptop',
       // onlineCourse: 'mdi-cast-education',

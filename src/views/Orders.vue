@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <v-row class="">
-      <v-col cols="12" class="">
+    <!-- <v-row class="">
+      <v-col cols="12" class=""> -->
         <v-card flat class="mb-8">
           <v-card-actions class="justify-center">
             <v-btn @click="type = 'commodity'" :class="{ active: type === 'commodity' }">Commodity</v-btn>
@@ -13,8 +13,8 @@
         <CommodityOrders v-if="type === 'commodity'" />
         <OnlineOrders v-if="type === 'online'" />
         <OfflineOrders v-if="type === 'offline'" />
-      </v-col>
-    </v-row>
+      <!-- </v-col>
+    </v-row> -->
   </v-container>
 </template>
 
@@ -48,4 +48,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.active {
+  background-color: #ffc44a !important;
+}
+</style>

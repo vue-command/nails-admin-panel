@@ -7,7 +7,7 @@
             <v-breadcrumbs-item :disabled="item.disabled">
               <router-link
                 :to="item.path"
-                class="uppercase"
+                class="uppercase orange--text"
                 :class="{ 'disabledPathBreadcrumbs--text': item.disabled }"
               >
                 {{ item.text }}

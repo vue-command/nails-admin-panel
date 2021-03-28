@@ -1,61 +1,12 @@
 <template>
   <v-navigation-drawer v-model="localDrawer" absolute temporary>
     <v-list nav dense>
-      <v-list-item-group v-model="group" active-class="red--text text--accent-4">
-        <v-list-item @click="goTo('home')">
+      <v-list-item-group v-model="group" active-class="orange--text text--accent-4">
+        <v-list-item v-for="item in schema" :key="item.name" @click="goTo(item.name)">
           <v-list-item-icon>
-            <v-icon>mdi-home</v-icon>
+            <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>Home</v-list-item-title>
-        </v-list-item>
-
-        <v-list-item @click="goTo('offline-courses')">
-          <v-list-item-icon>
-            <v-icon>$offlineCourse</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Offline courses</v-list-item-title>
-        </v-list-item>
-
-        <v-list-item @click="goTo('online-courses')">
-          <v-list-item-icon>
-            <v-icon>$onlineCourse</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Online courses</v-list-item-title>
-        </v-list-item>
-
-        <v-list-item @click="goTo('shop')">
-          <v-list-item-icon>
-            <v-icon>$shop</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Shop</v-list-item-title>
-        </v-list-item>
-
-        <v-list-item @click="goTo('categories')">
-          <v-list-item-icon>
-            <v-icon>$shopCategories</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Shop categories</v-list-item-title>
-        </v-list-item>
-
-        <v-list-item @click="goTo('delivery')">
-          <v-list-item-icon>
-            <v-icon>$deliveryPrices</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Delivery prices</v-list-item-title>
-        </v-list-item>
-
-        <v-list-item @click="goTo('orders')">
-          <v-list-item-icon>
-            <v-icon>$orders</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Orders</v-list-item-title>
-        </v-list-item>
-
-        <v-list-item @click="goTo('users')">
-          <v-list-item-icon>
-            <v-icon>$users</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Users</v-list-item-title>
+          <v-list-item-title>{{ item.text }}</v-list-item-title>
         </v-list-item>
       </v-list-item-group>
     </v-list>
@@ -74,6 +25,7 @@ export default {
   data() {
     return {
       group: null,
+      schema: require('@/config/navigationDrawer').default,
     };
   },
   computed: {
@@ -90,14 +42,20 @@ export default {
     group() {
       this.localDrawer = false;
     },
+    $route() {
+      this.setIndex();
+    },
   },
   methods: {
     goTo(name) {
       if (this.$route.name !== name) this.$router.push({ name });
     },
+    setIndex() {
+      this.group = this.schema.findIndex(item => item.name === this.$route.name);
+    },
+  },
+  mounted() {
+    this.setIndex();
   },
 };
 </script>
-
-<style>
-</style>
