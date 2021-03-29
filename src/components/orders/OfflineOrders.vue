@@ -29,7 +29,7 @@ export default {
     ...mapActions('orders', { getOrders: 'GET_ORDERS' }),
   },
   mounted() {
-    this.getOrders('online');
+    this.getOrders('offline');
   },
 };
 </script>

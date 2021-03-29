@@ -1,20 +1,16 @@
 <template>
   <v-container>
-    <!-- <v-row class="">
-      <v-col cols="12" class=""> -->
-        <v-card flat class="mb-8">
-          <v-card-actions class="justify-center">
-            <v-btn @click="type = 'commodity'" :class="{ active: type === 'commodity' }">Commodity</v-btn>
-            <v-btn @click="type = 'online'" :class="{ active: type === 'online' }" class="mx-12">Online</v-btn>
-            <v-btn @click="type = 'offline'" :class="{ active: type === 'offline' }" class="ml-0">Offline</v-btn>
-          </v-card-actions>
-        </v-card>
+    <v-card flat class="mb-8">
+      <v-card-actions class="justify-center">
+        <v-btn @click="type = 'commodity'" :class="{ active: type === 'commodity' }">Commodity</v-btn>
+        <v-btn @click="type = 'online'" :class="{ active: type === 'online' }" class="mx-12">Online</v-btn>
+        <v-btn @click="type = 'offline'" :class="{ active: type === 'offline' }" class="ml-0">Offline</v-btn>
+      </v-card-actions>
+    </v-card>
 
-        <CommodityOrders v-if="type === 'commodity'" />
-        <OnlineOrders v-if="type === 'online'" />
-        <OfflineOrders v-if="type === 'offline'" />
-      <!-- </v-col>
-    </v-row> -->
+    <CommodityOrders v-if="type === 'commodity'" />
+    <OnlineOrders v-if="type === 'online'" />
+    <OfflineOrders v-if="type === 'offline'" />
   </v-container>
 </template>
 

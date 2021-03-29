@@ -1,10 +1,25 @@
 <template>
-  <v-data-table
-    item-key="name"
-    class="elevation-1"
-    :loading="true"
-    loading-text="Loading... Please wait"
-  ></v-data-table>
+  <v-container>
+    <v-data-table
+      :headers="headers"
+      :items="data"
+      multi-sort
+      :sort-by="['formatDate']"
+      :sort-desc="[true]"
+      show-expand
+      single-expand
+      item-key="numberOfOrder"
+      class="elevation-1"
+    >
+      <template v-slot:[`item.createdAt`]="{ item }">
+        {{ formatDate(item.createdAt) }}
+      </template>
+
+      <template v-slot:expanded-item="{ item }">
+        <CommodityOrderItem :order="item" />
+      </template>
+    </v-data-table>
+  </v-container>
 </template>
 
 <script>
@@ -12,16 +27,44 @@ import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'CommodityOrders',
-  components: {},
+  components: {
+    CommodityOrderItem: () => import('@/components/orders/CommodityOrderItem.vue'),
+  },
   data() {
-    return {};
+    return {
+      headers: [
+        { text: 'Date', value: 'createdAt' },
+        { text: 'Price ($)', value: 'totalPrice' },
+        { text: 'User name', value: 'userName' },
+        { text: 'Status', value: 'status' },
+        { text: 'Delivery type', value: 'deliveryType' },
+        { text: 'Number of order', value: 'numberOfOrder', sortable: false },
+        { text: '', value: 'data-table-expand' },
+      ],
+    };
   },
   computed: {
     ...mapState('orders', ['commodityOrders']),
     ...mapState('users', ['users']),
+    data() {
+      return this.commodityOrders.map(order =>
+        Object.assign(
+          {
+            totalPrice: order.cart.reduce((total, item) => total + item.price * (item.purchasedAmount ?? 1), 0),
+            userName: order.paymentInfo.userName,
+            deliveryType: order.paymentInfo.deliveryType.type,
+          },
+          order
+        )
+      );
+    },
   },
   methods: {
     ...mapActions('orders', { getOrders: 'GET_ORDERS' }),
+    formatDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString();
+    },
   },
   mounted() {
     this.getOrders('commodity');
