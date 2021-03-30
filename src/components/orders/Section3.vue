@@ -1,9 +1,9 @@
 <template>
   <v-card flat class="transparent">
     <v-card-title>Current status: {{ status }}</v-card-title>
-    <v-select v-model="select" :items="items" item-text="text" item-value="value" label="Change status" outlined>
+    <v-select v-model="select" :items="items" item-text="text" item-value="value" label="Change status" outlined dense>
     </v-select>
-    <v-text-field v-if="select === 'sent'" v-model="trackingNumber" label="Tracking Number" outlined />
+    <v-text-field v-if="select === 'sent'" v-model="trackingNumber" label="Tracking Number" outlined dense />
     <v-card-actions class="justify-center">
       <v-btn @click="select = ''">cancel</v-btn>
       <v-btn :disabled="!validationSubmit" @click="submit">submit</v-btn>
