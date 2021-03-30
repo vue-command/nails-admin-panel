@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-data-table
       :headers="headers"
       :items="data"
@@ -15,8 +15,10 @@
         {{ formatDate(item.createdAt) }}
       </template>
 
-      <template v-slot:expanded-item="{ item }">
-        <CommodityOrderItem :order="item" />
+      <template v-slot:expanded-item="{ headers, item }">
+        <td :colspan="headers.length" class="pa-4">
+          <CommodityOrderItem :order="item" @changeStatus="putCommodityOrder" />
+        </td>
       </template>
     </v-data-table>
   </v-container>
@@ -39,6 +41,7 @@ export default {
         { text: 'Status', value: 'status' },
         { text: 'Delivery type', value: 'deliveryType' },
         { text: 'Number of order', value: 'numberOfOrder', sortable: false },
+        { text: 'Tracking number', value: 'trackingNumber', sortable: false },
         { text: '', value: 'data-table-expand' },
       ],
     };
@@ -60,7 +63,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('orders', { getOrders: 'GET_ORDERS' }),
+    ...mapActions('orders', { getOrders: 'GET_ORDERS', putCommodityOrder: 'PUT_COMMODITY_ORDER' }),
     formatDate(dateStr) {
       const date = new Date(dateStr);
       return date.toLocaleDateString();

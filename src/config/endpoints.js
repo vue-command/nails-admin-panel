@@ -5,6 +5,7 @@ export default {
   },
   orders: {
     get: 'order',
+    patch: 'order'
   },
   offline: {
     get: 'course/offline',

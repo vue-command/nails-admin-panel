@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-card flat class="mb-8">
       <v-card-actions class="justify-center">
         <v-btn @click="type = 'commodity'" :class="{ active: type === 'commodity' }">Commodity</v-btn>

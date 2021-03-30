@@ -10,11 +10,9 @@
       <NavigationDrawer :drawer.sync="drawer" />
 
       <v-main class="homefone main-content">
-        <v-container>
           <component :is="layout">
             <!-- <router-view /> -->
           </component>
-        </v-container>
       </v-main>
 
       <UploadFiles v-if="uploadDialog" />

@@ -9,7 +9,6 @@ export default new Vuetify({
   icons: {
     iconfont: 'mdi',
     values: {
-      expand: 'mdi-expand-more',
       home: 'mdi-home-circle',
       home2: 'mdi-home',
       back: 'mdi-arrow-left',
