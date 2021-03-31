@@ -7,10 +7,14 @@
       :sort-by="['formatDate']"
       :sort-desc="[true]"
       show-expand
+      :search="search"
       single-expand
       item-key="numberOfOrder"
       class="elevation-1"
     >
+      <template v-slot:top>
+        <v-text-field v-model="search" label="Search" class="mx-4"></v-text-field>
+      </template>
       <template v-slot:[`item.createdAt`]="{ item }">
         {{ formatDate(item.createdAt) }}
       </template>
@@ -34,6 +38,7 @@ export default {
   },
   data() {
     return {
+      search: '',
       headers: [
         { text: 'Date', value: 'createdAt' },
         { text: 'Price ($)', value: 'totalPrice' },

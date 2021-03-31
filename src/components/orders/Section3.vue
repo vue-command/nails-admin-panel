@@ -47,14 +47,9 @@ export default {
       select: '',
       trackingNumber: '',
       items: [
-        // { text: 'Created', value: 'created' },
-        // { text: 'Processing', value: 'processing' },
+        { text: 'Processed', value: 'processed' },
         { text: 'Sent', value: 'sent' },
-        { text: 'newStatus', value: 'newStatus' },
-        { text: 'newStatus2', value: 'newStatus2' },
-        { text: 'newStatus3', value: 'newStatus3' },
-        // { text: 'California', value: 'CA' },
-        // { text: 'New York', value: 'NY' },
+        { text: 'Delivered', value: 'delivered' },
       ],
     };
   },
