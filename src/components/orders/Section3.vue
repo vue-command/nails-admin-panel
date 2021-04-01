@@ -19,7 +19,7 @@
             </tr>
             <tr v-for="item in statusHistory" :key="item.date">
               <td>{{ item.status }}</td>
-              <td>{{ formatDate(item.data) }}</td>
+              <td>{{ formatDate(item.date) }}</td>
             </tr>
           </table>
         </v-expansion-panel-content>
