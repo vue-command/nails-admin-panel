@@ -40,7 +40,7 @@ export default {
   methods: {
     changeStatus(data) {
       const history = [...this.order.statusHistory];
-      history.push({ status: data.status, data: `${Date.now()}` });
+      history.push({ status: data.status, date: `${Date.now()}` });
       data.statusHistory = history
       const payload = {
         id: this.order._id,
