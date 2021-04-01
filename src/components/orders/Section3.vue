@@ -5,7 +5,7 @@
     </v-select>
     <v-text-field v-if="select === 'sent'" v-model="trackingNumber" label="Tracking Number" outlined dense />
     <v-card-actions class="justify-center">
-      <v-btn @click="select = ''">cancel</v-btn>
+      <v-btn @click="clear">clear</v-btn>
       <v-btn :disabled="!validationSubmit" @click="submit">submit</v-btn>
     </v-card-actions>
     <v-expansion-panels>
@@ -61,12 +61,17 @@ export default {
     },
   },
   methods: {
+    clear() {
+      this.select = '';
+      this.trackingNumber = '';
+    },
     submit() {
       const data = {
         status: this.select,
       };
       if (this.trackingNumber) data.trackingNumber = this.trackingNumber;
       this.$emit('changeStatus', data);
+      this.clear();
     },
     formatDate(dateStr) {
       const date = new Date(Number(dateStr));

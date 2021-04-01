@@ -1,6 +1,7 @@
 <template>
   <v-card flat class="transparent">
-    <table class="payment-info">
+    <h4 class="text-center py-4">Payment information</h4>
+    <table class="payment-info mb-4">
       <tr>
         <th>User Name</th>
         <td class="text-start">{{ paymentInfo.userName }}</td>
@@ -20,7 +21,7 @@
     </table>
     <v-expansion-panels>
       <v-expansion-panel>
-        <v-expansion-panel-header> <h4>User info</h4> </v-expansion-panel-header>
+        <v-expansion-panel-header> <h4>User information</h4> </v-expansion-panel-header>
         <v-expansion-panel-content>
           <table class="payment-info">
             <tr>
@@ -74,6 +75,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .payment-info {
+  border: 1px solid #000;
   width: 100%;
   & th,
   td {

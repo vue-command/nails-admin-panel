@@ -1,5 +1,6 @@
 <template>
   <v-card flat class="transparent">
+    <h4 class="text-center py-4">Product purchased information</h4>
     <table class="commodities-info">
       <tr>
         <th>Brand</th>
@@ -14,10 +15,17 @@
         <td>{{ item.price }}</td>
       </tr>
     </table>
-
-    <v-card-text flat v-if="delivery.type === 'pickup'" class="pickup-info text-center">
-      <h4 class="text-uppercase font-weight-black">Pickup</h4>
-    </v-card-text>
+    <h4 class="text-center py-4">Delivery information</h4>
+    <table v-if="delivery.type === 'pickup'" class="delivery-info">
+      <tr>
+        <th>type</th>
+        <th>Price</th>
+      </tr>
+      <tr>
+        <td>{{ delivery.type }}</td>
+        <td>{{ delivery.price }}</td>
+      </tr>
+    </table>
 
     <table v-if="delivery.type === 'express' || delivery.type === 'standard'" class="delivery-info">
       <tr>
@@ -25,12 +33,12 @@
         <th>Price</th>
       </tr>
       <tr>
-        <td class="text-start">{{ delivery.type }}</td>
+        <td>{{ delivery.type }}</td>
         <td>{{ delivery.price }}</td>
       </tr>
     </table>
 
-    <table v-if="delivery.type !== 'international'" class="delivery-info">
+    <table v-if="delivery.type === 'international'" class="delivery-info">
       <tr>
         <th>type</th>
         <th>Country</th>
@@ -42,8 +50,8 @@
         <td>{{ delivery.price }}</td>
       </tr>
     </table>
-      <v-card-text flat class="pickup-info text-center">
-      <h4 class="text-uppercase font-weight-black">Total cost : {{totalCost}}</h4>
+    <v-card-text flat class="pickup-info text-center">
+      <h4 class="text-uppercase font-weight-black">Total cost : {{ totalCost }}</h4>
     </v-card-text>
   </v-card>
 </template>
@@ -67,14 +75,18 @@ export default {
   },
   computed: {
     totalCost() {
-      return this.commodities.reduce((acc, curr) => acc + curr.price* curr.purchasedAmount,0) + this.delivery.price
-    }
+      return this.commodities.reduce((acc, curr) => acc + curr.price * curr.purchasedAmount, 0) + this.delivery.price;
+    },
   },
   methods: {},
   mounted() {},
 };
 </script>
 <style scoped lang="scss">
+.commodities-info,
+.delivery-info {
+  border: 1px solid #000;
+}
 .commodities-info,
 .delivery-info {
   width: 100%;
