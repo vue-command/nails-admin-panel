@@ -105,7 +105,7 @@ export default {
     },
     addCountry({ id, price }) {
       this.updateCountryPrice({ id, price });
-      (this.addCountryDialog = false), console.log(id, price);
+      this.addCountryDialog = false;
     },
   },
   mounted() {

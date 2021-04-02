@@ -17,7 +17,7 @@ const state = {
 };
 
 const mutations = {
-  SHOP_CATEGORIES_ITEM: (state, { categories }) => {
+  SHOP_CATEGORIES_ITEM: (state, categories) => {
     state.fullListOfCategories = categories.reduce((prev, curr) => {
       prev.push(curr);
       if (Array.isArray(curr.subcategories) && curr.subcategories.length) {
@@ -28,34 +28,46 @@ const mutations = {
     state.categories = categories;
   },
 
+  ADD_NEW_CATEGORY: (state, payload) => {
+    state.categories = state.categories.concat([payload]);
+  },
+
+  EDIT_CATEGORY: (state, payload) => {
+    state.categories = state.categories.map(item => (item._id === payload._id ? Object.assign(item, payload) : item));
+  },
+
+  REMOVE_CATEGORY: (state, id) => {
+    state.categories = state.categories.filter(elem => elem._id !== id);
+  },
+
   ADD_NEW_SUBCATEGORY: (state, { response, id, name }) => {
     if (state.activeCategory._id === id) {
-      const newSubcategory = response.category[0].subcategories.find((item) => item.name === name);
+      const newSubcategory = response.category[0].subcategories.find(item => item.name === name);
       state.activeCategory.subcategories = state.activeCategory.subcategories.concat([newSubcategory]);
     }
   },
-  REMOVE_SUBCATOGORY: (state, { id }) => {
+
+  REMOVE_SUBCATEGORY: (state, { id }) => {
     state.activeCategory.subcategories = state.activeCategory.subcategories.filter(elem => elem._id !== id);
   },
+
   UPDATE_SUBCATEGORY: (state, { response, id }) => {
-    state.activeCategory.subcategories.find((item) => item._id === id).name = response.subCategory.name;
-  }
+    state.activeCategory.subcategories.find(item => item._id === id).name = response.subCategory.name;
+  },
 };
 
 const actions = {
   async GET_SHOP_CATEGORIES({ commit }) {
-    state.isPageLoading = true;
-    const { categories, error } = await getData(categoriesEndpoints.categories);
-    if (!error) {
-      commit('SHOP_CATEGORIES_ITEM', {
-        categories,
-      });
-    } else {
-      commit('ERROR', errors.oops, {
-        root: true,
-      });
-    }
-    state.isPageLoading = false;
+    // state.isPageLoading = true;
+    const res = await getData(categoriesEndpoints.categories);
+    // if (!error) {
+    //   commit('SHOP_CATEGORIES_ITEM', categories);
+    // } else {
+    //   commit('ERROR', errors.oops, {
+    //     root: true,
+    //   });
+    // }
+    // state.isPageLoading = false;
   },
 
   SET_CATEGORY({ state }, { categoryId }) {
@@ -83,6 +95,44 @@ const actions = {
     }
   },
 
+  async CREATE_NEW_CATEGORY({state, commit, dispatch }, payload) {
+    const { data, error } = await postData(categoriesEndpoints.newCategory, payload);
+    if (!error) {
+      const categoryId = data._id;
+      commit('ADD_NEW_CATEGORY', data);
+      commit('SHOP_CATEGORIES_ITEM',state.categories)
+      dispatch('SET_CATEGORY', { categoryId });
+    } else {
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
+    }
+  },
+  async EDIT_CATEGORY({ commit, dispatch }, payload) {
+    const { updated, error } = await putData(`${categoriesEndpoints.put}/${payload.id}`, payload.name);
+    if (!error) {
+      commit('SHOP_CATEGORIES_ITEM', updated);
+      dispatch('SET_CATEGORY', { categoryId: payload.id });
+    } else {
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
+    }
+  },
+
+  async DELETE_CATEGORY({ state, commit, dispatch }, id) {
+    const { error } = await deleteData(`${categoriesEndpoints.delete}/${id}`);
+    if (!error) {
+      const categories = state.categories.filter(elem => elem._id !== id);
+      commit('SHOP_CATEGORIES_ITEM', categories);
+      dispatch('SET_CATEGORY', { categoryId: categories[0]._id });
+    } else {
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
+    }
+  },
+
   async CREATE_NEW_SUBCATEGORY({ commit, dispatch }, { name, id }) {
     const data = {
       name: name,
@@ -97,10 +147,10 @@ const actions = {
     }
   },
 
-  async DELETE_SUBCATOGORY({ commit }, { id }) {
+  async DELETE_SUBCATEGORY({ commit }, { id }) {
     const { deleted, error } = await deleteData(`${categoriesEndpoints.subcategory}/${id}`);
     if (!error) {
-      commit('REMOVE_SUBCATOGORY', {
+      commit('REMOVE_SUBCATEGORY', {
         id,
       });
     } else {
@@ -109,7 +159,7 @@ const actions = {
       });
     }
   },
-  async CHANGE_SUBCATOGORY_NAME({ commit, dispatch }, { id, name }) {
+  async CHANGE_SUBCATEGORY_NAME({ commit, dispatch }, { id, name }) {
     const data = {
       name: name,
     };
@@ -121,7 +171,7 @@ const actions = {
         root: true,
       });
     }
-  }
+  },
 };
 
 export default {

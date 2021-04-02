@@ -29,6 +29,8 @@ export default {
     subcategory: 'shop/subcategory',
     newCategory: 'shop/new/category',
     newSubcategory: 'shop/new/subcategory',
+    put:'shop/category',
+    delete:'shop/category'
   },
   commodities: {
     commodities: 'shop/commodities',
