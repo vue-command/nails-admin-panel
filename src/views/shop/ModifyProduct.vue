@@ -286,6 +286,22 @@ export default {
       coverImageSrc: require('@/assets/noImage.jpg'),
     };
   },
+  computed: {
+    ...mapState('shop', ['commodity', 'isCommodityLoading']),
+    ...mapState('categories', ['categories']),
+
+    isSaveDisabled() {
+      let isDisabled = true;
+      if (this.productId !== 'new') isDisabled = !this.valid;
+      else if (this.valid) {
+        isDisabled = !this.previewFile;
+      }
+      return isDisabled;
+    },
+    productId() {
+      return this.$route.params.commodityId;
+    },
+  },
   watch: {
     previewFile(newVal) {
       if (newVal) {
@@ -319,8 +335,18 @@ export default {
       });
     },
     setCommodity(commodity) {
-      const { categoryId, subCategoryId, brand, name, amount, codeOfProduct, speciﬁcations, isPublished, price } = commodity
-      
+      const {
+        categoryId,
+        subCategoryId,
+        brand,
+        name,
+        amount,
+        codeOfProduct,
+        speciﬁcations,
+        isPublished,
+        price,
+      } = commodity;
+
       this.currentCommodity = {
         categoryId,
         subCategoryId,
@@ -342,6 +368,7 @@ export default {
       this.activeCard = val.link;
     },
     async submitHandler() {
+      // TODO: ! refactor
       const data = { ...this.currentCommodity };
       if (this.productId === 'new') {
         data.previewFile = this.previewFile;
@@ -369,31 +396,18 @@ export default {
       this.$router.push({ name: 'shop' });
     },
   },
-  computed: {
-    ...mapState('shop', ['fullListOfCategories', 'commodity', 'categories', 'isCommodityLoading']),
-    isSaveDisabled() {
-      let isDisabled = true;
-      if (this.productId !== 'new') isDisabled = !this.valid;
-      else if (this.valid) {
-        isDisabled = !this.previewFile;
-      }
-      return isDisabled;
-    },
-    productId() {
-      return this.$route.params.commodityId;
-    },
-  },
+
   async created() {
-    if (!this.categories) await this.$store.dispatch('shop/GET_SHOP_CATEGORIES');
+    // if (!this.categories) await this.$store.dispatch('shop/GET_SHOP_CATEGORIES');
     if (this.productId !== 'new') {
-      this.$store.dispatch('shop/GET_COMMODITY', {
-        commodityId: this.productId,
-      });
+      this.$store.dispatch('shop/GET_COMMODITY', this.productId);
+    } else {
+      this.$store.commit('shop/CLEAR_COMMODITY');
     }
   },
-  beforeDestroy() {
-    this.$store.commit('shop/CLEAR_COMMODITY');
-  },
+  // beforeDestroy() {
+  //   this.$store.commit('shop/CLEAR_COMMODITY');
+  // },
 };
 </script>
 

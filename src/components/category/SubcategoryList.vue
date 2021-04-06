@@ -13,7 +13,7 @@
               v-if="subcategory._id === onchangeId"
               icon
               class="mt-2"
-              @click="$emit('changeSubcategoryName', subcategory.name)"
+              @click="$emit('changeSubcategoryName', subcategory.name.trim())"
             >
               <v-icon>$done</v-icon>
             </v-btn>

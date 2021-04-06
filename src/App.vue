@@ -62,7 +62,7 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('shop/STORE_INIT');
+    this.$store.dispatch('categories/GET_CATEGORIES');
 
     const arr = this.$route?.redirectedFrom?.split('/');
     const hash = arr?.length ? arr[arr.length - 1] : '0';

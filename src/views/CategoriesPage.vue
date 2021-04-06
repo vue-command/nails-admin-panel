@@ -1,6 +1,11 @@
 <template>
   <v-container>
-    <v-row>
+    <v-row v-if="loading">
+      <v-col cols="12">
+        <Spinner color="orange" />
+      </v-col>
+    </v-row>
+    <v-row v-if="!loading">
       <v-col cols="12" md="5">
         <v-select
           class="text-subtitle-1"
@@ -71,7 +76,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <confirmDelete :dialog.sync="showDialog" :title="title" :confirmDelete="deleteSubcategoryHandler" />
+    <confirmDelete :dialog.sync="showDialog" title="subcategory" :confirmDelete="deleteSubcategoryHandler" />
     <confirmDelete :dialog.sync="showDialog2" title="category" :confirmDelete="deleteCategoryHandler" />
   </v-container>
 </template>
@@ -87,6 +92,7 @@ export default {
     SubcategoryList: () => import('@/components/category/SubcategoryList.vue'),
     AddCategory: () => import('@/components/inputs/AddCategory.vue'),
     confirmDelete: () => import('@/components/popups/confirmDelete.vue'),
+    Spinner: () => import('@/components/Spinner.vue'),
   },
   data() {
     return {
@@ -100,16 +106,19 @@ export default {
       onchangeId: '',
       deleteId: '',
       selectedCategoryId: '',
-      // newSubcategoryName: '',
     };
   },
   computed: {
-    ...mapState('categories', ['isPageLoading', 'categories', 'activeCategory']),
+    ...mapState('categories', ['loading', 'categories']),
     disabledRemoveBtn() {
       return !!this.activeCategory?.subcategories?.length;
     },
     openedSomeInput() {
       return this.openAddSubcategory || this.openAddCategory || this.openEditCategory;
+    },
+    activeCategory() {
+      if (!this.selectedCategoryId) return this.categories[0];
+      return this.categories.find(cat => cat._id === this.selectedCategoryId);
     },
   },
   watch: {
@@ -121,20 +130,20 @@ export default {
         this.fillingData();
       },
     },
-    async selectedCategoryId(val) {
-      await this.$store.dispatch('categories/SET_CATEGORY', {
-        categoryId: val,
-      });
+    selectedCategoryId() {
+      // await this.$store.dispatch('categories/SET_CATEGORY', {
+      //   categoryId: val,
+      // });
       this.fillingData();
     },
   },
   methods: {
-    async selectCategory(categoryId) {
-      await this.$store.dispatch('categories/SET_CATEGORY', {
-        categoryId,
-      });
-      this.fillingData();
-    },
+    // async selectCategory(categoryId) {
+    //   await this.$store.dispatch('categories/SET_CATEGORY', {
+    //     categoryId,
+    //   });
+    //   this.fillingData();
+    // },
     removeCategory() {
       this.deleteId = this.activeCategory._id;
       this.showDialog2 = true;
@@ -146,8 +155,7 @@ export default {
     // edit(id) {
     //   this.onchangeId = id;
     // },
-    async changeSubcategoryName(name) {
-      const newName = name.trim();
+    async changeSubcategoryName(newName) {
       if (!newName) return;
       const oldName = this.activeCategory.subcategories.find(item => item._id === this.selectedCategoryId)?.name;
       if (oldName === newName) return;
@@ -160,7 +168,9 @@ export default {
     },
     async deleteCategoryHandler() {
       await this.$store.dispatch('categories/DELETE_CATEGORY', this.deleteId);
+      this.selectedCategoryId = '';
       this.showDialog2 = false;
+      this.deleteId = '';
     },
     cancelChangeSubcategoryName(id) {
       const obj1 = this.activeCategory.subcategories.find(elem => elem._id === id);
@@ -173,8 +183,9 @@ export default {
       this.data = this.activeCategory.subcategories.map(item => Object.assign({}, item));
     },
 
-    submitNewCategory(data) {
-      this.$store.dispatch('categories/CREATE_NEW_CATEGORY', data);
+    async submitNewCategory(data) {
+      const newCategoryId = await this.$store.dispatch('categories/CREATE_NEW_CATEGORY', data);
+      if (newCategoryId) this.selectedCategoryId = newCategoryId;
     },
     submitNewSubcategory(data) {
       this.$store.dispatch('categories/CREATE_NEW_SUBCATEGORY', data);
@@ -188,8 +199,9 @@ export default {
     },
   },
   mounted() {
-    this.selectedCategoryId = this.activeCategory._id;
-    this.fillingData();
+    this.$store.dispatch('categories/GET_CATEGORIES');
+    // this.selectedCategoryId = this.activeCategory._id;
+    // this.fillingData();
   },
 };
 </script>

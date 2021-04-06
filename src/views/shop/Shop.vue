@@ -5,37 +5,36 @@
         <v-row>
           <v-col cols="6">
             <v-select
-              :disabled="!!searchParams"
+              :disabled="!!search"
               class="text-subtitle-1"
               outlined
-              :value="selectedCategory"
+              v-model="selectedCategoryId"
               :items="categories"
               item-text="name"
               item-value="_id"
               label="Category"
-              @change="selectCategory"
             >
               Choose category
             </v-select>
           </v-col>
+
           <v-col cols="6" v-if="activeCategory">
             <v-select
               class="text-subtitle-1"
-              :disabled="!selectedCategory || !!searchParams"
-              :value="selectedSubategory"
+              :disabled="!selectedCategoryId || !!search"
+              v-model="selectedSubcategoryId"
               outlined
-              :items="subcategoriesSelect"
+              :items="subcategories"
               item-text="name"
               item-value="_id"
               label="Subcategory"
-              @change="selectSubcategory"
             >
               Choose subcategory
             </v-select>
           </v-col>
+
           <v-col cols="12">
             <v-text-field
-              @input="searchDebounced"
               v-model="search"
               clearable
               prepend-inner-icon="mdi-magnify"
@@ -46,78 +45,58 @@
           </v-col>
         </v-row>
       </v-col>
+
       <v-col cols="12" lg="6" class="pa-5">
         <v-row>
           <v-col cols="6">
-            <v-radio-group :value="filterShow" @change="setCommoditiesToShowValue" row>
-              <v-row class="d-flex justify-space-between flex-column text-body-1">
-                <v-radio class="ma-1 font-weight-bold" label="Published" value="all"></v-radio>
-                <v-radio class="ma-1 font-weight-bold" label="Hidden" value="hiddenOnly"></v-radio>
-                <v-radio class="ma-1 font-weight-bold" label="All" value="withHidden"></v-radio>
-              </v-row>
+            <v-radio-group v-model="radioGroup">
+              <v-radio
+                v-for="filter in filters"
+                class="ma-1 font-weight-bold"
+                :key="filter.param"
+                :label="filter.title"
+              />
             </v-radio-group>
           </v-col>
+
           <v-col cols="6">
             <v-btn @click="modifyHandler('new')">ADD NEW COMMODITY</v-btn>
           </v-col>
         </v-row>
       </v-col>
     </v-row>
+
     <v-divider></v-divider>
-    <v-row v-if="isShopLoading">
-      <v-col cols="3" v-for="i in 8" :key="i">
-        <v-skeleton-loader class="mx-auto" max-width="300" type="card"></v-skeleton-loader>
-      </v-col>
-    </v-row>
-    <v-row v-else-if="commodities" class="pa-2 ma-2">
-      <v-col v-if="commodities.length">
-        <v-row>
-          <v-col cols="12" sm="6" md="4" lg="3" v-for="card in commodities" :key="card.id" class="pa-2">
-            <v-card
-              width="100%"
-              min-height="300"
-              rounded="0"
-              shaped
-              height="100%"
-              color="lgrey"
-              class="pa-2"
-              @click="modifyHandler(card._id)"
-            >
-              <v-card flat width="100%">
-                <v-img
-                  :lazy-src="noImage"
-                  :src="card.previewImage && card.previewImage[0] && card.previewImage[0].link"
-                  width="100%"
-                  height="270"
-                  contain
-                />
-              </v-card>
-              <v-card-text class="pa-2 pb-0">
-                <span>
-                  <p class="text-h6 ma-0 pa-0 font-weight-bold dgrey--text text-start">
-                    {{ card.name }}
-                  </p>
-                  <p class="text-subtitle-1 ma-0 font-weight-medium dgrey--text text-start">
-                    {{ card.brand }}
-                  </p>
-                </span>
-                <p class="text-end text-subtitle-1 ma-0 pa-0 font-weight-bold dgrey--text">{{ card.price }} AUD</p>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-        <v-row justify="center" class="ma-5" v-if="showMoreButton">
-          <v-col>
-            <v-btn @click="getMore" x-large color="success">More</v-btn>
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-row v-else>
-        <v-col>
-          <h1>No commodities</h1>
-        </v-col>
-      </v-row>
-    </v-row>
+
+    <v-card v-if="isShopLoading" flat class="d-flex flex-wrap justify-center skeleton">
+      <v-skeleton-loader v-for="i in pageSize" :key="i" class="ma-4" width="250" height="350" type="card" />
+    </v-card>
+
+    <v-card flat class="d-flex flex-wrap justify-center" v-else-if="commodities.length">
+      <ShopCard
+        v-for="card in commodities"
+        :key="card.id"
+        @click="modifyHandler(card._id)"
+        :card="card"
+        width="250"
+        height="350"
+      />
+    </v-card>
+
+    <v-card flat v-else class="d-flex justify-center mt-8">
+      <v-card-title><h3 >No commodities</h3></v-card-title>
+    </v-card>
+
+    <v-pagination
+      v-if="pages > 1 && !isShopLoading"
+      v-model="page"
+      :length="pages"
+      :total-visible="8"
+      color="orange"
+      prev-icon="mdi-menu-left"
+      next-icon="mdi-menu-right"
+      class="pagination-buttons mt-10"
+    ></v-pagination>
   </v-container>
 </template>
 
@@ -127,55 +106,86 @@ import debounce from '@/utils/debounce';
 import { mapState } from 'vuex';
 
 export default {
-  name: 'shop',
+  name: 'Shop',
+  components: {
+    ShopCard: () => import('@/components/shop/ShopCard.vue'),
+  },
   data() {
     return {
       search: '',
+      page: 1,
+      pageSize: 12,
+      radioGroup: 0,
+      selectedCategoryId: '',
+      selectedSubcategoryId: '',
+      filters: [
+        {
+          title: 'Published',
+          param: 'all',
+        },
+        {
+          title: 'All',
+          param: 'withHidden',
+        },
+        {
+          title: 'Hidden',
+          param: 'hiddenOnly',
+        },
+      ],
       noImage: require('@/views/shop/assets/no-image.png'),
     };
   },
   computed: {
-    ...mapState('shop', [
-      'isShopLoading',
-      'categories',
-      'commodities',
-      'activeCategory',
-      'skip',
-      'searchParams',
-      'activeSubcategory',
-      'filterShow',
-      'totalCommodities',
-    ]),
-    subcategoriesSelect() {
-      if (!this.activeCategory) return null;
-      return [{ name: 'Show all', _id: this.activeCategory._id }, ...this.activeCategory.subcategories];
+    ...mapState('shop', ['isShopLoading', 'commodities', 'total']),
+    ...mapState('categories', ['categories']),
+    subcategories() {
+      return this.activeCategory?.subcategories ?? [];
     },
     showMoreButton() {
       return this.commodities.length < this.totalCommodities;
     },
-    selectedCategory() {
-      if (!this.activeCategory) return '';
-      return this.activeCategory._id;
+    activeSubcategory() {
+      if (!this.selectedSubcategoryId) return this.subcategories[0];
+      return this.subcategories.find(cat => cat._id === this.selectedSubcategoryId);
     },
-    selectedSubategory() {
-      if (!this.activeSubcategory) return '';
-      if (!this.activeCategory) return '';
-      return this.activeSubcategory._id;
+    activeCategory() {
+      if (!this.selectedCategoryId) return this.categories[0];
+      return this.categories.find(cat => cat._id === this.selectedCategoryId);
     },
-    searchDebounced() {
-      return debounce(this.searchHandler, 1000);
+    pages() {
+      if (!this.total) return 1;
+
+      return Math.ceil(this.total / this.pageSize);
     },
   },
-
-  methods: {
-    selectCategory(categoryId) {
-      this.$store.dispatch('shop/SET_CATEGORY', {
-        categoryId,
-      });
+  watch: {
+    radioGroup() {
+      if (this.page !== 1) this.page = 1;
+      else this.getCommodities();
     },
-    selectSubcategory(categoryId) {
-      this.$store.dispatch('shop/SET_SUBCATEGORY', {
-        categoryId,
+    page() {
+      this.getCommodities();
+    },
+    activeSubcategory(val) {
+      if (!val) return;
+      if (this.page !== 1) this.page = 1;
+      else this.getCommodities();
+    },
+    selectedCategoryId() {
+      this.selectedSubcategoryId = '';
+    },
+    search() {
+      this.searchDebounced();
+    },
+  },
+  methods: {
+    getCommodities() {
+      if (!this.activeSubcategory) return;
+      this.$store.dispatch('shop/GET_COMMODITIES', {
+        id: this.activeSubcategory?._id,
+        search: this.search,
+        offset: (this.page - 1) * this.pageSize,
+        filter: this.filters[this.radioGroup].param,
       });
     },
     modifyHandler(id) {
@@ -186,30 +196,15 @@ export default {
         },
       });
     },
-    setCommoditiesToShowValue(value) {
-      this.$store.dispatch('shop/SET_FILTER_SHOW', {
-        value,
-      });
-    },
-    getMore() {
-      this.$store.dispatch('shop/GET_MORE_SHOP_COMMODITIES');
-    },
-    searchHandler() {
-      if (this.search) {
-        this.$store.dispatch('shop/SEARCH_COMMODITIES', {
-          search: this.search,
-        });
-      } else {
-        this.$store.dispatch('shop/UPDATE_SHOP');
-      }
-    },
   },
   mounted() {
-    if (this.activeCategory) {
-      // this.$store.dispatch('shop/GET_SHOP_COMMODITIES', {
-      //   commodityId: this.activeCategory._id,
-      // });
-    }
+    this.getCommodities();
+    this.searchDebounced = debounce(this.getCommodities, 1000);
   },
 };
 </script>
+<style>
+.skeleton .v-skeleton-loader__image {
+  height: 250px !important;
+}
+</style>
