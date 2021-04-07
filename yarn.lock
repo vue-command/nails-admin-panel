@@ -723,7 +723,7 @@
     "@babel/helper-create-regexp-features-plugin" "^7.12.1"
     "@babel/helper-plugin-utils" "^7.10.4"
 
-"@babel/polyfill@^7.11.5", "@babel/polyfill@^7.12.1":
+"@babel/polyfill@^7.12.1":
   version "7.12.1"
   resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.12.1.tgz#1f2d6371d1261bbd961f3c5d5909150e12d0bd96"
   integrity sha512-X0pi0V6gxLi6lFZpGmeNa4zxtwEmCs42isWLNjZZDE0Y8yVfgu0T2OAHlzBbdYlqbW/YXVvoBHpATEM+goCj8g==
@@ -1067,7 +1067,7 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@mdi/font@^5.5.55", "@mdi/font@^5.9.55":
+"@mdi/font@^5.9.55":
   version "5.9.55"
   resolved "https://registry.yarnpkg.com/@mdi/font/-/font-5.9.55.tgz#41acd50b88073ded7095fc3029d8712b6e12f38e"
   integrity sha512-jswRF6q3eq8NWpWiqct6q+6Fg/I7nUhrxYJfiEM8JJpap0wVJLQdbKtyS65GdlK7S7Ytnx3TTi/bmw+tBhkGmg==
@@ -7648,37 +7648,6 @@ mz@^2.4.0:
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
 
-nails-shop-card@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/nails-shop-card/-/nails-shop-card-0.0.4.tgz#e624f26fb65b0bcce626ba1311d9dff77382f559"
-  integrity sha512-jq9hIrVmtJ2dQBLESq/eswhEArQ37kC9KG3WNBACvWw9m5qxa20q+dbUW0pbAhSPggFDbflhdtIdYi9IB1OYXQ==
-  dependencies:
-    "@babel/polyfill" "^7.11.5"
-    "@mdi/font" "^5.5.55"
-    core-js "^3.6.5"
-    nails-styles "^0.0.3"
-    vue "^2.6.11"
-    vuetify "^2.2.11"
-
-nails-shop-module@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/nails-shop-module/-/nails-shop-module-0.0.6.tgz#ca284203d31efa19a9df9d75cd0e8dae56542fa7"
-  integrity sha512-GNzvs5Q0FKudqtO+QjbF68OOwEkmv6Jdz72Vo/BWMrOxDIgv4grIaS4i8axvzgCfrHbCaAQIQVIwSqxFhX7NSA==
-  dependencies:
-    "@babel/polyfill" "^7.11.5"
-    "@mdi/font" "^5.5.55"
-    core-js "^3.6.5"
-    nails-shop-card "^0.0.4"
-    nails-styles "^0.0.3"
-    vue "^2.6.11"
-    vue-notification "^1.3.20"
-    vuetify "^2.2.11"
-
-nails-styles@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/nails-styles/-/nails-styles-0.0.3.tgz#c723416ff08118ae370ef7aba7dd2a053a45831e"
-  integrity sha512-c4yUMhlbayG9Qi1K/W6Oll3NDBdCP7ZnH7Qm2AGSd27f7tudVvWUOqhCoja8fWZsjaAw1J5eLdtOn0QVd2Hqqw==
-
 nan@^2.12.1, nan@^2.13.2:
   version "2.14.2"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.2.tgz#f5376400695168f4cc694ac9393d0c9585eeea19"
@@ -11213,11 +11182,6 @@ vue-loader@^15.9.2:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
-vue-notification@^1.3.20:
-  version "1.3.20"
-  resolved "https://registry.yarnpkg.com/vue-notification/-/vue-notification-1.3.20.tgz#d85618127763b46f3e25b8962b857947d5a97cbe"
-  integrity sha512-vPj67Ah72p8xvtyVE8emfadqVWguOScAjt6OJDEUdcW5hW189NsqvfkOrctxHUUO9UYl9cTbIkzAEcPnHu+zBQ==
-
 vue-router@^3.5.1:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.5.1.tgz#edf3cf4907952d1e0583e079237220c5ff6eb6c9"
@@ -11255,7 +11219,7 @@ vue-video-player@^5.0.2:
     videojs-flash "^2.1.0"
     videojs-hotkeys "^0.2.20"
 
-vue@^2.6.11, vue@^2.6.12:
+vue@^2.6.12:
   version "2.6.12"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.12.tgz#f5ebd4fa6bd2869403e29a896aed4904456c9123"
   integrity sha512-uhmLFETqPPNyuLLbsKz6ioJ4q7AZHzD8ZVFNATNyICSZouqP2Sz0rotWQC8UNBF6VGSCs5abnKJoStA6JbCbfg==
@@ -11269,7 +11233,7 @@ vuetify-loader@^1.7.1:
     file-loader "^6.2.0"
     loader-utils "^2.0.0"
 
-vuetify@^2.2.11, vuetify@^2.4.3:
+vuetify@^2.4.3:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.4.3.tgz#8d6f15dde396e81f64e130d8ac0bc272e030879c"
   integrity sha512-i2/Df0U0sedlaCbft4NMbna7WXbTCBhKVYTMjBrLVzrYTTWqzSO7ZCxLuDRY7MjwQhn7AOec7ent9U/NyIICqA==

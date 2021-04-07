@@ -1,4 +1,4 @@
-const { getData, postData, putData, deleteData, getFormData } = require('@/helpers').default;
+const { getData, postData, putData, deleteData } = require('@/helpers').default;
 const commoditiesEndpoints = require('@/config/endpoints').default.commodities;
 const errors = require('@/config/errors').default.shop;
 const messages = require('@/config/messages').default.shop;
@@ -33,9 +33,9 @@ const mutations = {
     state.commodity = payload;
     state.commodities = state.commodities.map(commodity => (commodity._id === payload._id ? payload : commodity));
   },
-  REMOVE_IMAGE: (state, { id }) => {
+  REMOVE_IMAGE: (state, payload) => {
     if (state.commodity && Array.isArray(state.commodity.images)) {
-      state.commodity = { ...state.commodity, images: state.commodity.images.filter(el => el._id !== id) };
+      state.commodity = { ...state.commodity, images: state.commodity.images.filter(el => el._id !== payload) };
     }
   },
 
@@ -98,25 +98,23 @@ const actions = {
     commit('COMMODITY_LOADING', false);
   },
 
-  async CREATE_COMMODITY({ commit }, { data: form }) {
+  async CREATE_COMMODITY({ commit }, payload) {
     commit('COMMODITY_LOADING', true);
-    const formData = getFormData(form);
-    const { data, error } = await postData(commoditiesEndpoints.newCommodity, formData);
+    const { data, error } = await postData(commoditiesEndpoints.newCommodity, payload);
     if (!error) {
       commit('ADD_COMMODITY', data);
     } else {
-      1;
       commit('ERROR', errors.oops, {
         root: true,
       });
     }
     commit('COMMODITY_LOADING', false);
+    return data?._id;
   },
 
-  async UPDATE_COMMODITY({ commit }, { data: form, id }) {
+  async UPDATE_COMMODITY({ commit }, { commodity, id }) {
     commit('COMMODITY_LOADING', true);
-    const formData = getFormData(form);
-    const { data, error } = await putData(`${commoditiesEndpoints.commodity}/${id}`, formData);
+    const { data, error } = await putData(`${commoditiesEndpoints.commodity}/${id}`, commodity);
     if (!error) {
       commit('REPLACE_COMMODITY', data);
       commit('MESSAGE', messages.update, { root: true });
@@ -143,12 +141,10 @@ const actions = {
     }
   },
 
-  async DELETE_IMAGE({ commit }, { id }) {
+  async DELETE_IMAGE({ commit }, id) {
     const { error } = await deleteData(`${commoditiesEndpoints.file}/${id}`);
     if (!error) {
-      commit('REMOVE_IMAGE', {
-        id,
-      });
+      commit('REMOVE_IMAGE', id);
       commit('MESSAGE', messages.update, { root: true });
     } else {
       commit('ERROR', errors.oops, {
@@ -157,12 +153,10 @@ const actions = {
     }
   },
 
-  async DELETE_COMMODITY({ commit }, { id }) {
+  async DELETE_COMMODITY({ commit }, id) {
     const { error } = await deleteData(`${commoditiesEndpoints.commodity}/${id}`);
     if (!error) {
-      commit('REMOVE_COMMODITY', {
-        id,
-      });
+      commit('REMOVE_COMMODITY', id);
     } else {
       commit('ERROR', errors.oops, {
         root: true,

@@ -9,7 +9,7 @@
 
       <NavigationDrawer :drawer.sync="drawer" />
 
-      <v-main class="homefone main-content">
+      <v-main class="homefone">
           <component :is="layout">
             <!-- <router-view /> -->
           </component>
@@ -79,11 +79,6 @@ html,
 body,
 .v-application {
   font-family: 'Archivo Narrow' !important;
-}
-.main-content {
-  min-height: calc(100vh - 64px);
-  width: 100vw;
-  margin: 0 auto;
 }
 a {
   text-decoration: none;

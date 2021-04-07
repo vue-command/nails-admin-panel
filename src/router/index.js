@@ -23,6 +23,18 @@ const routes = [
       ),
   },
   {
+    path: '/shop/commodity/create',
+    name: 'commodity-create',
+    meta: {
+      layout: 'shop',
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "modify-product" */
+        '@/views/shop/ModifyProduct.vue'
+      ),
+  },
+  {
     path: '/shop/commodity/:commodityId',
     name: 'commodity-edit',
     meta: {
@@ -30,7 +42,7 @@ const routes = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "commodity-edit" */
+        /* webpackChunkName: "modify-product" */
         '@/views/shop/ModifyProduct.vue'
       ),
   },
@@ -84,7 +96,7 @@ const routes = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "create-online-course" */
+        /* webpackChunkName: "online-course-create" */
         '@/views/courses/OnlineCourseCreate.vue'
       ),
   },
@@ -96,7 +108,7 @@ const routes = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "online-course" */
+        /* webpackChunkName: "course" */
         '@/views/courses/Course.vue'
       ),
   },
@@ -108,7 +120,7 @@ const routes = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "online-course-lessons" */
+        /* webpackChunkName: "course-videos" */
         '@/views/courses/CourseVideos.vue'
       ),
   },
@@ -120,7 +132,7 @@ const routes = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "online-course-lesson" */
+        /* webpackChunkName: "course-video-detail" */
         '@/views/courses/CourseVideoDetail.vue'
       ),
   },
@@ -132,7 +144,7 @@ const routes = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "offline-courses" */
+        /* webpackChunkName: "offline-courses-page" */
         '@/views/courses/OfflineCoursesPage.vue'
       ),
   },
@@ -144,7 +156,7 @@ const routes = [
     },
     component: () =>
       import(
-        /* webpackChunkName: "create-offline-course" */
+        /* webpackChunkName: "offline-course-create" */
         '@/views/courses/OfflineCourseCreate.vue'
       ),
   },

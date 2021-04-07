@@ -8,15 +8,6 @@
     class="ma-4"
     @click="$emit('click', card._id)"
   >
-    <!-- <v-card flat width="100%">
-      <v-img
-        :lazy-src="noImage"
-        :src="card.previewImage && card.previewImage[0] && card.previewImage[0].link"
-        width="100%"
-        height="270"
-        contain
-      />
-    </v-card> -->
     <CoverImage width="100%" height="250" :url="checkShopCardLink(card)" />
     <v-card-text class="pa-2 pb-0">
       <span>

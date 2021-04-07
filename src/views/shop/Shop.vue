@@ -60,7 +60,14 @@
           </v-col>
 
           <v-col cols="6">
-            <v-btn @click="modifyHandler('new')">ADD NEW COMMODITY</v-btn>
+            <v-btn
+              @click="
+                $router.push({
+                  name: 'commodity-create',
+                })
+              "
+              >ADD NEW COMMODITY</v-btn
+            >
           </v-col>
         </v-row>
       </v-col>
@@ -84,7 +91,7 @@
     </v-card>
 
     <v-card flat v-else class="d-flex justify-center mt-8">
-      <v-card-title><h3 >No commodities</h3></v-card-title>
+      <v-card-title><h3>No commodities</h3></v-card-title>
     </v-card>
 
     <v-pagination
@@ -175,6 +182,7 @@ export default {
       this.selectedSubcategoryId = '';
     },
     search() {
+      if (this.page !== 1) this.page = 1;
       this.searchDebounced();
     },
   },

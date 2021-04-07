@@ -12,7 +12,6 @@
     "@babel/polyfill": "^7.12.1",
     "@mdi/font": "^5.9.55",
     "core-js": "^3.8.3",
-    "nails-shop-module": "^0.0.6",
     "vue": "^2.6.12",
     "vue-router": "^3.5.1",
     "vue-video-player": "^5.0.2",
