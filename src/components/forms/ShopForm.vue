@@ -116,6 +116,10 @@ export default {
       type: Object,
       required: false,
     },
+    currentCommodity: {
+      type: Object,
+      required: false,
+    },
   },
   data() {
     return {
@@ -173,7 +177,13 @@ export default {
   methods: {
     fillingData() {
       Object.keys(this.data).forEach(key => {
-        this.data[key] = this.commodity[key];
+        if (this.$route.name === 'commodity-create') {
+          this.currentCommodity[key] && (this.data[key] = this.currentCommodity[key]);
+        } else {
+          if (this.commodity) {
+            this.data[key] = this.commodity[key];
+          }
+        }
       });
     },
     submit() {
@@ -182,9 +192,7 @@ export default {
     },
   },
   mounted() {
-    if (this.commodity) {
-      this.fillingData();
-    }
+    this.fillingData();
   },
 };
 </script>

@@ -2,11 +2,16 @@
   <v-container>
     <v-card flat v-if="!isCommodityLoading">
       <v-card-text class="mb-10">
-        <h1 class="text-h4 black--text">{{ productId === 'new' ? 'NEW' : 'MODIFY' }} PRODUCT</h1>
+        <h1 class="text-h4 black--text">{{ $route.name === 'commodity-create' ? 'CREATE' : 'MODIFY' }} PRODUCT</h1>
       </v-card-text>
       <v-row>
         <v-col cols="12" sm="6">
-          <ShopForm @input="merge" @submitHandler="submitHandler" :commodity="commodity" />
+          <ShopForm
+            @input="merge"
+            @submitHandler="submitHandler"
+            :commodity="commodity"
+            :currentCommodity="currentCommodity"
+          />
         </v-col>
         <v-col cols="12" sm="6">
           <v-card flat class="d-flex justify-center">
@@ -15,7 +20,7 @@
         </v-col>
       </v-row>
 
-      <v-divider class="my-10"></v-divider>
+      <v-divider v-if="commodity" class="my-10"></v-divider>
       <ShopCardList
         v-if="commodity"
         :images="commodity.images"
@@ -24,11 +29,11 @@
         :disabled="!commodity"
         width="200"
       />
-      <v-divider class="my-10"></v-divider>
+      <v-divider v-if="commodity" class="my-10"></v-divider>
       <ShopCardDetail :commodity="commodity" />
 
-      <v-divider class="my-10"></v-divider>
-      <v-card-actions>
+      <v-divider v-if="commodity" class="my-10"></v-divider>
+      <v-card-actions v-if="commodity">
         <v-btn color="error" large min-width="90" class="mt-4" @click="showDialog = true" :disabled="!commodity"
           >DELETE COMMODITY</v-btn
         >
@@ -72,7 +77,9 @@ export default {
       showDialog: false,
       title: 'commodity',
       valid: true,
-      currentCommodity: {},
+      currentCommodity: {
+        // isPublished: false,
+      },
     };
   },
   computed: {
@@ -90,11 +97,10 @@ export default {
     merge(data) {
       this.currentCommodity = Object.assign({}, this.currentCommodity, data);
     },
-
     publishHandler() {
-      this.$store.dispatch('shop/UPDATE_COMMODITY', {
+      this.$store.dispatch('shop/PATCH_COMMODITY', {
         commodity: {
-          ...this.currentCommodity,
+          // ...this.currentCommodity,
           isPublished: !this.commodity.isPublished,
         },
         id: this.productId,
@@ -138,6 +144,7 @@ export default {
     if (this.$route.name !== 'commodity-create') {
       this.$store.dispatch('shop/GET_COMMODITY', this.productId);
     } else {
+      this.currentCommodity = { };
       this.$store.commit('shop/CLEAR_COMMODITY');
     }
   },

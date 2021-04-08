@@ -1,9 +1,9 @@
 <template>
   <v-container>
     <v-row class="pa-5">
-      <v-col cols="12" lg="6" class="pa-5">
+      <v-col cols="12" md="6" class="pa-5">
         <v-row>
-          <v-col cols="6">
+          <v-col cols="12" sm="6">
             <v-select
               :disabled="!!search"
               class="text-subtitle-1"
@@ -18,7 +18,7 @@
             </v-select>
           </v-col>
 
-          <v-col cols="6" v-if="activeCategory">
+          <v-col cols="12" sm="6" v-if="activeCategory">
             <v-select
               class="text-subtitle-1"
               :disabled="!selectedCategoryId || !!search"
@@ -33,7 +33,7 @@
             </v-select>
           </v-col>
 
-          <v-col cols="12">
+          <v-col cols="12" offset-sm="2" sm="8" offset-md="0" md="12">
             <v-text-field
               v-model="search"
               clearable
@@ -46,10 +46,10 @@
         </v-row>
       </v-col>
 
-      <v-col cols="12" lg="6" class="pa-5">
+      <v-col cols="12" md="6" class="pa-5">
         <v-row>
-          <v-col cols="6">
-            <v-radio-group v-model="radioGroup">
+          <v-col cols="12" sm="6">
+            <v-radio-group v-model="radioGroup" :row="$vuetify.breakpoint.smAndDown">
               <v-radio
                 v-for="filter in filters"
                 class="ma-1 font-weight-bold"
@@ -59,15 +59,19 @@
             </v-radio-group>
           </v-col>
 
-          <v-col cols="6">
-            <v-btn
-              @click="
-                $router.push({
-                  name: 'commodity-create',
-                })
-              "
-              >ADD NEW COMMODITY</v-btn
-            >
+          <v-col cols="12" sm="6">
+            <v-card flat>
+              <v-card-actions class="d-flex justify-center justify-sm-end">
+                <v-btn
+                  @click="
+                    $router.push({
+                      name: 'commodity-create',
+                    })
+                  "
+                  >ADD NEW COMMODITY</v-btn
+                >
+              </v-card-actions>
+            </v-card>
           </v-col>
         </v-row>
       </v-col>
@@ -139,7 +143,6 @@ export default {
           param: 'hiddenOnly',
         },
       ],
-      noImage: require('@/views/shop/assets/no-image.png'),
     };
   },
   computed: {

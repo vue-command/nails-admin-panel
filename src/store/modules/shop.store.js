@@ -1,4 +1,4 @@
-const { getData, postData, putData, deleteData } = require('@/helpers').default;
+const { getData, postData, putData, patchData, deleteData } = require('@/helpers').default;
 const commoditiesEndpoints = require('@/config/endpoints').default.commodities;
 const errors = require('@/config/errors').default.shop;
 const messages = require('@/config/messages').default.shop;
@@ -38,7 +38,6 @@ const mutations = {
       state.commodity = { ...state.commodity, images: state.commodity.images.filter(el => el._id !== payload) };
     }
   },
-
   CLEAR_COMMODITY: state => {
     state.commodity = null;
   },
@@ -104,7 +103,7 @@ const actions = {
     if (!error) {
       commit('ADD_COMMODITY', data);
     } else {
-      commit('ERROR', errors.oops, {
+      commit('ERROR', Object.assign({}, errors.oops, { errorMessage: error }), {
         root: true,
       });
     }
@@ -115,6 +114,19 @@ const actions = {
   async UPDATE_COMMODITY({ commit }, { commodity, id }) {
     commit('COMMODITY_LOADING', true);
     const { data, error } = await putData(`${commoditiesEndpoints.commodity}/${id}`, commodity);
+    if (!error) {
+      commit('REPLACE_COMMODITY', data);
+      commit('MESSAGE', messages.update, { root: true });
+    } else {
+      commit('ERROR', errors.oops, {
+        root: true,
+      });
+    }
+    commit('COMMODITY_LOADING', false);
+  },
+  async PATCH_COMMODITY({ commit }, { commodity, id }) {
+    commit('COMMODITY_LOADING', true);
+    const { data, error } = await patchData(`${commoditiesEndpoints.isPublished}/${id}`, commodity);
     if (!error) {
       commit('REPLACE_COMMODITY', data);
       commit('MESSAGE', messages.update, { root: true });

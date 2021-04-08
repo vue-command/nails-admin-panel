@@ -5,7 +5,7 @@ export default {
   },
   orders: {
     get: 'order',
-    patch: 'order'
+    patch: 'order',
   },
   offline: {
     get: 'course/offline',
@@ -29,8 +29,8 @@ export default {
     subcategory: 'shop/subcategory',
     newCategory: 'shop/new/category',
     newSubcategory: 'shop/new/subcategory',
-    put:'shop/category',
-    delete:'shop/category'
+    put: 'shop/category',
+    delete: 'shop/category',
   },
   commodities: {
     commodities: 'shop/commodities',
@@ -40,6 +40,7 @@ export default {
     newCommodity: 'shop/new/commodity',
     files: 'shop/commodity/files',
     file: 'shop/file',
+    isPublished: 'shop/set-published',
   },
   delivery: {
     get: 'delivery-prices',
