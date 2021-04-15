@@ -104,6 +104,7 @@ export default {
   methods: {},
 };
 </script>
+
 <style>
 .v-icon--left {
   margin-right: 8px;

@@ -131,19 +131,10 @@ export default {
       },
     },
     selectedCategoryId() {
-      // await this.$store.dispatch('categories/SET_CATEGORY', {
-      //   categoryId: val,
-      // });
       this.fillingData();
     },
   },
   methods: {
-    // async selectCategory(categoryId) {
-    //   await this.$store.dispatch('categories/SET_CATEGORY', {
-    //     categoryId,
-    //   });
-    //   this.fillingData();
-    // },
     removeCategory() {
       this.deleteId = this.activeCategory._id;
       this.showDialog2 = true;
@@ -152,9 +143,6 @@ export default {
       this.deleteId = id;
       this.showDialog = true;
     },
-    // edit(id) {
-    //   this.onchangeId = id;
-    // },
     async changeSubcategoryName(newName) {
       if (!newName) return;
       const oldName = this.activeCategory.subcategories.find(item => item._id === this.selectedCategoryId)?.name;
@@ -200,10 +188,7 @@ export default {
   },
   mounted() {
     this.$store.dispatch('categories/GET_CATEGORIES');
-    // this.selectedCategoryId = this.activeCategory._id;
-    // this.fillingData();
   },
 };
 </script>
 
-<style></style>

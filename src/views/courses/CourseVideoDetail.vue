@@ -15,11 +15,6 @@
         <v-card flat class="d-flex justify-center my-16 transparent">
           <VideoPdfs />
         </v-card>
-        <!-- <v-card v-if="pdfs.length && !isAdmin" flat class="d-flex justify-center mt-16 transparent">
-          <a v-for="pdf in video.pdfs" :key="pdf._id" :href="pdf.link" target="_blank" class="mx-8"
-            ><v-img src="@/assets/pdf.svg" width="50px"
-          /></a>
-        </v-card> -->
       </v-col>
       <v-col cols="12" xs="12">
         <div v-if="!showForm" class="d-flex justify-center mt-8">
@@ -131,9 +126,6 @@ export default {
         // poster: this.video?.coverImg?.link,
       };
     },
-    // isAdmin() {
-    //   return this.course?.idUser === this.user._id;
-    // },
     pdfs() {
       return this?.video?.pdfs ?? [];
     },
@@ -192,6 +184,7 @@ export default {
   },
 };
 </script>
+
 <style>
 .vjs_video_3-dimensions {
   height: unset;
@@ -207,8 +200,4 @@ export default {
   transform: translate(-50%, -50%);
 }
 </style>
-<style scoped>
-/* .pdf-link:not(:last-child) {
-  margin-right: 50px;
-} */
-</style>
+

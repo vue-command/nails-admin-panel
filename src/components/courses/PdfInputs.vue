@@ -13,9 +13,6 @@
   </v-row>
 </template>
 
-<style scoped>
-</style>
-
 <script>
 import FileInput from '@/components/inputs/FileInput.vue';
 

@@ -59,7 +59,7 @@ export default {
 .user-info,
 .payment-info {
   width: 100%;
-  border: 1px solid #000;
+  border: 1px solid var(--v-courseOrderItemBorder-base);
   & th,
   td {
     padding: 5px;

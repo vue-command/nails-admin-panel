@@ -90,11 +90,6 @@ a {
 .v-btn__content {
   justify-content: center !important;
 }
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 ::-webkit-scrollbar {
   width: 10px; /* width for vertical scroll */
   height: 8px; /* height for horizontal scroll */

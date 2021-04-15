@@ -4,17 +4,32 @@
       <Spinner v-if="loading" />
       <CourseDetail v-if="!loading && course && !editing" :course="course" :type="type" btnTitle="BUY THIS COURSE" />
       <v-col cols="12" xs="12" md="7" v-if="editing">
-        <OnlineForm :course.sync="courseData" :schema="schema" @submit="submit" mode="edit" @back="back" />
+        <OnlineForm
+          :course.sync="courseData"
+          :schema="schema"
+          @submit="submit"
+          :loading="loading"
+          mode="edit"
+          @back="back"
+        />
       </v-col>
       <v-col v-if="editing" cols="12" xs="12" md="5" class="d-flex flex-column justify-space-between align-center">
         <CourseCard :course="courseData" :type="type" :preview="true" />
       </v-col>
       <CourseDetail v-if="editing" :course="courseUpdate" :type="type" btnTitle="BUY THIS COURSE" />
+    </v-row>
       <div
         v-if="!loading && course && !editing"
         class="d-flex flex-column align-center flex-sm-row justify-sm-center my-8"
       >
-        <v-btn @click="goTo('online-course-lessons')" color="buttons" rounded large dark min-width="160" class="yellow-button mr-4"
+        <v-btn
+          @click="goTo('online-course-lessons')"
+          color="buttons"
+          rounded
+          large
+          dark
+          min-width="160"
+          class="yellow-button mr-4"
           >Lessons</v-btn
         >
         <v-btn
@@ -39,7 +54,6 @@
           >{{ course.isPublished ? 'unpublish' : 'publish' }}</v-btn
         >
       </div>
-    </v-row>
   </v-container>
 </template>
 
@@ -63,6 +77,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       schema,
       type: 'online',
       courseData: null,
@@ -70,7 +85,6 @@ export default {
     };
   },
   computed: {
-    ...mapState(['loading']),
     ...mapState('users', ['user']),
     ...mapState('onlineCourses', ['courses', 'course', 'total']),
     courseUpdate() {
@@ -95,7 +109,8 @@ export default {
     back() {
       this.editing = false;
     },
-    submit(data) {
+    async submit(data) {
+      this.loading = true;
       const { thisCourseIsSuitableFor, ...rest } = data;
       const fd = new FormData();
       Object.entries(rest).forEach(([name, value]) => {
@@ -105,10 +120,11 @@ export default {
       thisCourseIsSuitableFor.forEach(str => {
         fd.append('thisCourseIsSuitableFor[]', str);
       });
-      this.putCourse({
+      await this.putCourse({
         data: fd,
         id: this.course._id,
       });
+      this.loading = false;
     },
     fillingForm() {
       if (this.course) {
@@ -122,7 +138,7 @@ export default {
       }
     },
     goTo(name) {
-        this.$router.push({ name });
+      this.$router.push({ name });
     },
   },
   created() {
@@ -131,4 +147,3 @@ export default {
 };
 </script>
 
-<style></style>

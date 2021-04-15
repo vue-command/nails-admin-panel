@@ -1,12 +1,8 @@
 <template>
   <v-row v-if="commodity">
     <v-col cols="12" sm="6" lg="5">
-      <!-- <v-row class="image-row d-flex justify-center"> -->
       <v-card flat class="px-5">
         <v-img :src="currentLink" :lazy-src="noImage" height="400px" contain></v-img>
-        <!-- </v-row> -->
-        <!-- <v-row class="justify-center"> -->
-        <!-- center-active mandatory -->
         <v-slide-group v-model="activeCard" center-active mandatory show-arrows>
           <v-slide-item v-slot:default="{ active, toggle }" v-for="img in previewImgs" :key="img._id">
             <v-img
@@ -23,12 +19,9 @@
           </v-slide-item>
         </v-slide-group>
       </v-card>
-      <!-- </v-row> -->
     </v-col>
 
     <v-col cols="12" sm="6" offset-lg="1" lg="5">
-      <!-- <v-row>
-            <v-col cols="12"> -->
       <h2 class="dgrey--text">{{ commodity.name }}</h2>
       <h4 class="shopfont--text">{{ commodity.brand }}</h4>
       <div class="caption mt-12">
@@ -42,20 +35,10 @@
             style="position: absolute; top: -20px; font-size: 14px; left: 50%; transform: translateX(-50%)"
             >not available</span
           >
-          <v-btn
-            :disabled="!commodity.amount"
-            small
-            width="100%"
-            class="pa-2 mt-2 dgrey--text"
-            color="orange"
+          <v-btn :disabled="!commodity.amount" small width="100%" class="pa-2 mt-2 dgrey--text" color="orange"
             >Add to card</v-btn
           >
-          <v-btn
-            :disabled="!commodity.amount"
-            small
-            width="100%"
-            class="pa-2 mt-4 white--text"
-            color="dgrey"
+          <v-btn :disabled="!commodity.amount" small width="100%" class="pa-2 mt-4 white--text" color="dgrey"
             >Buy it now</v-btn
           >
         </v-card>
@@ -65,14 +48,13 @@
 </template>
 
 <script>
-
 export default {
   name: 'ShopCardDetail',
-  props:{
+  props: {
     commodity: {
-      type:Object,
+      type: Object,
       required: false,
-    }
+    },
   },
   data() {
     return {
@@ -88,18 +70,10 @@ export default {
       return this.commodity?.images[this.activeCard]?.link ?? this.noImage;
     },
   },
-  watch: {
-  },
-  methods: {
-
-  },
-  async mounted() {
-  },
 };
 </script>
 
 <style lang="scss">
-@import '@/css/variables.scss';
 .card-active {
   opacity: 1;
 }

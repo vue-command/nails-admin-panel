@@ -43,7 +43,7 @@
     <AddCountry :dialog.sync="addCountryDialog" :countries="countries" @addCountry="addCountry" />
   </v-container>
 </template>
-<style scoped></style>
+
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
 
@@ -115,6 +115,6 @@ export default {
 </script>
 <style scoped>
 .active {
-  background-color: #ffc44a !important;
+  background-color: var(--v-orange-base) !important;
 }
 </style>

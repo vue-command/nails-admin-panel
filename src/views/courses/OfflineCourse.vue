@@ -1,76 +1,56 @@
 <template>
   <v-container id="edit-form">
     <v-row>
-      <!-- <v-col cols="12" xs="12" v-if="loading">
-        <Spinner />
-      </v-col> -->
-      <v-col cols="12" xs="12" v-if="!loading && course && !editing ">
-        <CourseDetail
-          :course="course"
-          :type="type"
-          btnTitle="BUY THIS COURSE"
+      <v-col cols="12" xs="12" v-if="!loading && course && !editing">
+        <CourseDetail :course="course" :type="type" btnTitle="BUY THIS COURSE" />
+      </v-col>
+      <v-col cols="12" xs="12" md="7" v-if="editing">
+        <OfflineForm
+          :course.sync="courseData"
+          :loading="loading"
+          :schema="schema"
+          mode="edit"
+          @submit="submit"
+          @back="back"
         />
       </v-col>
-       <v-col cols="12" xs="12" md="7" v-if="editing">
-        <OfflineForm :course.sync="courseData" :schema="schema" mode="edit" @submit="submit" @back="back" />
-      </v-col>
-      <v-col
-        v-if="editing"
-        cols="12"
-        xs="12"
-        md="5"
-        class="d-flex flex-column justify-space-between align-center"
-      >
-        <CourseCard :course="courseData" :type="type" :preview="true"/>
+      <v-col v-if="editing" cols="12" xs="12" md="5" class="d-flex flex-column justify-space-between align-center">
+        <CourseCard :course="courseData" :type="type" :preview="true" />
       </v-col>
       <v-col cols="12" xs="12">
-         <CourseDetail
-          v-if="editing"
-          :course="courseData"
-          :type="type"
-          btnTitle="BUY THIS COURSE"
-        />
-      <div
-        v-if="!editing"
-        class="d-flex flex-column align-center flex-sm-row justify-sm-center mt-8"
-      >
-        <v-btn
-          @click="fillingForm"
-          color="buttons"
-          rounded
-          large
-          dark
-          min-width="160"
-          class="yellow-button"
-          >Edit</v-btn
-        >
-      </div>
+        <CourseDetail v-if="editing" :course="courseData" :type="type" btnTitle="BUY THIS COURSE" />
+        <div v-if="!editing" class="d-flex flex-column align-center flex-sm-row justify-sm-center mt-8">
+          <v-btn @click="fillingForm" color="buttons" rounded large dark min-width="160" class="yellow-button"
+            >Edit</v-btn
+          >
+        </div>
       </v-col>
     </v-row>
+    <Spinner v-if="loading" />
   </v-container>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex';
 
-// import Spinner from '@/components/Spinner.vue';
+import Spinner from '@/components/Spinner.vue';
 import CourseDetail from '@/components/courses/CourseDetail.vue';
 import CourseCard from '@/components/courses/CourseCard.vue';
 import OfflineForm from '@/components/forms/OfflineForm.vue';
 
 const schema = require('@/config/editOfflineCourseSchema').default;
 
-
 export default {
   name: 'OfflineCourse',
   components: {
-    // Spinner,
+    Spinner,
     CourseDetail,
     CourseCard,
     OfflineForm,
   },
   data() {
     return {
+      loading: false,
       schema,
       courseData: null,
       editing: false,
@@ -79,9 +59,7 @@ export default {
   },
   computed: {
     ...mapState(['loading', 'error']),
-    ...mapState('offlineCourses', [
-      'course',
-    ]),
+    ...mapState('offlineCourses', ['course']),
   },
   watch: {
     сourse(val) {
@@ -106,10 +84,12 @@ export default {
       }
     },
     async submit(data) {
+      this.loading = true;
       await this.putCourse({
         data,
         id: this.$route.params.courseid,
       });
+      this.loading = false;
       if (!this.error) this.back();
     },
     back() {
@@ -119,9 +99,6 @@ export default {
   created() {
     this.getCourse(this.$route.params.courseid);
   },
-  beforeDestroy() {
-  },
 };
 </script>
 
-<style></style>

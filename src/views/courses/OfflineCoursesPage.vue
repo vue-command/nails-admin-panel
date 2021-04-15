@@ -49,9 +49,6 @@
   </v-container>
 </template>
 
-<style scoped>
-</style>
-
 <script>
 import { mapState, mapActions } from 'vuex';
 

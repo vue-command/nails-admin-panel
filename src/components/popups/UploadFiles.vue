@@ -52,19 +52,6 @@
   </v-card>
 </template>
 
-<style lang="scss">
-</style>
-
-<style>
-.upload-dialog {
-  width: 300px;
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  z-index: 20;
-}
-</style>
-
 <script>
 import { mapState, mapActions } from 'vuex'
 
@@ -112,3 +99,13 @@ export default {
   beforeDestroy () {}
 }
 </script>
+
+<style>
+.upload-dialog {
+  width: 300px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 20;
+}
+</style>

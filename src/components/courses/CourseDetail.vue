@@ -19,10 +19,10 @@
           >
         </v-card>
         <v-card flat class="transparent" dark v-if="type === 'online' && (!course.isPaid || !course.isPublished)">
-          <v-card-text class="pa-0 pl-4 pb-4 notPaidAndPublished--text"
-            ><h3 v-if="!course.isPaid">this course has not been paid for yet</h3>
-            <h3 v-if="!course.isPublished">this course has not been published yet</h3></v-card-text
-          >
+          <v-card-text class="pa-0 pl-4 pb-4 notPaidAndPublished--text">
+            <!-- <h3 v-if="!course.isPaid">this course has not been paid for yet</h3> -->
+            <h3 v-if="!course.isPublished">this course has not been published yet</h3>
+          </v-card-text>
         </v-card>
         <v-card flat class="transparent d-flex flex-column align-center" dark v-if="type === 'offline'">
           <table>
@@ -64,33 +64,9 @@
           <v-card-text>{{ course.infoForBonus }}</v-card-text>
         </v-card>
       </v-col>
-      <!-- <v-col
-        cols="12"
-        xs="12"
-        class="d-flex justify-center justify-sm-end"
-        order="2"
-      >
-        <v-btn
-          color="buttons"
-          rounded
-          small
-          outlined
-          primary
-          min-width="90"
-          class="yellow-button mr-4"
-          @click="btnHandler"
-          >{{ btnTitle }}</v-btn
-        >
-      </v-col> -->
     </v-row>
   </v-container>
 </template>
-
-<style scoped>
-td {
-  padding: 8px;
-}
-</style>
 
 <script>
 import CoverImage from '@/components/CoverImage.vue';
@@ -147,3 +123,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+td {
+  padding: 8px;
+}
+</style>

@@ -37,10 +37,6 @@ export default {
       this.error = false;
     },
   },
-  methods: {},
-  mounted() {},
 };
 </script>
 
-<style>
-</style>

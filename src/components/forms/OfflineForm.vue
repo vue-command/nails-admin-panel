@@ -98,6 +98,7 @@
             >cancel</v-btn
           >
           <v-btn
+            :disabled="loading"
             color="buttons"
             rounded
             outlined
@@ -138,6 +139,10 @@ export default {
     mode: {
       type: String,
       required: true,
+    },
+    loading: {
+      type: Boolean,
+      default: false,
     },
   },
   components: {
@@ -232,4 +237,3 @@ export default {
 };
 </script>
 
-<style></style>

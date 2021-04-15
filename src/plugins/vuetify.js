@@ -39,7 +39,6 @@ export default new Vuetify({
         orange: '#FFC44A',
         primary: '#333333',
         secondary: '#dde',
-        // accent: '',
         dgrey: '#333333',
         lgrey: '#F4F4F4',
         buttons: '#FFC44A',
@@ -57,10 +56,11 @@ export default new Vuetify({
         disabledPathBreadcrumbs: '#262624',
         error: '#f5420d',
         deliveryItem: '#e5e5e5',
-        disabledLink: '#808080'
+        disabledLink: '#808080',
+        courseOrderItemBorder: '#000',
+        deliverySectionBorder: '#000'
       },
       dark: {
-        // orange
         orange: '#FFC44A',
         primary: '#FFC44A',
         // light gray
@@ -78,7 +78,10 @@ export default new Vuetify({
         notPaidAndPublished: '#369ab3',
         disabledPathBreadcrumbs: '#ffffff',
         error: '#f5420d',
-        disabledLink: '#808080'
+        disabledLink: '#808080',
+        courseOrderItemBorder: '#000',
+        deliverySectionBorder: '#000'
+
       },
     },
   },

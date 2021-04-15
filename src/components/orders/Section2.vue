@@ -75,7 +75,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .payment-info {
-  border: 1px solid #000;
+  border: 1px solid var(--v-deliverySectionBorder-base);
   width: 100%;
   & th,
   td {

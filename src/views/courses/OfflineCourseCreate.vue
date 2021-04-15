@@ -2,10 +2,10 @@
   <v-container>
     <v-row>
       <v-col cols="12" xs="12" md="7">
-        <OfflineForm :course.sync="courseData" :schema="schema" mode="create" @submit="submit" />
+        <OfflineForm :course.sync="courseData" :loading="loading" :schema="schema" mode="create" @submit="submit" />
       </v-col>
       <v-col v-if="courseData" cols="12" xs="12" md="5" class="d-flex flex-column justify-space-between align-center">
-        <CourseCard :course="courseData" :type="type" :preview="true"/>
+        <CourseCard :course="courseData" :type="type" :preview="true" />
       </v-col>
       <v-col v-if="courseData" cols="12" xs="12">
         <CourseDetail :course="courseData" :type="type" btnTitle="BUY THIS COURSE" />
@@ -13,7 +13,7 @@
     </v-row>
   </v-container>
 </template>
-<style scoped></style>
+
 <script>
 import { mapActions } from 'vuex';
 
@@ -22,7 +22,6 @@ import CourseCard from '@/components/courses/CourseCard.vue';
 import OfflineForm from '@/components/forms/OfflineForm.vue';
 
 const schema = require('@/config/offlineCourseSchema').default;
-
 
 export default {
   components: {
@@ -33,6 +32,7 @@ export default {
   name: 'OfflineCourseCreate',
   data() {
     return {
+      loading: false,
       schema,
       courseData: null,
       type: 'offline',
@@ -43,7 +43,9 @@ export default {
       postCourse: 'POST_COURSE',
     }),
     async submit(data) {
+      this.loading = true;
       const id = await this.postCourse(data);
+      this.loading = false;
       if (id) {
         this.$router.push({
           name: 'offline-course',

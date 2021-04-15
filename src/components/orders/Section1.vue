@@ -85,7 +85,7 @@ export default {
 <style scoped lang="scss">
 .commodities-info,
 .delivery-info {
-  border: 1px solid #000;
+  border: 1px solid var(--v-deliverySectionBorder-base);
 }
 .commodities-info,
 .delivery-info {
