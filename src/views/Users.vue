@@ -62,7 +62,7 @@
           <v-card-title>
             <v-row v-if="$vuetify.breakpoint.xs">
               <v-col cols="12" xs="12">
-                <h5 class="users_delivery-address-hiden">
+                <h5 class="text-truncate">
                   {{ user.firstName + ' ' + user.lastName }}
                 </h5>
               </v-col>
@@ -70,12 +70,12 @@
 
             <v-row v-else>
               <v-col cols="12" sm="4" md="3">
-                <h5 class="users_delivery-address-hiden">
+                <h5 class="text-truncate">
                   {{ user.firstName + ' ' + user.lastName }}
                 </h5>
               </v-col>
               <v-col cols="12" sm="8" md="9">
-                <h5 class="users_delivery-address-hiden">
+                <h5 class="text-truncate">
                   <span v-if="$vuetify.breakpoint.mdAndUp" style="font-weight: normal">Delivery address: </span
                   >{{ user.deliveryAddress.length ? user.deliveryAddress : 'address not specified' }}
                 </h5>
@@ -217,13 +217,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.users_delivery-address-hiden {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-}
-</style>

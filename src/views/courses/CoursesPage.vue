@@ -49,8 +49,6 @@
     <confirmDelete :dialog.sync="dialog" :confirmDelete="confirmDelete" />
   </v-container>
 </template>
-<style scoped>
-</style>
 <script>
 import { mapState, mapActions } from 'vuex';
 

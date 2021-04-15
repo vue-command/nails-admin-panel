@@ -46,6 +46,6 @@ export default {
 
 <style scoped>
 .active {
-  background-color: #ffc44a !important;
+  background-color: var(--v-orange-base) !important;
 }
 </style>

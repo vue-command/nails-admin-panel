@@ -1,26 +1,30 @@
 <template>
   <v-app dark>
-    <div v-if="user">
-      <v-app-bar color="orange" dark>
-        <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
+    <v-app-bar app color="orange" dark>
+      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
 
-        <v-toolbar-title><a class="white--text" :href="baseUrl">Nails AUSTRALIA</a></v-toolbar-title>
-      </v-app-bar>
+      <v-toolbar-title><a class="white--text" :href="baseUrl">Nails AUSTRALIA</a></v-toolbar-title>
+    </v-app-bar>
 
-      <NavigationDrawer :drawer.sync="drawer" />
+    <NavigationDrawer :drawer.sync="drawer" />
 
-      <v-main class="homefone">
-          <component :is="layout">
-            <!-- <router-view /> -->
-          </component>
-      </v-main>
+    <v-main v-if="user" class="homefone">
+      <component :is="layout">
+        <!-- <router-view /> -->
+      </component>
+    </v-main>
 
-      <UploadFiles v-if="uploadDialog" />
-      <error-message />
-      <simple-message />
-    </div>
-    
-    <h2 v-else class="text-center">User does not found</h2>
+    <UploadFiles v-if="uploadDialog" />
+    <error-message />
+    <simple-message />
+
+    <h2
+      v-if="!user"
+      style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)"
+      class="text-center"
+    >
+      User does not found
+    </h2>
   </v-app>
 </template>
 
@@ -90,32 +94,16 @@ a {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* text-align: center; */
-}
-.disabled-link {
-  color: grey !important;
-}
-.v-snack__content {
-  text-align: center !important;
 }
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 10px; /* width for vertical scroll */
+  height: 8px; /* height for horizontal scroll */
+  background-color: var(--v-homefone-base);
 }
-::-webkit-scrollbar-button:start:decrement,
-::-webkit-scrollbar-button:end:increment {
-  height: 10px;
-  background-color: transparent;
-}
-::-webkit-scrollbar-track-piece {
-  background-color: #ffffff00;
-  -webkit-border-radius: 16px;
-}
-::-webkit-scrollbar-thumb:vertical {
-  cursor: crosshair;
-  height: 10px;
-  background-color: #666;
-  border: 1px solid #eee;
-  -webkit-border-radius: 16px;
+
+/* slider scrollbar */
+::-webkit-scrollbar-thumb {
+  background-color: var(--v-orange-base);
+  border-radius: 9em;
 }
 </style>

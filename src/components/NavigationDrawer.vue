@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="localDrawer" absolute temporary>
+  <v-navigation-drawer app v-model="localDrawer" temporary>
     <v-list nav dense>
       <v-list-item-group v-model="group" active-class="orange--text text--accent-4">
         <v-list-item v-for="item in schema" :key="item.name" @click="goTo(item.name)">

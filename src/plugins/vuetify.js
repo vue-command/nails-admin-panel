@@ -57,6 +57,7 @@ export default new Vuetify({
         disabledPathBreadcrumbs: '#262624',
         error: '#f5420d',
         deliveryItem: '#e5e5e5',
+        disabledLink: '#808080'
       },
       dark: {
         // orange
@@ -77,6 +78,7 @@ export default new Vuetify({
         notPaidAndPublished: '#369ab3',
         disabledPathBreadcrumbs: '#ffffff',
         error: '#f5420d',
+        disabledLink: '#808080'
       },
     },
   },
