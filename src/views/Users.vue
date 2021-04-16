@@ -58,7 +58,7 @@
       </template>
 
       <template v-slot:default="{ items, isExpanded, expand }">
-        <v-card v-for="user in items" :key="user._id" class="my-4" @click="v => expand(user, !isExpanded(user))">
+        <v-card v-for="user in items" :key="user._id" class="my-4">
           <v-card-title>
             <v-row v-if="$vuetify.breakpoint.xs">
               <v-col cols="12" xs="12">
@@ -81,8 +81,10 @@
                 </h5>
               </v-col>
             </v-row>
+            <v-btn icon @click="v => expand(user, !isExpanded(user))">
+              <v-icon>{{ !isExpanded(user) ? 'mdi-chevron-down' : 'mdi-chevron-up' }}</v-icon>
+            </v-btn>
           </v-card-title>
-
           <v-divider></v-divider>
 
           <v-list v-if="isExpanded(user)" dense>
