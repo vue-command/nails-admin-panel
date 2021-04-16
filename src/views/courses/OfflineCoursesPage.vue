@@ -13,7 +13,7 @@
       >
     </div>
     <h3 v-if="emtyCourses" class="text-center">No courses have been added yet.</h3>
-    <div class="d-flex flex-wrap justify-center">
+    <div v-if="!loading" class="d-flex flex-wrap justify-center">
       <CourseCard
         v-for="course in courses"
         :key="course._id"
@@ -25,7 +25,7 @@
       />
     </div>
 
-    <OfflineCardSkeleton v-if="loading" />
+    <CardSkeleton v-if="loading" type="offline"/>
 
     <div class="text-center">
       <v-btn
@@ -51,7 +51,7 @@
 import { mapState, mapActions } from 'vuex';
 
 import CourseCard from '@/components/courses/CourseCard.vue';
-import OfflineCardSkeleton from '@/components/courses/OfflineCardSkeleton.vue';
+import CardSkeleton from '@/components/courses/CardSkeleton.vue';
 import confirmDelete from '@/components/popups/confirmDelete.vue';
 
 export default {
@@ -59,7 +59,7 @@ export default {
   components: {
     CourseCard,
     confirmDelete,
-    OfflineCardSkeleton,
+    CardSkeleton,
   },
   data: () => ({
     dialog: false,

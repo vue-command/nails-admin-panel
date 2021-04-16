@@ -29,8 +29,8 @@
         @delete="removeCourse"
       />
     </div>
-    
-    <OnlineCardSkeleton v-if="loading" />
+
+    <CardSkeleton v-if="loading" />
 
     <div class="text-center">
       <v-btn
@@ -50,14 +50,14 @@
 import { mapState, mapActions } from 'vuex';
 
 import CourseCard from '@/components/courses/CourseCard.vue';
-import OnlineCardSkeleton from '@/components/courses/OnlineCardSkeleton.vue';
+import CardSkeleton from '@/components/courses/CardSkeleton.vue';
 import confirmDelete from '@/components/popups/confirmDelete.vue';
 export default {
   name: 'CoursesPage',
   components: {
     confirmDelete,
     CourseCard,
-    OnlineCardSkeleton,
+    CardSkeleton,
   },
   data: () => ({
     dialog: false,

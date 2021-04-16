@@ -5,7 +5,7 @@
       :elevation="hover ? 16 : 2"
       :class="{ 'on-hover': hover }"
       class="ma-12"
-      :width="width" 
+      :width="width"
       @click="$emit('click', course._id)"
     >
       <CoverImage :url="checkLink(course)" />
@@ -15,10 +15,18 @@
       <h3 class="pa-0 pl-4 my-2 text-truncate">{{ course.nameOfCourse }}</h3>
       <p class="pa-0 px-4 text-truncate spacing">{{ course.subtitle }}</p>
       <v-card-actions class="pl-4 pb-4">
-        <v-btn color="buttons" rounded small outlined primary min-width="90" class="yellow-button mr-4">pay</v-btn>
-        <v-btn v-if="type === 'offline'" color="buttons" rounded small min-width="90" dark class="yellow-button"
-          >more</v-btn
+        <v-btn
+          v-if="type === 'online'"
+          color="buttons"
+          rounded
+          small
+          outlined
+          primary
+          min-width="90"
+          class="yellow-button mr-4"
+          >pay</v-btn
         >
+        <v-btn color="buttons" rounded small min-width="90" dark class="yellow-button">more</v-btn>
         <v-spacer />
         <v-btn
           v-if="!course.isPublished && !preview"
@@ -67,8 +75,7 @@ export default {
   data() {
     return {};
   },
-  computed: {
-  },
+  computed: {},
   watch: {},
   methods: {
     checkLink,
