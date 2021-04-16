@@ -1,0 +1,66 @@
+<template>
+  <div class="d-flex flex-wrap justify-center">
+    <v-card
+      v-for="(item, index) in count"
+      :key="index"
+      :width="width"
+      :height="height"
+      class="ma-12 skeleton-course-card"
+    >
+      <v-skeleton-loader type="card,article,actions"></v-skeleton-loader>
+    </v-card>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    width: {
+      type: String,
+      default: '300',
+    },
+    height: {
+      type: String,
+      default: '480',
+    },
+    count: {
+      type: Number,
+      default: 4,
+    },
+  },
+};
+</script>
+
+<style lang="scss">
+.skeleton-course-card {
+  & .v-skeleton-loader__card-heading .v-skeleton-loader__heading,
+  .v-skeleton-loader__article .v-skeleton-loader__heading,
+  .v-skeleton-loader__actions .v-skeleton-loader__button:first-child {
+    display: none;
+  }
+  & .v-skeleton-loader__image {
+    height: 300px !important;
+  }
+  & .v-skeleton-loader__actions {
+    text-align: left;
+    padding: 16;
+  }
+  & .v-skeleton-loader__button {
+    border-radius: 28px;
+    height: 30px;
+    width: 100px;
+  }
+  & .v-skeleton-loader__paragraph .v-skeleton-loader__text:nth-child(1) {
+    max-width: 50%;
+    margin-top: 10px;
+  }
+  & .v-skeleton-loader__paragraph .v-skeleton-loader__text:nth-child(2) {
+    max-width: 70%;
+    margin-top: 15px;
+  }
+  & .v-skeleton-loader__paragraph .v-skeleton-loader__text:nth-child(3) {
+    max-width: 60%;
+    margin-top: 15px;
+  }
+}
+</style>

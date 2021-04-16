@@ -24,11 +24,9 @@
         :deleteBtn="true"
       />
     </div>
-    <div v-if="loading" class="d-flex flex-wrap justify-center">
-      <v-card v-for="(item, index) in 4" :key="index" width="300" height="400" class="ma-4">
-        <v-skeleton-loader type="card"></v-skeleton-loader>
-      </v-card>
-    </div>
+
+    <OfflineCardSkeleton v-if="loading" />
+
     <div class="text-center">
       <v-btn
         v-if="!emtyCourses && isHideMoreBtn"
@@ -45,7 +43,7 @@
       >
     </div>
 
-    <confirmDelete :dialog.sync="dialog" :confirmDelete="confirmDelete"/>
+    <confirmDelete :dialog.sync="dialog" :confirmDelete="confirmDelete" />
   </v-container>
 </template>
 
@@ -53,6 +51,7 @@
 import { mapState, mapActions } from 'vuex';
 
 import CourseCard from '@/components/courses/CourseCard.vue';
+import OfflineCardSkeleton from '@/components/courses/OfflineCardSkeleton.vue';
 import confirmDelete from '@/components/popups/confirmDelete.vue';
 
 export default {
@@ -60,6 +59,7 @@ export default {
   components: {
     CourseCard,
     confirmDelete,
+    OfflineCardSkeleton,
   },
   data: () => ({
     dialog: false,

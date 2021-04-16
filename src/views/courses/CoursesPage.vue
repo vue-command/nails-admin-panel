@@ -18,7 +18,6 @@
         <v-radio v-for="current of filterCourses" :key="current.title" dark :label="current.title"></v-radio>
       </v-radio-group>
     </div>
-    <!-- <Spinner v-if="loading" /> -->
     <h2 v-if="emtyCourses" class="text-center">No courses have been added yet</h2>
     <div class="d-flex flex-wrap justify-center">
       <CourseCard
@@ -30,11 +29,9 @@
         @delete="removeCourse"
       />
     </div>
-    <div v-if="loading" class="d-flex flex-wrap justify-center">
-      <v-card v-for="(item, index) in 4" :key="index" width="400" height="350" class="ma-4">
-        <v-skeleton-loader type="card"></v-skeleton-loader>
-      </v-card>
-    </div>
+    
+    <OnlineCardSkeleton v-if="loading" />
+
     <div class="text-center">
       <v-btn
         v-if="!emtyCourses && isHideMoreBtn"
@@ -53,15 +50,14 @@
 import { mapState, mapActions } from 'vuex';
 
 import CourseCard from '@/components/courses/CourseCard.vue';
+import OnlineCardSkeleton from '@/components/courses/OnlineCardSkeleton.vue';
 import confirmDelete from '@/components/popups/confirmDelete.vue';
-// import Spinner from '@/components/Spinner.vue';
-
 export default {
   name: 'CoursesPage',
   components: {
-    // Spinner,
     confirmDelete,
     CourseCard,
+    OnlineCardSkeleton,
   },
   data: () => ({
     dialog: false,
