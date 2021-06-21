@@ -1,5 +1,5 @@
 <template>
-  <v-card width="400" class="ma-4 pa-4 d-flex flex-column align-center delivery-item-card">
+  <v-card width="400" class="ma-4 pa-4 d-flex flex-column align-center delivery-item-card deliveryCardBg">
     <v-btn v-if="international" large icon class="delete-country-button" color="error" @click="$emit('deleteCountry')">
       <v-icon>mdi-close-circle-outline</v-icon>
     </v-btn>

@@ -36,6 +36,7 @@ export default new Vuetify({
     },
     themes: {
       light: {
+        deliveryCardBg: '#f1f1f1',
         orange: '#FFC44A',
         primary: '#333333',
         secondary: '#dde',
@@ -61,6 +62,7 @@ export default new Vuetify({
         deliverySectionBorder: '#000'
       },
       dark: {
+        deliveryCardBg: '#f1f1f1',
         orange: '#FFC44A',
         primary: '#FFC44A',
         // light gray
