@@ -15,11 +15,11 @@ export default {
   ],
   sideRight: [
     {
-      text: 'Shop',
-      routeName: 'shop',
+      text: 'Commodities',
+      routeName: 'commodities',
     },
     {
-      text: 'Shop categories',
+      text: 'Categories',
       routeName: 'categories',
     },
     {

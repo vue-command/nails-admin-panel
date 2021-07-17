@@ -40,6 +40,9 @@ export default {
     lessonId() {
       return this.$route.params.lessonid ?? '';
     },
+    commodityId() {
+      return this.$route.params.commodityId ?? '';
+    },
     courseName() {
       return this?.course?.nameOfCourse ?? '';
     },
@@ -53,7 +56,6 @@ export default {
       return this?.video?.name ?? '';
     },
     commodityName() {
-      if (this.$route.params.commodityId == 'new') return 'New commodity';
       return this?.commodity?.name ?? '';
     },
     routeName() {

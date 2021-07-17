@@ -11,8 +11,8 @@ const routes = [
     component: Home,
   },
   {
-    path: '/shop',
-    name: 'shop',
+    path: '/commodities',
+    name: 'commodities',
     meta: {
       layout: 'shop',
     },
@@ -23,7 +23,7 @@ const routes = [
       ),
   },
   {
-    path: '/shop/commodity/create',
+    path: '/commodities/create',
     name: 'commodity-create',
     meta: {
       layout: 'shop',
@@ -35,7 +35,7 @@ const routes = [
       ),
   },
   {
-    path: '/shop/commodity/:commodityId',
+    path: '/commodities/:commodityId',
     name: 'commodity-edit',
     meta: {
       layout: 'shop',

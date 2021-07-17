@@ -4,7 +4,7 @@
       :headers="headers"
       :items="data"
       multi-sort
-      :sort-by="['formatDate']"
+      :sort-by="['createdAt']"
       :sort-desc="[true]"
       show-expand
       :search="search"

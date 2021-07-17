@@ -8,25 +8,25 @@
               :disabled="!!search"
               class="text-subtitle-1"
               outlined
-              v-model="selectedCategoryId"
+              v-model="selectedCategory"
               :items="categories"
               item-text="name"
-              item-value="_id"
+              return-object
               label="Category"
             >
               Choose category
             </v-select>
           </v-col>
 
-          <v-col cols="12" sm="6" v-if="activeCategory">
+          <v-col cols="12" sm="6" v-if="selectedCategory">
             <v-select
               class="text-subtitle-1"
-              :disabled="!selectedCategoryId || !!search"
-              v-model="selectedSubcategoryId"
+              :disabled="!selectedCategory || !!search"
+              v-model="selectedSubcategory"
               outlined
               :items="subcategories"
               item-text="name"
-              item-value="_id"
+              return-object
               label="Subcategory"
             >
               Choose subcategory
@@ -127,8 +127,8 @@ export default {
       page: 1,
       pageSize: 12,
       radioGroup: 0,
-      selectedCategoryId: '',
-      selectedSubcategoryId: '',
+      selectedCategory: null,
+      selectedSubcategory: null,
       filters: [
         {
           title: 'Published',
@@ -149,18 +149,7 @@ export default {
     ...mapState('shop', ['isShopLoading', 'commodities', 'total']),
     ...mapState('categories', ['categories']),
     subcategories() {
-      return this.activeCategory?.subcategories ?? [];
-    },
-    showMoreButton() {
-      return this.commodities.length < this.totalCommodities;
-    },
-    activeSubcategory() {
-      if (!this.selectedSubcategoryId) return this.subcategories[0];
-      return this.subcategories.find(cat => cat._id === this.selectedSubcategoryId);
-    },
-    activeCategory() {
-      if (!this.selectedCategoryId) return this.categories[0];
-      return this.categories.find(cat => cat._id === this.selectedCategoryId);
+      return this.selectedCategory?.subcategories ?? [];
     },
     pages() {
       if (!this.total) return 1;
@@ -176,13 +165,16 @@ export default {
     page() {
       this.getCommodities();
     },
-    activeSubcategory(val) {
+    selectedSubcategory(val) {
       if (!val) return;
       if (this.page !== 1) this.page = 1;
       else this.getCommodities();
     },
-    selectedCategoryId() {
-      this.selectedSubcategoryId = '';
+    selectedCategory(val) {
+      if(!val) {
+        this.selectedSubcategory = null;
+      }
+      this.selectedSubcategory = val?.subcategories?.[0] || null;
     },
     search() {
       if (this.page !== 1) this.page = 1;
@@ -191,9 +183,9 @@ export default {
   },
   methods: {
     getCommodities() {
-      if (!this.activeSubcategory) return;
+      if (!this.selectedSubcategory) return;
       this.$store.dispatch('shop/GET_COMMODITIES', {
-        id: this.activeSubcategory?._id,
+        id: this.selectedSubcategory?._id,
         search: this.search,
         offset: (this.page - 1) * this.pageSize,
         filter: this.filters[this.radioGroup].param,
@@ -208,7 +200,11 @@ export default {
       });
     },
   },
-  mounted() {
+  created() {
+    if(this.categories.length){
+      this.selectedCategory = this.categories[0];
+      this.selectedSubcategory = this.categories[0].subcategories[0];
+    }
     this.getCommodities();
     this.searchDebounced = debounce(this.getCommodities, 1000);
   },

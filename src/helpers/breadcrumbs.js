@@ -91,27 +91,27 @@ export function breadcrumbsFactory() {
         name: 'delivery',
         text: `Delivery`,
       },
-      //! Shop
+      //! Commodities
       {
         id: 60,
         parentId: 0,
-        path: '/shop',
-        name: 'shop',
-        text: `Shop`,
+        path: '/commodities',
+        name: 'commodities',
+        text: `Commodities`,
       },
       {
         id: 61,
         parentId: 60,
-        path: '/shop',
-        name: 'shop',
-        text: `Commodity`,
+        path: `/commodities/${this.commodityId}`,
+        name: 'commodity-edit',
+        text: this.commodityName,
       },
       {
         id: 62,
-        parentId: 61,
-        path: '/shop/commodity/new',
-        name: 'commodity-edit',
-        text: this.commodityName,
+        parentId: 60,
+        path: '/commodities/create',
+        name: 'commodity-create',
+        text: 'New commodity',
       },
       //! Categories
       {
