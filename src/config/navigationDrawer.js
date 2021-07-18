@@ -15,13 +15,13 @@ export default [
     icon:'$onlineCourse'
   },
   {
-    name:'shop',
-    text:'Shop',
+    name:'commodities',
+    text:'Commodities',
     icon:'$shop'
   },
   {
     name:'categories',
-    text:'Shop categories',
+    text:'Categories',
     icon:'$shopCategories'
   },
   {

@@ -7,7 +7,7 @@
       <Section2 :paymentInfo="order.paymentInfo" :userInfo="order.user" />
     </v-col>
     <v-col cols="12" md="4">
-      <Section3 :status="order.status" :statusHistory="order.statusHistory" @changeStatus="changeStatus" />
+      <Section3 :status="order.status" :statusHistory="order.statusHistory" @changeStatus="changeStatus" :deliveryType="deliveryType" />
     </v-col>
   </v-row>
 </template>
@@ -35,6 +35,9 @@ export default {
     },
     delivery() {
       return this.order.cart[this.order.cart.length - 1];
+    },
+    deliveryType() {
+      return this.order.paymentInfo.deliveryType.type;
     },
   },
   methods: {

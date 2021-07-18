@@ -40,17 +40,16 @@ export default {
       type: Array,
       requaired: true,
     },
+    deliveryType: {
+      type: String,
+      requaired: true,
+    },
   },
   components: {},
   data() {
     return {
       select: '',
       trackingNumber: '',
-      items: [
-        { text: 'Processed', value: 'processed' },
-        { text: 'Sent', value: 'sent' },
-        { text: 'Delivered', value: 'delivered' },
-      ],
     };
   },
   computed: {
@@ -58,6 +57,19 @@ export default {
       if (this.select === 'sent') return this.trackingNumber;
       if (this.select) return true;
       return false;
+    },
+    items(){
+      const pickup = [
+        { text: 'Processed', value: 'processed' },
+        { text: 'Waiting pickup', value: 'waiting-pickup' },
+        { text: 'Taken away', value: 'taken-away' },
+      ];
+      const other = [
+        { text: 'Processed', value: 'processed' },
+        { text: 'Sent', value: 'sent' },
+        { text: 'Delivered', value: 'delivered' },
+      ];
+      return this.deliveryType === 'pickup' ? pickup : other;
     },
   },
   methods: {
