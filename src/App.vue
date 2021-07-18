@@ -73,7 +73,7 @@ export default {
     this.$store.dispatch('users/GET_USER', hash);
   },
   mounted() {
-    setTimeout(this.redirect, 500);
+    setTimeout(this.redirect, 1000);
   },
 };
 </script>
