@@ -8,10 +8,10 @@
               :disabled="!!search"
               class="text-subtitle-1"
               outlined
-              v-model="selectedCategory"
-              :items="categories"
+              v-model="selectedCategoryIndex"
+              :items="categoriesList"
               item-text="name"
-              return-object
+              item-value="index"
               label="Category"
             >
               Choose category
@@ -22,11 +22,11 @@
             <v-select
               class="text-subtitle-1"
               :disabled="!selectedCategory || !!search"
-              v-model="selectedSubcategory"
+              v-model="selectedSubcategoryIndex"
               outlined
               :items="subcategories"
               item-text="name"
-              return-object
+              item-value="index"
               label="Subcategory"
             >
               Choose subcategory
@@ -127,8 +127,8 @@ export default {
       page: 1,
       pageSize: 12,
       radioGroup: 0,
-      selectedCategory: null,
-      selectedSubcategory: null,
+      selectedCategoryIndex: 0,
+      selectedSubcategoryIndex: 0,
       filters: [
         {
           title: 'Published',
@@ -148,8 +148,23 @@ export default {
   computed: {
     ...mapState('shop', ['isShopLoading', 'commodities', 'total']),
     ...mapState('categories', ['categories']),
+    categoriesList() {
+      return this.categories.map((item, index) => {
+        item.index = index;
+        return item;
+      });
+    },
+    selectedCategory() {
+      return this.categories?.[this.selectedCategoryIndex] || null;
+    },
+    selectedSubcategory() {
+      return this.selectedCategory?.subcategories?.[this.selectedSubcategoryIndex] || null;
+    },
     subcategories() {
-      return this.selectedCategory?.subcategories ?? [];
+      return (this.selectedCategory?.subcategories || []).map((item, index) => {
+        item.index = index;
+        return item;
+      });
     },
     pages() {
       if (!this.total) return 1;
@@ -165,16 +180,17 @@ export default {
     page() {
       this.getCommodities();
     },
+    selectedCategoryIndex() {
+      localStorage.setItem('Shop_categoryIndex', this.selectedCategoryIndex);
+      this.selectedSubcategoryIndex = 0;
+    },
+    selectedSubcategoryIndex() {
+      localStorage.setItem('Shop_subCategoryIndex', this.selectedSubcategoryIndex);
+    },
     selectedSubcategory(val) {
       if (!val) return;
       if (this.page !== 1) this.page = 1;
       else this.getCommodities();
-    },
-    selectedCategory(val) {
-      if(!val) {
-        this.selectedSubcategory = null;
-      }
-      this.selectedSubcategory = val?.subcategories?.[0] || null;
     },
     search() {
       if (this.page !== 1) this.page = 1;
@@ -199,14 +215,23 @@ export default {
         },
       });
     },
+    saveIndexes() {
+      localStorage.setItem('Shop_categoryIndex', this.selectedCategoryIndex);
+      localStorage.setItem('Shop_subCategoryIndex', this.selectedSubcategoryIndex);
+    },
+    readIndexes() {
+      this.selectedCategoryIndex = Number(localStorage.getItem('Shop_categoryIndex')) || 0;
+      this.selectedSubcategoryIndex = Number(localStorage.getItem('Shop_subCategoryIndex')) || 0;
+    },
   },
   created() {
-    if(this.categories.length){
-      this.selectedCategory = this.categories[0];
-      this.selectedSubcategory = this.categories[0].subcategories[0];
-    }
+    this.readIndexes();
+
     this.getCommodities();
     this.searchDebounced = debounce(this.getCommodities, 1000);
+  },
+  beforeDestroy() {
+    this.saveIndexes();
   },
 };
 </script>
