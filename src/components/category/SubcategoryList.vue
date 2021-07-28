@@ -32,7 +32,7 @@
               v-else
               icon
               class="mt-2"
-              :disabled="subcategory.amountOfProduct !== 0"
+              :disabled="typeof subcategory.amountOfProduct === 'number' && subcategory.amountOfProduct > 0"
               @click="$emit('removeSubcat', subcategory._id)"
             >
               <v-icon>$delete</v-icon>
