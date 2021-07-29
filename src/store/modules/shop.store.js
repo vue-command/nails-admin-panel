@@ -21,7 +21,7 @@ const mutations = {
   COMMODITY: (state, payload) => {
     state.commodity = payload;
   },
-  REMOVE_COMMODITY: (state, { id }) => {
+  REMOVE_COMMODITY: (state, id) => {
     state.commodity = null;
     state.commodities = state.commodities.filter(elem => elem._id !== id);
   },

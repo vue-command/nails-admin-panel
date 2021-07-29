@@ -185,10 +185,22 @@ export default {
           }
         }
       });
+      this.readIndexes()
     },
     submit() {
       if (!this.$refs.form.validate()) return;
       this.$emit('submitHandler');
+    },
+    readIndexes() {
+      const categoryIndex = Number(localStorage.getItem('Shop_categoryIndex')) || 0;
+      const subcategoryIndex = Number(localStorage.getItem('Shop_subCategoryIndex')) || 0;
+      const category = this.categories[categoryIndex];
+      if (!category) {
+        this.data.categoryId = '';
+        this.data.subCategoryId = '';
+      }
+      this.data.categoryId = category._id;
+      this.data.subCategoryId = category.subcategories[subcategoryIndex]?._id || '';
     },
   },
   mounted() {

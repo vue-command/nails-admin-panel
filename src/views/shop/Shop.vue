@@ -143,6 +143,7 @@ export default {
           param: 'hiddenOnly',
         },
       ],
+      ready: false,
     };
   },
   computed: {
@@ -176,6 +177,7 @@ export default {
     radioGroup() {
       if (this.page !== 1) this.page = 1;
       else this.getCommodities();
+      localStorage.setItem('Shop_radioGroup', this.radioGroup);
     },
     page() {
       this.getCommodities();
@@ -199,7 +201,7 @@ export default {
   },
   methods: {
     getCommodities() {
-      if (!this.selectedSubcategory) return;
+      if (!this.ready || !this.selectedSubcategory) return;
       this.$store.dispatch('shop/GET_COMMODITIES', {
         id: this.selectedSubcategory?._id,
         search: this.search,
@@ -218,10 +220,15 @@ export default {
     saveIndexes() {
       localStorage.setItem('Shop_categoryIndex', this.selectedCategoryIndex);
       localStorage.setItem('Shop_subCategoryIndex', this.selectedSubcategoryIndex);
+      localStorage.setItem('Shop_radioGroup', this.radioGroup);
     },
     readIndexes() {
       this.selectedCategoryIndex = Number(localStorage.getItem('Shop_categoryIndex')) || 0;
-      this.selectedSubcategoryIndex = Number(localStorage.getItem('Shop_subCategoryIndex')) || 0;
+      this.radioGroup = Number(localStorage.getItem('Shop_radioGroup')) || 0;
+      this.$nextTick().then(() => {
+        this.selectedSubcategoryIndex = Number(localStorage.getItem('Shop_subCategoryIndex')) || 0;
+        this.ready = true;
+      });
     },
   },
   created() {

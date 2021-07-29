@@ -136,7 +136,7 @@ export default {
     },
     async deleteCommodityHandler() {
       await this.$store.dispatch('shop/DELETE_COMMODITY', this.commodity._id);
-      this.$router.push({ name: 'shop' });
+      this.$router.push({ name: 'commodities' });
     },
   },
 
