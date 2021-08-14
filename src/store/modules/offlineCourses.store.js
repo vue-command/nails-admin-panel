@@ -1,7 +1,5 @@
-/* eslint-disable no-shadow */
-/* eslint-disable no-underscore-dangle */
-
 const { getData, postData, putData, deleteData } = require('@/helpers').default;
+import { api } from './../../helpers/api';
 
 const endpoints = require('@/config/endpoints').default.offline;
 const errors = require('@/config/errors').default.offline;
@@ -20,7 +18,7 @@ const mutations = {
     state.courses = payload ?? [];
   },
   TOTAL: (state, payload) => {
-    state.total = payload ?? 0;
+    state.total = payload || 0;
   },
   MORE_COURSES: (state, payload) => {
     state.courses = state.courses.concat(payload);
@@ -33,22 +31,22 @@ const mutations = {
 const actions = {
   async GET_COURSES({ commit }) {
     commit('LOADING', true, { root: true });
-    const { offlineCourses, total, error } = await getData(endpoints.get);
-    if (!error) {
-      commit('COURSES', offlineCourses);
-      commit('TOTAL', total);
+    const res = await api.get(endpoints.get);
+    if (res.statusText === 'OK') {
+      commit('COURSES', res.data.data);
+      commit('TOTAL', res.data.total);
     } else {
       commit('ERROR', errors.get, { root: true });
     }
     commit('LOADING', false, { root: true });
   },
 
-  async GET_MORE_COURSES({ commit }, { skip }) {
+  async GET_MORE_COURSES({ commit }, params) {
     commit('LOADING', true, { root: true });
-    const { offlineCourses, total, error } = await getData(`${endpoints.get}?skip=${skip}`);
-    if (!error) {
-      commit('MORE_COURSES', offlineCourses);
-      commit('TOTAL', total);
+    const res = await api.get(endpoints.get, { params });
+    if (res.statusText === 'OK') {
+      commit('MORE_COURSES', res.data.data);
+      commit('TOTAL', res.data.total);
     } else {
       commit('ERROR', errors.get, { root: true });
     }

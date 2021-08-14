@@ -1,5 +1,6 @@
 /* eslint-disable no-shadow */
 const { getData, postData, patchData, putData, deleteData } = require('@/helpers').default;
+import { api } from './../../helpers/api';
 
 const endpoints = require('@/config/endpoints').default.online;
 const errors = require('@/config/errors').default.online;
@@ -19,7 +20,7 @@ const mutations = {
     state.courses = payload ?? [];
   },
   TOTAL: (state, payload) => {
-    state.total = payload ?? 0;
+    state.total = payload || 0;
   },
   MORE_COURSES: (state, payload) => {
     state.courses = state.courses.concat(payload);
@@ -54,10 +55,10 @@ const mutations = {
 const actions = {
   async GET_COURSES({ commit }, query) {
     commit('LOADING', true, { root: true });
-    const { onlineCourses, total, error } = await getData(`${endpoints.get}${query}`);
-    if (!error) {
-      commit('COURSES', onlineCourses);
-      commit('TOTAL', total);
+    const res = await api.get(`${endpoints.get}${query}`);
+    if (res.statusText === 'OK') {
+      commit('COURSES', res.data.data);
+      commit('TOTAL', res.data.total);
     } else {
       commit('ERROR', errors.get, { root: true });
     }
@@ -66,10 +67,10 @@ const actions = {
 
   async GET_MORE_COURSES({ commit }, query) {
     commit('LOADING', true, { root: true });
-    const { onlineCourses, total, error } = await getData(`${endpoints.get}${query}`);
-    if (!error) {
-      commit('MORE_COURSES', onlineCourses);
-      commit('TOTAL', total);
+    const res = await api.get(`${endpoints.get}${query}`);
+    if (res.statusText === 'OK') {
+      commit('MORE_COURSES', res.data.data);
+      commit('TOTAL', res.data.total);
     } else {
       commit('ERROR', errors.get, { root: true });
     }

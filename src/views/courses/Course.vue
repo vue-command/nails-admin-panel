@@ -44,7 +44,7 @@
         >
         <v-btn
           @click="() => publish({ id: course._id, publish: !course.isPublished })"
-          :disabled="(!course.isPaid || !lessonsCounter) && !course.isPublished"
+          :disabled="(!course.isPaid || !lessonCount) && !course.isPublished"
           color="buttons"
           rounded
           large
@@ -90,7 +90,7 @@ export default {
     courseUpdate() {
       return Object.assign({}, this.course, this.courseData);
     },
-    lessonsCounter() {
+    lessonCount() {
       return this?.course?.videos?.length ?? 0;
     },
   },

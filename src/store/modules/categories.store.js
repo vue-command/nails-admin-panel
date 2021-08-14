@@ -1,4 +1,5 @@
-const { getData, postData, putData, deleteData } = require('@/helpers').default;
+const { postData, putData, deleteData } = require('@/helpers').default;
+import { api } from './../../helpers/api';
 
 const categoriesEndpoints = require('@/config/endpoints').default.categories;
 const errors = require('@/config/errors').default.shop;
@@ -20,8 +21,8 @@ const getters = {
   },
 };
 const mutations = {
-  CATEGORIES: (state, categories) => {
-    state.categories = categories;
+  CATEGORIES: (state, payload) => {
+    state.categories = payload;
   },
 
   ADD_CATEGORY: (state, payload) => {
@@ -35,9 +36,9 @@ const mutations = {
 const actions = {
   async GET_CATEGORIES({ commit }) {
     commit('LOADING', true);
-    const { categories, error } = await getData(categoriesEndpoints.categories);
-    if (!error) {
-      commit('CATEGORIES', categories);
+    const res = await api.get(categoriesEndpoints.categories);
+    if (res.statusText === 'OK') {
+      commit('CATEGORIES', res.data);
     } else {
       commit('ERROR', errors.oops, {
         root: true,
@@ -57,6 +58,7 @@ const actions = {
       });
     }
   },
+
   async EDIT_CATEGORY({ commit }, payload) {
     const { updated, error } = await putData(`${categoriesEndpoints.put}/${payload.id}`, payload.name);
     if (!error) {
@@ -101,6 +103,7 @@ const actions = {
       });
     }
   },
+
   async CHANGE_SUBCATEGORY_NAME({ commit }, { id, name }) {
     const data = {
       name: name,

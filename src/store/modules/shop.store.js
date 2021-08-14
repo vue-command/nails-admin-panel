@@ -1,4 +1,5 @@
 const { getData, postData, putData, patchData, deleteData } = require('@/helpers').default;
+import { api } from './../../helpers/api';
 const commoditiesEndpoints = require('@/config/endpoints').default.commodities;
 const errors = require('@/config/errors').default.shop;
 const messages = require('@/config/messages').default.shop;
@@ -9,6 +10,7 @@ const state = {
   total: 0,
   isShopLoading: false,
   isCommodityLoading: false,
+  pageSize: 12,
 };
 
 const mutations = {
@@ -51,31 +53,49 @@ const mutations = {
 
 const actions = {
   async SEARCH_COMMODITIES({ commit }, { offset, filter, search }) {
-    const { commodities, total, error } = await getData(
-      `${commoditiesEndpoints.search}?query=${search}&skip=${offset}&withHidden=${filter}`
-    );
-    if (!error) {
-      commit('COMMODITIES', commodities);
-      commit('TOTAL', total);
+    const params = {
+      query: search,
+      // limit: state.pageSize,
+      // offset,
+      skip: offset,
+      // page,
+      // per_page: state.pageSize,
+      // published: true,
+      published: filter, // FIXME: published: (true, false, undefined)
+    };
+    const res = await api.get(commoditiesEndpoints.search, { params });
+    if (res.statusText === 'OK') {
+      commit('COMMODITIES', res.data.data);
+      commit('TOTAL', res.data.total);
     } else {
       commit('ERROR', errors.oops, {
         root: true,
       });
     }
   },
+
   async GET_COMMODITIES({ commit, dispatch }, { id, offset, filter, search }) {
     if (search) {
       dispatch('SEARCH_COMMODITIES', { offset, filter, search });
       return;
     }
     commit('SHOP_LOADING', true);
-    const { commodities, total, error } = await getData(
-      `${commoditiesEndpoints.subcommodities}/${id}?withHidden=${filter}&skip=${offset}`
-    );
 
-    if (!error) {
-      commit('COMMODITIES', commodities);
-      commit('TOTAL', total);
+    const params = {
+      // limit: state.pageSize,
+      // offset,
+      skip: offset,
+      // page,
+      // per_page: state.pageSize,
+      // published: true,
+      published: filter, // FIXME: published: (true, false, undefined)
+    };
+
+    const res = await api.get(`${commoditiesEndpoints.subcommodities}/${id}`, { params });
+
+    if (res.statusText === 'OK') {
+      commit('COMMODITIES', res.data.data);
+      commit('TOTAL', res.data.total);
     } else {
       commit('ERROR', errors.oops, {
         root: true,
