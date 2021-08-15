@@ -1,4 +1,4 @@
-const { getData, putData } = require('@/helpers').default;
+import { api } from './../../helpers/api';
 
 const endpoints = require('@/config/endpoints').default.delivery;
 const errors = require('@/config/errors').default.online;
@@ -26,9 +26,10 @@ const mutations = {
 const actions = {
   async GET_COUNTRIES({ commit }) {
     commit('LOADING', true, { root: true });
-    const { data, error } = await getData(`${endpoints.get}?full=true`);
-    if (!error) {
-      commit('PRICES', data);
+    const params = { full: true }
+    const res = await api.get(endpoints.get, { params });
+    if (res.statusText === 'OK') {
+      commit('PRICES', res.data);
     } else {
       commit('ERROR', errors.get, { root: true });
     }
@@ -37,8 +38,8 @@ const actions = {
 
   async UPDATE_COUNTRY_PRICE({ commit }, { id, price }) {
     commit('LOADING', true, { root: true });
-    const { error } = await putData(`${endpoints.put}/${id}`, { price });
-    if (!error) {
+    const res = await api.patch(`${endpoints.put}/${id}`, { price });
+    if (res.statusText === 'OK') {
       commit('CHANGE_PRICE', { id, price });
     } else {
       commit('ERROR', errors.get, { root: true });
