@@ -38,7 +38,7 @@ const actions = {
 
   async UPDATE_COUNTRY_PRICE({ commit }, { id, price }) {
     commit('LOADING', true, { root: true });
-    const res = await api.patch(`${endpoints.put}/${id}`, { price });
+    const res = await api.patch(`${endpoints.patch}/${id}`, { price });
     if (res.statusText === 'OK') {
       commit('CHANGE_PRICE', { id, price });
     } else {

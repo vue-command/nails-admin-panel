@@ -1,7 +1,6 @@
 export default {
   users: {
-    findByHash: 'user/findByHash',
-    find: 'user/find',
+    get: 'users',
   },
   orders: {
     get: 'order',
@@ -44,6 +43,6 @@ export default {
   },
   delivery: {
     get: 'delivery-prices',
-    put: 'delivery-prices',
+    patch: 'delivery-prices',
   },
 };
