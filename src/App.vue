@@ -30,6 +30,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import { subscribeToFailedRefresh } from './helpers/api';
 
 export default {
   name: 'App',
@@ -50,31 +51,20 @@ export default {
       return `${this.$route.meta?.layout || 'default'}-layout`;
     },
     ...mapState('onlineCourses', ['uploadDialog']),
-    ...mapState('users', ['user']),
+    ...mapState('auth', ['user']),
     baseUrl() {
       return process.env.BASE_URL;
       // return process.env.VUE_APP_API_URL
     },
   },
 
-  methods: {
-    redirect() {
-      let redirectPath = localStorage.getItem('redirectPath');
-      localStorage.removeItem('redirectPath');
-      if (!redirectPath) redirectPath = '/';
-      if (this.$route.path !== redirectPath) this.$router.push(redirectPath);
-    },
-  },
+  methods: {},
   created() {
+    subscribeToFailedRefresh(() => this.$store.commit('auth/LOGOUT'));
     this.$store.dispatch('categories/GET_CATEGORIES');
-
-    const arr = this.$route?.redirectedFrom?.split('/');
-    const hash = arr?.length ? arr[arr.length - 1] : '0';
-    this.$store.dispatch('users/GET_USER', hash);
+    this.$store.dispatch('auth/GET_PROFILE');
   },
-  mounted() {
-    setTimeout(this.redirect, 1000);
-  },
+  mounted() {},
 };
 </script>
 

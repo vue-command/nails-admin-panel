@@ -78,11 +78,11 @@ export default {
       this.trackingNumber = '';
     },
     submit() {
-      const data = {
+      const order = {
         status: this.select,
       };
-      if (this.trackingNumber) data.trackingNumber = this.trackingNumber;
-      this.$emit('changeStatus', data);
+      if (this.trackingNumber) order.trackingNumber = this.trackingNumber;
+      this.$emit('changeStatus', order);
       this.clear();
     },
     formatDate(dateStr) {

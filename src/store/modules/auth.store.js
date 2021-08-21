@@ -43,14 +43,8 @@ const actions = {
     }
   },
   async LOG_OUT({ commit }) {
-    const res = await api.post(endpoints.logout);
-    if (res.statusText === 'Created') {
-      storage.clearAuthorization();
-      commit('USER', null);
-      commit('IS_LOGGED', false);
-    } else {
-      commit('ERROR', Object.assign({}, errors.signIn, { errorMessage: res.data.message }), { root: true });
-    }
+    await api.post(endpoints.logout);
+    commit('LOGOUT');
   },
   async SIGN_IN({ commit, dispatch }, payload) {
     commit('LOADING', true);

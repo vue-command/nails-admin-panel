@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { storage } from './storage';
 
+let failedRefresh = null;
+const subscribeToFailedRefresh = cb => {
+  failedRefresh = cb;
+};
+
 const baseURL = process.env.NODE_ENV === 'production' ? process.env.VUE_APP_API_URL : process.env.VUE_APP_CLIENT_URL;
 
 const config = {
@@ -34,16 +39,16 @@ api.interceptors.response.use(
       originalRequest._isRetry = true;
       try {
         const response = await axios.get(`/auth/refresh`, { baseURL, withCredentials: true, timeout: 5 * 1000 });
-        console.log('🚀 ~ file: api.js ~ line 33 ~ response', response);
         await storage.saveAuthorization(response.data);
         return api.request(originalRequest);
       } catch (e) {
         storage.clearAuthorization();
         console.log('НЕ АВТОРИЗОВАН');
+        failedRefresh?.()
       }
     }
     return Promise.reject(error);
   }
 );
 
-export { api };
+export { api, subscribeToFailedRefresh };

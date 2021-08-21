@@ -41,13 +41,12 @@ export default {
     },
   },
   methods: {
-    changeStatus(data) {
-      const history = [...this.order.statusHistory];
-      history.push({ status: data.status, date: `${Date.now()}` });
-      data.statusHistory = history
+    changeStatus(orderPatch) {
+      orderPatch.statusHistory = [...this.order.statusHistory];
+      orderPatch.statusHistory.push({ status: orderPatch.status, date: Date.now() });
       const payload = {
         id: this.order._id,
-        object: data,
+        orderPatch,
       };
       this.$emit('changeStatus', payload);
     },

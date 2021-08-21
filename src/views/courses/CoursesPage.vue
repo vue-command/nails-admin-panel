@@ -82,7 +82,7 @@ export default {
   computed: {
     ...mapState(['loading']),
     ...mapState('onlineCourses', ['courses', 'total']),
-    ...mapState('users', ['user']),
+    ...mapState('auth', ['user']),
     emtyCourses() {
       return !this.loading && !this.courses?.length;
     },

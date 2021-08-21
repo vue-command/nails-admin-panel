@@ -85,7 +85,6 @@ export default {
     };
   },
   computed: {
-    ...mapState('users', ['user']),
     ...mapState('onlineCourses', ['courses', 'course', 'total']),
     courseUpdate() {
       return Object.assign({}, this.course, this.courseData);

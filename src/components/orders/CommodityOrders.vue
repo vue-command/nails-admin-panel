@@ -21,7 +21,7 @@
 
       <template v-slot:expanded-item="{ headers, item }">
         <td :colspan="headers.length" class="pa-4">
-          <CommodityOrderItem :order="item" @changeStatus="putCommodityOrder" />
+          <CommodityOrderItem :order="item" @changeStatus="patchCommodityOrder" />
         </td>
       </template>
     </v-data-table>
@@ -68,7 +68,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('orders', { getOrders: 'GET_ORDERS', putCommodityOrder: 'PUT_COMMODITY_ORDER' }),
+    ...mapActions('orders', { getOrders: 'GET_ORDERS', patchCommodityOrder: 'PATCH_COMMODITY_ORDER' }),
     formatDate(dateStr) {
       const date = new Date(dateStr);
       return date.toLocaleDateString();

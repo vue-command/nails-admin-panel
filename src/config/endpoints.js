@@ -3,8 +3,8 @@ export default {
     get: 'users',
   },
   orders: {
-    get: 'order',
-    patch: 'order',
+    get: 'orders',
+    patch: 'orders',
   },
   auth: {
     registration: 'auth/registration',

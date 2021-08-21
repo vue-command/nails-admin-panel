@@ -149,7 +149,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('users', ['user']),
+    ...mapState('auth', ['user']),
   },
   watch: {
     data: {

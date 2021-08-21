@@ -63,7 +63,6 @@ export default {
   },
   computed: {
     ...mapState(['loading']),
-    ...mapState('users', ['user']),
     ...mapState('onlineCourses', ['course']),
     videos() {
       return this.course?.videos ?? [];

@@ -23,24 +23,23 @@ const mutations = {
   COMMODITY_ORDERS: (state, payload) => {
     state.commodityOrders = payload;
   },
-  PATCH_COMMODITY_ORDER: (state, { id, object }) => {
-    state.commodityOrders = state.commodityOrders.map(item => (item._id === id ? Object.assign(item, object) : item));
+  PATCH_COMMODITY_ORDER: (state, { id, orderPatch }) => {
+    state.commodityOrders = state.commodityOrders.map(item => (item._id === id ? Object.assign(item, orderPatch) : item));
   },
 };
 const actions = {
   async GET_ORDERS({ commit }, type) {
-    const params = { type };
-    const res = await api.get(endpoints.get, { params });
+    const res = await api.get(`${endpoints.get}/${type}`);
     if (res.statusText === 'OK') {
-      if (type === 'online') commit('ONLINE_ORDERS', res.data);
-      if (type === 'offline') commit('OFFLINE_ORDERS', res.data);
-      if (type === 'commodity') commit('COMMODITY_ORDERS', res.data);
+      if (type === 'online') commit('ONLINE_ORDERS', res.data.data);
+      if (type === 'offline') commit('OFFLINE_ORDERS', res.data.data);
+      if (type === 'commodity') commit('COMMODITY_ORDERS', res.data.data);
     }
   },
-  async PUT_COMMODITY_ORDER({ commit }, { id, object }) {
-    const res = await api.path(endpoints.patch, object);
+  async PATCH_COMMODITY_ORDER({ commit }, { id, orderPatch }) {
+    const res = await api.path(endpoints.patch, orderPatch);
     if (res.statusText === 'OK') {
-      commit('PATCH_COMMODITY_ORDER', { id, object });
+      commit('PATCH_COMMODITY_ORDER', { id, orderPatch });
     }
   },
 };
