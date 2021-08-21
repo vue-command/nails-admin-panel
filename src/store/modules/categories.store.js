@@ -1,4 +1,3 @@
-const { postData, putData, deleteData } = require('@/helpers').default;
 import { api } from './../../helpers/api';
 
 const categoriesEndpoints = require('@/config/endpoints').default.categories;
@@ -48,10 +47,10 @@ const actions = {
   },
 
   async CREATE_NEW_CATEGORY({ commit }, payload) {
-    const { data, error } = await postData(categoriesEndpoints.newCategory, payload);
-    if (!error) {
-      commit('ADD_CATEGORY', data);
-      return data._id;
+    const res = await api.post(categoriesEndpoints.newCategory, payload);
+    if (res.statusText === 'Created') {
+      commit('ADD_CATEGORY', res.data);
+      return res.data._id;
     } else {
       commit('ERROR', errors.oops, {
         root: true,
@@ -60,9 +59,9 @@ const actions = {
   },
 
   async EDIT_CATEGORY({ commit }, payload) {
-    const { updated, error } = await putData(`${categoriesEndpoints.put}/${payload.id}`, payload.name);
-    if (!error) {
-      commit('CATEGORIES', updated);
+    const res = await api.put(`${categoriesEndpoints.put}/${payload.id}`, payload.name);
+    if (res.statusText === 'OK') {
+      commit('CATEGORIES', res.data);
     } else {
       commit('ERROR', errors.oops, {
         root: true,
@@ -71,8 +70,8 @@ const actions = {
   },
 
   async DELETE_CATEGORY({ state, commit }, id) {
-    const { error } = await deleteData(`${categoriesEndpoints.delete}/${id}`);
-    if (!error) {
+    const res = await api.delete(`${categoriesEndpoints.delete}/${id}`);
+    if (res.statusText === 'OK') {
       const categories = state.categories.filter(elem => elem._id !== id);
       commit('CATEGORIES', categories);
     } else {
@@ -83,9 +82,9 @@ const actions = {
   },
 
   async CREATE_NEW_SUBCATEGORY({ commit }, { name, id }) {
-    const { updated, error } = await postData(`${categoriesEndpoints.newSubcategory}/${id}`, { name });
-    if (!error) {
-      commit('CATEGORIES', updated);
+    const res = await api.post(`${categoriesEndpoints.newSubcategory}/${id}`, { name });
+    if (res.statusText === 'Created') {
+      commit('CATEGORIES', res.data);
     } else {
       commit('ERROR', errors.oops, {
         root: true,
@@ -94,9 +93,9 @@ const actions = {
   },
 
   async DELETE_SUBCATEGORY({ commit }, { id }) {
-    const { updated, error } = await deleteData(`${categoriesEndpoints.subcategory}/${id}`);
-    if (!error) {
-      commit('CATEGORIES', updated);
+    const res = await api.delete(`${categoriesEndpoints.subcategory}/${id}`);
+    if (res.statusText === 'OK') {
+      commit('CATEGORIES', res.data);
     } else {
       commit('ERROR', errors.oops, {
         root: true,
@@ -108,9 +107,9 @@ const actions = {
     const data = {
       name: name,
     };
-    const { updated, error } = await putData(`${categoriesEndpoints.subcategory}/${id}`, data);
-    if (!error) {
-      commit('CATEGORIES', updated);
+    const res = await api.put(`${categoriesEndpoints.subcategory}/${id}`, data);
+    if (res.statusText === 'OK') {
+      commit('CATEGORIES', res.data);
     } else {
       commit('ERROR', errors.oops, {
         root: true,

@@ -1,4 +1,3 @@
-const { getData, postData, putData, patchData, deleteData } = require('@/helpers').default;
 import { api } from './../../helpers/api';
 const commoditiesEndpoints = require('@/config/endpoints').default.commodities;
 const errors = require('@/config/errors').default.shop;
@@ -106,9 +105,9 @@ const actions = {
 
   async GET_COMMODITY({ commit }, payload) {
     commit('COMMODITY_LOADING', true);
-    const { commodity, error } = await getData(`${commoditiesEndpoints.commodity}/${payload}`);
-    if (!error) {
-      commit('COMMODITY', commodity[0]);
+    const res = await api.get(`${commoditiesEndpoints.commodity}/${payload}`);
+    if (res.statusText === 'OK') {
+      commit('COMMODITY', res.data[0]);
     } else {
       commit('ERROR', errors.oops, {
         root: true,
@@ -119,23 +118,23 @@ const actions = {
 
   async CREATE_COMMODITY({ commit }, payload) {
     commit('COMMODITY_LOADING', true);
-    const { data, error } = await postData(commoditiesEndpoints.newCommodity, payload);
-    if (!error) {
-      commit('ADD_COMMODITY', data);
+    const res = await api.post(commoditiesEndpoints.newCommodity, payload);
+    if (res.statusText === 'Created') {
+      commit('ADD_COMMODITY', res.data);
     } else {
-      commit('ERROR', Object.assign({}, errors.oops, { errorMessage: error }), {
+      commit('ERROR', Object.assign({}, errors.oops, { errorMessage: res.data.message }), {
         root: true,
       });
     }
     commit('COMMODITY_LOADING', false);
-    return data?._id;
+    return res.data?._id;
   },
 
   async UPDATE_COMMODITY({ commit }, { commodity, id }) {
     commit('COMMODITY_LOADING', true);
-    const { data, error } = await putData(`${commoditiesEndpoints.commodity}/${id}`, commodity);
-    if (!error) {
-      commit('REPLACE_COMMODITY', data);
+    const res = await api.put(`${commoditiesEndpoints.commodity}/${id}`, commodity);
+    if (res.statusText === 'OK') {
+      commit('REPLACE_COMMODITY', res.data);
       commit('MESSAGE', messages.update, { root: true });
     } else {
       commit('ERROR', errors.oops, {
@@ -146,9 +145,9 @@ const actions = {
   },
   async PATCH_COMMODITY({ commit }, { commodity, id }) {
     commit('COMMODITY_LOADING', true);
-    const { data, error } = await patchData(`${commoditiesEndpoints.isPublished}/${id}`, commodity);
-    if (!error) {
-      commit('REPLACE_COMMODITY', data);
+    const res = await api.patch(`${commoditiesEndpoints.isPublished}/${id}`, commodity);
+    if (res.statusText === 'OK') {
+      commit('REPLACE_COMMODITY', res.data);
       commit('MESSAGE', messages.update, { root: true });
     } else {
       commit('ERROR', errors.oops, {
@@ -161,9 +160,9 @@ const actions = {
   async UPLOAD_IMAGES({ commit }, { data, id }) {
     const formData = new FormData();
     data.forEach(item => formData.append('files', item));
-    const { updatedCommodity, error } = await postData(`${commoditiesEndpoints.files}/${id}`, formData);
-    if (!error) {
-      commit('REPLACE_COMMODITY', updatedCommodity);
+    const res = await api.post(`${commoditiesEndpoints.files}/${id}`, formData);
+    if (res.statusText === 'Created') {
+      commit('REPLACE_COMMODITY', res.data);
 
       commit('MESSAGE', messages.update, { root: true });
     } else {
@@ -174,8 +173,8 @@ const actions = {
   },
 
   async DELETE_IMAGE({ commit }, id) {
-    const { error } = await deleteData(`${commoditiesEndpoints.file}/${id}`);
-    if (!error) {
+    const res = await api.delete(`${commoditiesEndpoints.file}/${id}`);
+    if (res.statusText === 'OK') {
       commit('REMOVE_IMAGE', id);
       commit('MESSAGE', messages.update, { root: true });
     } else {
@@ -186,8 +185,8 @@ const actions = {
   },
 
   async DELETE_COMMODITY({ commit }, id) {
-    const { error } = await deleteData(`${commoditiesEndpoints.commodity}/${id}`);
-    if (!error) {
+    const res = await api.delete(`${commoditiesEndpoints.commodity}/${id}`);
+    if (res.statusText === 'OK') {
       commit('REMOVE_COMMODITY', id);
     } else {
       commit('ERROR', errors.oops, {

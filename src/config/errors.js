@@ -6,6 +6,28 @@ export default {
       errorMessage: 'Process failed... Data was not received',
     },
   },
+  auth: {
+    get: {
+      error: true,
+      errorType: 'Get user',
+      errorMessage: 'Process failed... Data was not received',
+    },
+    put: {
+      error: true,
+      errorType: 'User preservation error',
+      errorMessage: 'Process failed... Data was not saved',
+    },
+    signIn: {
+      error: true,
+      errorType: 'Sign in error',
+      errorMessage: 'Process failed... Data was not saved',
+    },
+    signUp: {
+      error: true,
+      errorType: 'Sign up error',
+      errorMessage: 'Process failed... Data was not saved',
+    },
+  },
   offline: {
     get: {
       error: true,

@@ -6,6 +6,15 @@ export default {
     get: 'order',
     patch: 'order',
   },
+  auth: {
+    registration: 'auth/registration',
+    login: 'auth/login',
+    logout: 'auth/logout',
+    profile: 'auth/profile',
+    reset: 'auth/reset-password',
+    restore: 'auth/restore-password',
+    change: 'auth/change-password',
+  },
   offline: {
     get: 'course/offline',
     post: 'course/offline',

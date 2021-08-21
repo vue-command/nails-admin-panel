@@ -45,4 +45,21 @@ export default {
       messageText: 'Deleted offline course successfully',
     },
   },
+  auth: {
+    requestReset: {
+      message: true,
+      messageType: 'Request reset',
+      messageText: 'A link to reset your password has been sent to your email',
+    },
+    resetPass: {
+      message: true,
+      messageType: 'Reset password',
+      messageText: 'Your password has been successfully changed',
+    },
+    changePass: {
+      message: true,
+      messageType: 'Change password',
+      messageText: 'Your password has been successfully changed',
+    }
+  },
 };

@@ -1,4 +1,3 @@
-const { getData, postData, putData, deleteData } = require('@/helpers').default;
 import { api } from './../../helpers/api';
 
 const endpoints = require('@/config/endpoints').default.offline;
@@ -55,14 +54,14 @@ const actions = {
 
   async GET_COURSE({ commit }, id) {
     commit('LOADING', true, { root: true });
-    const { offlineCourse, error } = await getData(`${endpoints.get}/${id}`);
-    if (!error) {
-      offlineCourse.dateOfCourses = offlineCourse.dateOfCourses.map((item) => {
+    const res = await api.get(`${endpoints.get}/${id}`);
+    if (res.statusText === 'OK') {
+      res.data.dateOfCourses = res.data.dateOfCourses.map(item => {
         const { availableSpots, ...rest } = item;
         const str = availableSpots.toString();
         return { availableSpots: str, ...rest };
       });
-      commit('COURSE', offlineCourse);
+      commit('COURSE', res.data);
     } else {
       commit('ERROR', errors.get_by_id, { root: true });
     }
@@ -71,26 +70,26 @@ const actions = {
 
   async POST_COURSE({ commit }, data) {
     commit('LOADING', true, { root: true });
-    const { newOfflineCourse, error } = await postData(endpoints.post, data);
-    if (!error) {
+    const res = await api.post(endpoints.post, data);
+    if (res.statusText === 'Created') {
       commit('MESSAGE', messages.post, { root: true });
     } else {
       commit('ERROR', errors.post, { root: true });
     }
     commit('LOADING', false, { root: true });
-    return newOfflineCourse._id;
+    return res.data?._id;
   },
 
   async PUT_COURSE({ commit }, { data, id }) {
     commit('LOADING', true, { root: true });
-    const { updatedOfflineCourse, error } = await putData(`${endpoints.put}/${id}`, data);
-    if (!error) {
-      updatedOfflineCourse.dateOfCourses = updatedOfflineCourse.dateOfCourses.map((item) => {
+    const res = await api.put(`${endpoints.put}/${id}`, data);
+    if (res.statusText === 'OK') {
+      res.data.dateOfCourses = res.data.dateOfCourses.map(item => {
         const { availableSpots, ...rest } = item;
         const str = availableSpots.toString();
         return { availableSpots: str, ...rest };
       });
-      commit('COURSE', updatedOfflineCourse);
+      commit('COURSE', res.data);
       commit('MESSAGE', messages.put, { root: true });
     } else {
       commit('ERROR', errors.put, { root: true });
@@ -100,8 +99,8 @@ const actions = {
 
   async DELETE_COURSE({ commit, dispatch }, id) {
     commit('LOADING', true, { root: true });
-    const { error } = await deleteData(`${endpoints.delete}/${id}`);
-    if (!error) {
+    const res = await api.delete(`${endpoints.delete}/${id}`);
+    if (res.statusText === 'OK') {
       commit('MESSAGE', messages.delete, { root: true });
       dispatch('GET_COURSES');
     } else {

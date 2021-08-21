@@ -1,5 +1,4 @@
-const { getData } = require('@/helpers').default;
-
+import { api } from './../../helpers/api';
 const errors = require('@/config/errors').default.users;
 // const messages = require('@/config/messages').default.users
 
@@ -8,7 +7,6 @@ const endpoints = require('@/config/endpoints').default.users;
 const state = {
   user: null,
   users: [],
-  token: null,
 };
 
 const getters = {};
@@ -20,35 +18,22 @@ const mutations = {
   USERS: (state, payload) => {
     state.users = payload;
   },
-  TOKEN: (state, payload) => {
-    state.token = payload;
-  },
 };
 const actions = {
   async GET_USER({ commit, dispatch }, hash) {
     dispatch('READ_TOKEN');
     dispatch('GET_USERS');
-    const response = await getData(`${endpoints.findByHash}/${hash}`);
-    if (!response.error) {
-      commit('USER', response.data);
+    const res = await api.get(`${endpoints.findByHash}/${hash}`);
+    if (res.statusText === 'OK') {
+      commit('USER', res.data);
     } else {
       commit('ERROR', errors.get, { root: true });
     }
   },
-  async GET_USERS({ commit, state }) {
-    const { error, data } = await (
-      await fetch(`${process.env.VUE_APP_API_URL}/${endpoints.find}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8',
-          Authorization: `Bearer ${state.token}`,
-        },
-      })
-    ).json();
-    if (error) {
-      //
-    } else {
-      commit('USERS', data);
+  async GET_USERS({ commit }) {
+    const res = await api.get(endpoints.find);
+    if (res.statusText === 'OK') {
+      commit('USERS', res.data);
     }
   },
   async READ_TOKEN({ commit }) {
