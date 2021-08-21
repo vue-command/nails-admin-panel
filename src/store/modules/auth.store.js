@@ -35,6 +35,9 @@ const actions = {
   async GET_PROFILE({ commit }) {
     const res = await api.get(endpoints.profile);
     if (res.statusText === 'OK') {
+      if(!res.data.roles.includes('Admin')){
+        window.open(`${process.env.VUE_APP_API_URL}/user-cabinet`);
+      }
       commit('USER', res.data);
       commit('IS_LOGGED', true);
     } else {
