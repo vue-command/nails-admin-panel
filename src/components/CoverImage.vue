@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       error: false,
-      coverImageSrc: `${process.env.VUE_APP_API_URL}/img/noImage300x300.png`,
+      coverImageSrc: `${process.env.VUE_APP_HOST_URL}/img/noImage300x300.png`,
       // coverImageSrc: `${process.env.VUE_APP_LOCAL_URL}/img/noImage300x300.png`,
     };
   },

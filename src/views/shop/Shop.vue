@@ -132,15 +132,15 @@ export default {
       filters: [
         {
           title: 'Published',
-          param: 'all',
+          param: true,
         },
         {
           title: 'All',
-          param: 'withHidden',
+          param: undefined,
         },
         {
           title: 'Hidden',
-          param: 'hiddenOnly',
+          param: false,
         },
       ],
       ready: false,
@@ -206,7 +206,7 @@ export default {
         id: this.selectedSubcategory?._id,
         search: this.search,
         offset: (this.page - 1) * this.pageSize,
-        filter: this.filters[this.radioGroup].param,
+        published: this.filters[this.radioGroup].param,
       });
     },
     modifyHandler(id) {

@@ -21,7 +21,7 @@ const getters = {
 };
 const mutations = {
   CATEGORIES: (state, payload) => {
-    state.categories = payload;
+    state.categories = payload ?? [];
   },
 
   ADD_CATEGORY: (state, payload) => {

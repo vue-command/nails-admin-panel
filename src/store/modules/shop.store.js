@@ -51,7 +51,7 @@ const mutations = {
 };
 
 const actions = {
-  async SEARCH_COMMODITIES({ commit }, { offset, filter, search }) {
+  async SEARCH_COMMODITIES({ commit }, { offset, published, search }) {
     const params = {
       query: search,
       // limit: state.pageSize,
@@ -60,7 +60,7 @@ const actions = {
       // page,
       // per_page: state.pageSize,
       // published: true,
-      published: filter, // FIXME: published: (true, false, undefined)
+      published,
     };
     const res = await api.get(commoditiesEndpoints.search, { params });
     if (res.statusText === 'OK') {
@@ -73,9 +73,9 @@ const actions = {
     }
   },
 
-  async GET_COMMODITIES({ commit, dispatch }, { id, offset, filter, search }) {
+  async GET_COMMODITIES({ commit, dispatch }, { id, offset, published, search }) {
     if (search) {
-      dispatch('SEARCH_COMMODITIES', { offset, filter, search });
+      dispatch('SEARCH_COMMODITIES', { offset, published, search });
       return;
     }
     commit('SHOP_LOADING', true);
@@ -87,7 +87,7 @@ const actions = {
       // page,
       // per_page: state.pageSize,
       // published: true,
-      published: filter, // FIXME: published: (true, false, undefined)
+      published,
     };
 
     const res = await api.get(`${commoditiesEndpoints.subcommodities}/${id}`, { params });

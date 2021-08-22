@@ -28,19 +28,16 @@ const mutations = {
 };
 
 const actions = {
-  async IS_SIGNED({ dispatch }) {
-    const authorization = storage.getAuthorization();
-    if (authorization) dispatch('GET_PROFILE');
-  },
   async GET_PROFILE({ commit }) {
     const res = await api.get(endpoints.profile);
     if (res.statusText === 'OK') {
       if(!res.data.roles.includes('Admin')){
-        window.open(`${process.env.VUE_APP_API_URL}/user-cabinet`);
+        window.location = `${process.env.VUE_APP_HOST_URL}/user-cabinet`;
       }
       commit('USER', res.data);
       commit('IS_LOGGED', true);
     } else {
+      window.location = `${process.env.VUE_APP_HOST_URL}/user-cabinet`
       commit('IS_LOGGED', false);
       commit('ERROR', Object.assign({}, errors.signIn, { errorMessage: res.data.message }), { root: true });
     }

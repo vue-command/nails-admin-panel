@@ -60,7 +60,7 @@ export default {
 
   methods: {},
   created() {
-    subscribeToFailedRefresh(() => this.$store.commit('auth/LOGOUT'));
+    subscribeToFailedRefresh(() => window.location = `${process.env.VUE_APP_HOST_URL}/user-cabinet`);
     this.$store.dispatch('categories/GET_CATEGORIES');
     this.$store.dispatch('auth/GET_PROFILE');
   },

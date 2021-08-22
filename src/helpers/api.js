@@ -6,7 +6,7 @@ const subscribeToFailedRefresh = cb => {
   failedRefresh = cb;
 };
 
-const baseURL = process.env.NODE_ENV === 'production' ? process.env.VUE_APP_API_URL : process.env.VUE_APP_CLIENT_URL;
+const baseURL = process.env.NODE_ENV === 'production' ? process.env.VUE_APP_API_URL : process.env.VUE_APP_DEVELOP_API_URL;
 
 const config = {
   baseURL,

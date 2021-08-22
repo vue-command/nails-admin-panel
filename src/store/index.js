@@ -6,7 +6,6 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    host: process.env.VUE_APP_API_URL,
     loading: false,
     error: null,
     errorMessage: '',
