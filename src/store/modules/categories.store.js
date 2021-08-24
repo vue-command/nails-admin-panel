@@ -43,7 +43,7 @@ const actions = {
 
   CREATE_NEW_CATEGORY({ commit }, payload) {
     let resolve = null
-    const promise = new Promise()
+    const promise = new Promise(res => resolve = res)
     api.post(categoriesEndpoints.newCategory, payload)
       .then((res) => {
         commit('ADD_CATEGORY', res.data);

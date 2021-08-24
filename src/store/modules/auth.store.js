@@ -51,7 +51,7 @@ const actions = {
 
   REQUEST_RESET({ commit }, payload) {
     let resolve = null
-    const promise = new Promise()
+    const promise = new Promise(res => resolve = res)
     api.post(endpoints.reset, { email: payload })
       .then(() => {
         commit('MESSAGE', requestReset, { root: true });
@@ -75,7 +75,7 @@ const actions = {
 
   RESTORE({ commit }, payload) {
     let resolve = null
-    const promise = new Promise()
+    const promise = new Promise(res => resolve = res)
     api.post(endpoints.restore, payload)
       .then(() => {
         commit('MESSAGE', resetPass, { root: true });
