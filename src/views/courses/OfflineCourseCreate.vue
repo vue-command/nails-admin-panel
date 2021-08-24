@@ -37,8 +37,10 @@ export default {
       type: 'offline',
     };
   },
-  methods: {
+  computed: {
     ...mapState(['loading']),
+  },
+  methods: {
     ...mapActions('offlineCourses', {
       postCourse: 'POST_COURSE',
     }),

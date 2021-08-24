@@ -37,8 +37,10 @@ export default {
       type: 'online',
     };
   },
-  methods: {
+  computed: {
     ...mapState(['loading']),
+  },
+  methods: {
     ...mapActions('onlineCourses', {
       postCourse: 'POST_COURSE',
     }),
