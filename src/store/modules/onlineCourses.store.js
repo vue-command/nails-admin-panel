@@ -129,21 +129,18 @@ const actions = {
     commit('DIALOG', true);
     setTimeout(() => commit('QUEUE', arr), 2000);
   },
-  async ADD_LESSON({ commit }, payload) {
-    const request = new XMLHttpRequest();
-    request.open('POST', `${process.env.VUE_APP_API_URL}/${endpoints.video}/${payload.id}`);
-    request.upload.addEventListener('progress', function (e) {
-      commit('CHANGE_PROGRESS', { index: payload.index, progress: (e.loaded / e.total) * 100 });
-    });
-    request.addEventListener('load', function () {
-      if (request.status === 200) {
-        commit('COMPLETE', payload.index);
-      } else {
+  ADD_LESSON({ commit }, payload) {
+    api.post(`${endpoints.video}/${payload.id}`, payload.lesson, {
+      onUploadProgress: (progressEvent) => {
+        let percentCompleted = Math.round(progressEvent.loaded * 100 / progressEvent.total);
+        commit('CHANGE_PROGRESS', { index: payload.index, progress: percentCompleted });
+      }
+    })
+      .then(() => commit('COMPLETE', payload.index))
+      .catch(() => {
         commit('UPLOAD_FAIL', { index: payload.index, error: true });
         commit('ERROR', errors.addLesson, { root: true });
-      }
-    });
-    request.send(payload.lesson);
+      })
   },
   async PUT_VIDEO({ commit, dispatch }, { fd, id }) {
     const res = await api.put(`${endpoints.video}/${id}`, fd);

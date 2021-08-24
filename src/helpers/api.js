@@ -11,7 +11,6 @@ const baseURL = process.env.NODE_ENV === 'production' ? process.env.VUE_APP_API_
 const config = {
   baseURL,
   withCredentials: true,
-  timeout: 5 * 1000,
 };
 
 const api = axios.create(config);
@@ -35,7 +34,7 @@ api.interceptors.response.use(
   },
   async function (error) {
     const originalRequest = error.config;
-    if (error.response.status == 401 && error.config && !error.config._isRetry) {
+    if (error.response?.status == 401 && error.config && !error.config._isRetry) {
       originalRequest._isRetry = true;
       try {
         const response = await axios.get(`/auth/refresh`, { baseURL, withCredentials: true, timeout: 5 * 1000 });
