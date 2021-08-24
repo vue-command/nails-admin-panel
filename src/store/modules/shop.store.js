@@ -113,7 +113,7 @@ const actions = {
           root: true,
         });
       })
-      .finally(() => commit('COMMODITY_LOADING', true))
+      .finally(() => commit('COMMODITY_LOADING', false))
   },
 
   UPDATE_COMMODITY({ commit }, { commodity, id }) {
