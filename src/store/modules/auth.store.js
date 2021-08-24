@@ -1,6 +1,5 @@
 /* eslint-disable quote-props */
 import { api } from './../../helpers/api';
-import { storage } from './../../helpers/storage';
 
 const errors = require('@/config/errors').default.auth;
 const { requestReset, resetPass } = require('@/config/messages').default.auth;
@@ -28,70 +27,74 @@ const mutations = {
 };
 
 const actions = {
-  async GET_PROFILE({ commit }) {
-    const res = await api.get(endpoints.profile);
-    if (res.statusText === 'OK') {
-      if(!res.data.roles.includes('Admin')){
-        // window.location = `${process.env.VUE_APP_HOST_URL}/user-cabinet`;
-      }
-      commit('USER', res.data);
-      commit('IS_LOGGED', true);
-    } else {
-      // window.location = `${process.env.VUE_APP_HOST_URL}/user-cabinet`
-      commit('IS_LOGGED', false);
-      commit('ERROR', Object.assign({}, errors.signIn, { errorMessage: res.data.message }), { root: true });
-    }
+  GET_PROFILE({ commit }) {
+    api.get(endpoints.profile)
+      .then((res) => {
+        if (!res.data.roles.includes('Admin')) {
+          window.location = `${process.env.VUE_APP_HOST_URL}/user-cabinet`;
+        }
+        commit('USER', res.data);
+        commit('IS_LOGGED', true);
+      })
+      .catch((e) => {
+        window.location = `${process.env.VUE_APP_HOST_URL}/user-cabinet`
+        commit('IS_LOGGED', false);
+        commit('ERROR', Object.assign({}, errors.signIn, { errorMessage: e.response.data.message }), { root: true });
+      })
   },
-  async LOG_OUT({ commit }) {
-    await api.post(endpoints.logout);
-    commit('LOGOUT');
+
+  LOG_OUT({ commit }) {
+    api.post(endpoints.logout)
+      .then(() => commit('LOGOUT'))
+      .catch(() => { })
   },
-  async SIGN_IN({ commit, dispatch }, payload) {
-    commit('LOADING', true);
-    const res = await api.post(endpoints.login, payload);
-    if (res.statusText === 'Created') {
-      storage.saveAuthorization(res.data);
-      dispatch('GET_PROFILE');
-    } else {
-      commit('ERROR', Object.assign({}, errors.signIn, { errorMessage: res.data.message }), { root: true });
-    }
-    commit('LOADING', false);
+
+  REQUEST_RESET({ commit }, payload) {
+    let resolve = null
+    const promise = new Promise()
+    api.post(endpoints.reset, { email: payload })
+      .then(() => {
+        commit('MESSAGE', requestReset, { root: true });
+        resolve(true)
+
+      })
+      .catch((e) => {
+        commit(
+          'ERROR',
+          {
+            error: true,
+            errorType: 'Request reset',
+            errorMessage: e.response.data.message,
+          },
+          { root: true }
+        );
+        resolve(false)
+      })
+    return promise;
   },
-  async REQUEST_RESET(ctx, payload) {
-    const res = await api.post(endpoints.reset, { email: payload });
-    if (res.statusText === 'Created') {
-      ctx.commit('MESSAGE', requestReset, { root: true });
-      return true;
-    } else {
-      ctx.commit(
-        'ERROR',
-        {
-          error: true,
-          errorType: 'Request reset',
-          errorMessage: res.data.message,
-        },
-        { root: true }
-      );
-      return false;
-    }
-  },
-  async RESTORE(ctx, payload) {
-    const res = await api.post(endpoints.restore, payload);
-    if (res.statusText === 'Created') {
-      ctx.commit('MESSAGE', resetPass, { root: true });
-      return true;
-    } else {
-      ctx.commit(
-        'ERROR',
-        {
-          error: true,
-          errorType: 'Restore password',
-          errorMessage: res.data.message,
-        },
-        { root: true }
-      );
-      return false;
-    }
+
+  RESTORE({ commit }, payload) {
+    let resolve = null
+    const promise = new Promise()
+    api.post(endpoints.restore, payload)
+      .then(() => {
+        commit('MESSAGE', resetPass, { root: true });
+        resolve(true)
+
+      })
+      .catch((e) => {
+        commit(
+          'ERROR',
+          {
+            error: true,
+            errorType: 'Restore password',
+            errorMessage: e.response.data.message,
+          },
+          { root: true }
+        );
+        resolve(false)
+      })
+    return promise
   },
 };
 
