@@ -41,6 +41,10 @@ export default new Vuex.Store({
       state.loading = payload;
     },
   },
-  actions: {},
+  actions: {
+    SET_LOADING({ commit }, payload) {
+      commit('LOADING', payload)
+    }
+  },
   modules,
 });

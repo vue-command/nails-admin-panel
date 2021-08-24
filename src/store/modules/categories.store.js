@@ -33,88 +33,63 @@ const mutations = {
 };
 
 const actions = {
-  async GET_CATEGORIES({ commit }) {
+  GET_CATEGORIES({ commit }) {
     commit('LOADING', true);
-    const res = await api.get(categoriesEndpoints.categories);
-    if (res.statusText === 'OK') {
-      commit('CATEGORIES', res.data);
-    } else {
-      commit('ERROR', errors.oops, {
-        root: true,
-      });
-    }
-    commit('LOADING', false);
+    api.get(categoriesEndpoints.categories)
+      .then((res) => commit('CATEGORIES', res.data))
+      .catch(() => commit('ERROR', errors.oops, { root: true }))
+      .finally(() => commit('LOADING', false))
   },
 
-  async CREATE_NEW_CATEGORY({ commit }, payload) {
-    const res = await api.post(categoriesEndpoints.newCategory, payload);
-    if (res.statusText === 'Created') {
-      commit('ADD_CATEGORY', res.data);
-      return res.data._id;
-    } else {
-      commit('ERROR', errors.oops, {
-        root: true,
-      });
-    }
+  CREATE_NEW_CATEGORY({ commit }, payload) {
+    let resolve = null
+    const promise = new Promise()
+    api.post(categoriesEndpoints.newCategory, payload)
+      .then((res) => {
+        commit('ADD_CATEGORY', res.data);
+        resolve(res.data._id)
+      })
+      .catch(() => {
+        commit('ERROR', errors.oops, { root: true })
+        resolve(false)
+      })
+    return promise
   },
 
-  async EDIT_CATEGORY({ commit }, payload) {
-    const res = await api.put(`${categoriesEndpoints.put}/${payload.id}`, payload.name);
-    if (res.statusText === 'OK') {
-      commit('CATEGORIES', res.data);
-    } else {
-      commit('ERROR', errors.oops, {
-        root: true,
-      });
-    }
+  EDIT_CATEGORY({ commit }, payload) {
+    api.put(`${categoriesEndpoints.put}/${payload.id}`, payload.name)
+      .then((res) => commit('CATEGORIES', res.data))
+      .catch(() => commit('ERROR', errors.oops, { root: true }))
   },
 
-  async DELETE_CATEGORY({ state, commit }, id) {
-    const res = await api.delete(`${categoriesEndpoints.delete}/${id}`);
-    if (res.statusText === 'OK') {
-      const categories = state.categories.filter(elem => elem._id !== id);
-      commit('CATEGORIES', categories);
-    } else {
-      commit('ERROR', errors.oops, {
-        root: true,
-      });
-    }
+  DELETE_CATEGORY({ state, commit }, id) {
+    api.delete(`${categoriesEndpoints.delete}/${id}`)
+      .then(() => {
+        const categories = state.categories.filter(elem => elem._id !== id);
+        commit('CATEGORIES', categories);
+      })
+      .catch(() => commit('ERROR', errors.oops, { root: true }))
   },
 
-  async CREATE_NEW_SUBCATEGORY({ commit }, { name, id }) {
-    const res = await api.post(`${categoriesEndpoints.newSubcategory}/${id}`, { name });
-    if (res.statusText === 'Created') {
-      commit('CATEGORIES', res.data);
-    } else {
-      commit('ERROR', errors.oops, {
-        root: true,
-      });
-    }
+  CREATE_NEW_SUBCATEGORY({ commit }, { name, id }) {
+    api.post(`${categoriesEndpoints.newSubcategory}/${id}`, { name })
+      .then((res) => commit('CATEGORIES', res.data))
+      .catch(() => commit('ERROR', errors.oops, { root: true }))
   },
 
-  async DELETE_SUBCATEGORY({ commit }, { id }) {
-    const res = await api.delete(`${categoriesEndpoints.subcategory}/${id}`);
-    if (res.statusText === 'OK') {
-      commit('CATEGORIES', res.data);
-    } else {
-      commit('ERROR', errors.oops, {
-        root: true,
-      });
-    }
+  DELETE_SUBCATEGORY({ commit }, { id }) {
+    api.delete(`${categoriesEndpoints.subcategory}/${id}`)
+      .then((res) => commit('CATEGORIES', res.data))
+      .catch(() => commit('ERROR', errors.oops, { root: true }))
   },
 
-  async CHANGE_SUBCATEGORY_NAME({ commit }, { id, name }) {
+  CHANGE_SUBCATEGORY_NAME({ commit }, { id, name }) {
     const data = {
       name: name,
     };
-    const res = await api.put(`${categoriesEndpoints.subcategory}/${id}`, data);
-    if (res.statusText === 'OK') {
-      commit('CATEGORIES', res.data);
-    } else {
-      commit('ERROR', errors.oops, {
-        root: true,
-      });
-    }
+    api.put(`${categoriesEndpoints.subcategory}/${id}`, data)
+      .then((res) => commit('CATEGORIES', res.data))
+      .catch(() => commit('ERROR', errors.oops, { root: true }))
   },
 };
 

@@ -1,4 +1,5 @@
 import { api } from './../../helpers/api';
+import router from './../../router';
 
 const endpoints = require('@/config/endpoints').default.online;
 const errors = require('@/config/errors').default.online;
@@ -51,84 +52,83 @@ const mutations = {
 };
 
 const actions = {
-  async GET_COURSES({ commit }, query) {
+  GET_COURSES({ commit }, query) {
     commit('LOADING', true, { root: true });
-    const res = await api.get(`${endpoints.get}${query}`);
-    if (res.statusText === 'OK') {
-      commit('COURSES', res.data.data);
-      commit('TOTAL', res.data.total);
-    } else {
-      commit('ERROR', errors.get, { root: true });
-    }
-    commit('LOADING', false, { root: true });
+    api.get(`${endpoints.get}${query}`)
+      .then((res) => {
+        commit('COURSES', res.data.data);
+        commit('TOTAL', res.data.total);
+      })
+      .catch(() => commit('ERROR', errors.get, { root: true }))
+      .finally(() => commit('LOADING', false, { root: true }))
   },
 
-  async GET_MORE_COURSES({ commit }, query) {
+  GET_MORE_COURSES({ commit }, query) {
     commit('LOADING', true, { root: true });
-    const res = await api.get(`${endpoints.get}${query}`);
-    if (res.statusText === 'OK') {
-      commit('MORE_COURSES', res.data.data);
-      commit('TOTAL', res.data.total);
-    } else {
-      commit('ERROR', errors.get, { root: true });
-    }
-    commit('LOADING', false, { root: true });
+    api.get(`${endpoints.get}${query}`)
+      .then((res) => {
+        commit('MORE_COURSES', res.data.data);
+        commit('TOTAL', res.data.total);
+      })
+      .catch(() => commit('ERROR', errors.get, { root: true }))
+      .finally(() => commit('LOADING', false, { root: true }))
   },
 
-  async GET_COURSE({ commit }, id) {
+  GET_COURSE({ commit }, id) {
     commit('LOADING', true, { root: true });
-    const res = await api.get(`${endpoints.get}/${id}`);
-    if (res.statusText === 'OK') {
-      commit('COURSE', res.data);
-    } else {
-      commit('ERROR', errors.get_by_id, { root: true });
-    }
-    commit('LOADING', false, { root: true });
+    api.get(`${endpoints.get}/${id}`)
+      .then((res) => commit('COURSE', res.data))
+      .catch(() => commit('ERROR', errors.get_by_id, { root: true }))
+      .finally(() => commit('LOADING', false, { root: true }))
   },
 
-  async POST_COURSE({ commit }, data) {
+  POST_COURSE({ commit }, data) {
     commit('LOADING', true, { root: true });
-    const res = await api.post(endpoints.post, data);
-    if (res.statusText === 'Created') {
-      commit('MESSAGE', messages.post, { root: true });
-    } else {
-      commit('ERROR', errors.post, { root: true });
-    }
-    commit('LOADING', false, { root: true });
-    return res.data._id;
+    api.post(endpoints.post, data)
+      .then((res) => {
+        commit('MESSAGE', messages.post, { root: true });
+        router.push({
+          name: 'online-course',
+          params: {
+            courseid: res.data._id,
+          },
+        });
+      })
+      .catch(() => commit('ERROR', errors.post, { root: true }))
+      .finally(() => commit('LOADING', false, { root: true }))
   },
-  async PUT_COURSE({ state, commit }, { data, id }) {
-    const res = await api.post(`${endpoints.get}/${id}`, data);
-    if (res.statusText === 'Created') {
-      commit('COURSE', res.data);
-      commit(
-        'COURSES',
-        state.courses.map(course => (course._id === id ? res.data : course))
-      );
-    } else {
-      commit('ERROR', errors.get, { root: true });
-    }
+
+  PUT_COURSE({ state, commit }, { data, id }) {
+    api.post(`${endpoints.get}/${id}`, data)
+      .then((res) => {
+        commit('COURSE', res.data);
+        commit(
+          'COURSES',
+          state.courses.map(course => (course._id === id ? res.data : course))
+        );
+      })
+      .catch(() => commit('ERROR', errors.get, { root: true }))
   },
-  async DELETE_COURSE({ commit }, courseId) {
-    const res = await api.delete(`${endpoints.delete}/${courseId}`);
-    if (res.statusText === 'OK') {
-      commit('ERROR', errors.get, { root: true });
-    }
+
+  DELETE_COURSE({ commit }, courseId) {
+    api.delete(`${endpoints.delete}/${courseId}`)
+      .then(() => { })
+      .catch(() => commit('ERROR', errors.get, { root: true }))
   },
-  async GET_VIDEO({ commit }, id) {
+
+  GET_VIDEO({ commit }, id) {
     commit('LOADING', true, { root: true });
-    const res = await api.get(`${endpoints.findvideo}/${id}`);
-    if (res.statusText === 'OK') {
-      commit('VIDEO', res.data);
-    } else {
-      commit('ERROR', errors.get_video, { root: true });
-    }
-    commit('LOADING', false, { root: true });
+    api.get(`${endpoints.findvideo}/${id}`)
+      .then((res) => commit('VIDEO', res.data))
+      .catch(() => commit('ERROR', errors.get_video, { root: true }))
+      .finally(() => commit('LOADING', false, { root: true }))
   },
-  async ADD_QUEUE({ commit }, arr) {
+
+  ADD_QUEUE({ commit }, arr) {
     commit('DIALOG', true);
     setTimeout(() => commit('QUEUE', arr), 2000);
   },
+
   ADD_LESSON({ commit }, payload) {
     api.post(`${endpoints.video}/${payload.id}`, payload.lesson, {
       onUploadProgress: (progressEvent) => {
@@ -142,53 +142,49 @@ const actions = {
         commit('ERROR', errors.addLesson, { root: true });
       })
   },
-  async PUT_VIDEO({ commit, dispatch }, { fd, id }) {
-    const res = await api.put(`${endpoints.video}/${id}`, fd);
-    if (res.statusText === 'OK') {
-      dispatch('GET_VIDEO', id);
-    } else {
-      commit('ERROR', errors.get, { root: true });
-    }
+
+  PUT_VIDEO({ commit, dispatch }, { fd, id }) {
+    api.put(`${endpoints.video}/${id}`, fd)
+      .then(() => dispatch('GET_VIDEO', id))
+      .catch(() => commit('ERROR', errors.get, { root: true }))
   },
-  async DELETE_VIDEO({ commit, dispatch }, { id, courseId }) {
-    const res = await api.delete(`${endpoints.video}/${id}`);
-    if (res.statusText === 'OK') {
-      dispatch('GET_COURSE', courseId);
-    } else {
-      commit('ERROR', errors.delete, { root: true });
-    }
+
+  DELETE_VIDEO({ commit, dispatch }, { id, courseId }) {
+    api.delete(`${endpoints.video}/${id}`)
+      .then(() => dispatch('GET_COURSE', courseId))
+      .catch(() => commit('ERROR', errors.delete, { root: true }))
   },
-  async PUBLISH({ commit, dispatch }, { id, publish }) {
+
+  PUBLISH({ commit, dispatch }, { id, publish }) {
     const data = {
       isPublished: publish,
     };
-    const res = await api.patch(`${endpoints.patch}/${id}`, data);
-    if (res.statusText === 'OK') {
-      commit('MESSAGE', publish ? messages.publish : messages.unpublish, { root: true });
-      dispatch('GET_COURSE', id);
-    } else {
-      commit('ERROR', publish ? errors.publish : errors.unpublish, { root: true });
-    }
+    api.patch(`${endpoints.patch}/${id}`, data)
+      .then(() => {
+        commit('MESSAGE', publish ? messages.publish : messages.unpublish, { root: true });
+        dispatch('GET_COURSE', id);
+      })
+      .catch(() => commit('ERROR', publish ? errors.publish : errors.unpublish, { root: true }))
   },
-  async ADD_PDF({ commit, dispatch }, { fd, lessonId }) {
-    const res = await api.post(`${endpoints.pdf}/${lessonId}`, fd);
-    if (res.statusText === 'Created') {
-      // dispatch('GET_COURSES');
-      // dispatch('GET_COURSE', currentCourseId);
-      dispatch('GET_VIDEO', lessonId);
-    } else {
-      commit('ERROR', errors.addPdf, { root: true });
-    }
+
+  ADD_PDF({ commit, dispatch }, { fd, lessonId }) {
+    api.post(`${endpoints.pdf}/${lessonId}`, fd)
+      .then(() => {
+        // dispatch('GET_COURSES');
+        // dispatch('GET_COURSE', currentCourseId);
+        dispatch('GET_VIDEO', lessonId);
+      })
+      .catch(() => commit('ERROR', errors.addPdf, { root: true }))
   },
-  async REMOVE_PDF({ commit, dispatch }, { id, lessonId }) {
-    const res = await api.delete(`${endpoints.pdf}/${id}`);
-    if (res.statusText === 'OK') {
-      // dispatch('GET_COURSES');
-      // dispatch('GET_COURSE', currentCourseId);
-      dispatch('GET_VIDEO', lessonId);
-    } else {
-      commit('ERROR', errors.delete, { root: true });
-    }
+
+  REMOVE_PDF({ commit, dispatch }, { id, lessonId }) {
+    api.delete(`${endpoints.pdf}/${id}`)
+      .then(() => {
+        // dispatch('GET_COURSES');
+        // dispatch('GET_COURSE', currentCourseId);
+        dispatch('GET_VIDEO', lessonId);
+      })
+      .catch(() => commit('ERROR', errors.delete, { root: true }))
   },
 };
 

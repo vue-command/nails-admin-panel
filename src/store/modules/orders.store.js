@@ -28,19 +28,19 @@ const mutations = {
   },
 };
 const actions = {
-  async GET_ORDERS({ commit }, type) {
-    const res = await api.get(`${endpoints.get}/${type}`);
-    if (res.statusText === 'OK') {
-      if (type === 'online') commit('ONLINE_ORDERS', res.data.data);
-      if (type === 'offline') commit('OFFLINE_ORDERS', res.data.data);
-      if (type === 'commodity') commit('COMMODITY_ORDERS', res.data.data);
-    }
+  GET_ORDERS({ commit }, type) {
+    api.get(`${endpoints.get}/${type}`)
+      .then((res) => {
+        if (type === 'online') commit('ONLINE_ORDERS', res.data.data);
+        if (type === 'offline') commit('OFFLINE_ORDERS', res.data.data);
+        if (type === 'commodity') commit('COMMODITY_ORDERS', res.data.data);
+      })
+      .catch(() => { })
   },
-  async PATCH_COMMODITY_ORDER({ commit }, { id, orderPatch }) {
-    const res = await api.path(endpoints.patch, orderPatch);
-    if (res.statusText === 'OK') {
-      commit('PATCH_COMMODITY_ORDER', { id, orderPatch });
-    }
+  PATCH_COMMODITY_ORDER({ commit }, { id, orderPatch }) {
+    api.path(endpoints.patch, orderPatch)
+      .then(() => commit('PATCH_COMMODITY_ORDER', { id, orderPatch }))
+      .catch(() => { })
   },
 };
 

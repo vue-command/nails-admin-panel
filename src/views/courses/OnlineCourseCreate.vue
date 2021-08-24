@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import CourseDetail from '@/components/courses/CourseDetail.vue';
 import CourseCard from '@/components/courses/CourseCard.vue';
@@ -32,28 +32,18 @@ export default {
   name: 'OnlineCourseCreate',
   data() {
     return {
-      loading: false,
       schema,
       courseData: null,
       type: 'online',
     };
   },
   methods: {
+    ...mapState(['loading']),
     ...mapActions('onlineCourses', {
       postCourse: 'POST_COURSE',
     }),
-    async submit(data) {
-      this.loading = true;
-      const id = await this.postCourse(data);
-      this.loading = false;
-      if (id) {
-        this.$router.push({
-          name: 'online-course',
-          params: {
-            courseid: id,
-          },
-        });
-      }
+    submit(data) {
+      this.postCourse(data);
     },
   },
 };

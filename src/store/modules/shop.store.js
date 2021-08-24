@@ -51,7 +51,7 @@ const mutations = {
 };
 
 const actions = {
-  async SEARCH_COMMODITIES({ commit }, { offset, published, search }) {
+  SEARCH_COMMODITIES({ commit }, { offset, published, search }) {
     const params = {
       query: search,
       // limit: state.pageSize,
@@ -62,18 +62,15 @@ const actions = {
       // published: true,
       published,
     };
-    const res = await api.get(commoditiesEndpoints.search, { params });
-    if (res.statusText === 'OK') {
-      commit('COMMODITIES', res.data.data);
-      commit('TOTAL', res.data.total);
-    } else {
-      commit('ERROR', errors.oops, {
-        root: true,
-      });
-    }
+    api.get(commoditiesEndpoints.search, { params })
+      .then((res) => {
+        commit('COMMODITIES', res.data.data);
+        commit('TOTAL', res.data.total);
+      })
+      .catch(() => commit('ERROR', errors.oops, { root: true }))
   },
 
-  async GET_COMMODITIES({ commit, dispatch }, { id, offset, published, search }) {
+  GET_COMMODITIES({ commit, dispatch }, { id, offset, published, search }) {
     if (search) {
       dispatch('SEARCH_COMMODITIES', { offset, published, search });
       return;
@@ -90,109 +87,81 @@ const actions = {
       published,
     };
 
-    const res = await api.get(`${commoditiesEndpoints.subcommodities}/${id}`, { params });
-
-    if (res.statusText === 'OK') {
-      commit('COMMODITIES', res.data.data);
-      commit('TOTAL', res.data.total);
-    } else {
-      commit('ERROR', errors.oops, {
-        root: true,
-      });
-    }
-    commit('SHOP_LOADING', false);
+    api.get(`${commoditiesEndpoints.subcommodities}/${id}`, { params })
+      .then((res) => {
+        commit('COMMODITIES', res.data.data);
+        commit('TOTAL', res.data.total);
+      })
+      .catch(() => commit('ERROR', errors.oops, { root: true }))
+      .finally(() => commit('SHOP_LOADING', false))
   },
 
-  async GET_COMMODITY({ commit }, payload) {
+  GET_COMMODITY({ commit }, payload) {
     commit('COMMODITY_LOADING', true);
-    const res = await api.get(`${commoditiesEndpoints.commodity}/${payload}`);
-    if (res.statusText === 'OK') {
-      commit('COMMODITY', res.data[0]);
-    } else {
-      commit('ERROR', errors.oops, {
-        root: true,
-      });
-    }
-    commit('COMMODITY_LOADING', false);
+    api.get(`${commoditiesEndpoints.commodity}/${payload}`)
+      .then((res) => commit('COMMODITY', res.data[0]))
+      .catch(() => commit('ERROR', errors.oops, { root: true }))
+      .finally(() => commit('COMMODITY_LOADING', false))
   },
 
-  async CREATE_COMMODITY({ commit }, payload) {
+  CREATE_COMMODITY({ commit }, payload) {
     commit('COMMODITY_LOADING', true);
-    const res = await api.post(commoditiesEndpoints.newCommodity, payload);
-    if (res.statusText === 'Created') {
-      commit('ADD_COMMODITY', res.data);
-    } else {
-      commit('ERROR', Object.assign({}, errors.oops, { errorMessage: res.data.message }), {
-        root: true,
-      });
-    }
-    commit('COMMODITY_LOADING', false);
-    return res.data?._id;
+    api.post(commoditiesEndpoints.newCommodity, payload)
+      .then((res) => commit('ADD_COMMODITY', res.data))
+      .catch((e) => {
+        commit('ERROR', Object.assign({}, errors.oops, { errorMessage: e.response.data.message }), {
+          root: true,
+        });
+      })
+      .finally(() => commit('COMMODITY_LOADING', true))
   },
 
-  async UPDATE_COMMODITY({ commit }, { commodity, id }) {
+  UPDATE_COMMODITY({ commit }, { commodity, id }) {
     commit('COMMODITY_LOADING', true);
-    const res = await api.put(`${commoditiesEndpoints.commodity}/${id}`, commodity);
-    if (res.statusText === 'OK') {
-      commit('REPLACE_COMMODITY', res.data);
-      commit('MESSAGE', messages.update, { root: true });
-    } else {
-      commit('ERROR', errors.oops, {
-        root: true,
-      });
-    }
-    commit('COMMODITY_LOADING', false);
-  },
-  async PATCH_COMMODITY({ commit }, { commodity, id }) {
-    commit('COMMODITY_LOADING', true);
-    const res = await api.patch(`${commoditiesEndpoints.isPublished}/${id}`, commodity);
-    if (res.statusText === 'OK') {
-      commit('REPLACE_COMMODITY', res.data);
-      commit('MESSAGE', messages.update, { root: true });
-    } else {
-      commit('ERROR', errors.oops, {
-        root: true,
-      });
-    }
-    commit('COMMODITY_LOADING', false);
+    api.put(`${commoditiesEndpoints.commodity}/${id}`, commodity)
+      .then((res) => {
+        commit('REPLACE_COMMODITY', res.data);
+        commit('MESSAGE', messages.update, { root: true });
+      })
+      .catch(() => commit('ERROR', errors.oops, { root: true }))
+      .finally(() => commit('COMMODITY_LOADING', false))
   },
 
-  async UPLOAD_IMAGES({ commit }, { data, id }) {
+  PATCH_COMMODITY({ commit }, { commodity, id }) {
+    commit('COMMODITY_LOADING', true);
+    api.patch(`${commoditiesEndpoints.isPublished}/${id}`, commodity)
+      .then((res) => {
+        commit('REPLACE_COMMODITY', res.data);
+        commit('MESSAGE', messages.update, { root: true });
+      })
+      .catch(() => commit('ERROR', errors.oops, { root: true }))
+      .finally(() => commit('COMMODITY_LOADING', false))
+  },
+
+  UPLOAD_IMAGES({ commit }, { data, id }) {
     const formData = new FormData();
     data.forEach(item => formData.append('files', item));
-    const res = await api.post(`${commoditiesEndpoints.files}/${id}`, formData);
-    if (res.statusText === 'Created') {
-      commit('REPLACE_COMMODITY', res.data);
-
-      commit('MESSAGE', messages.update, { root: true });
-    } else {
-      commit('ERROR', errors.oops, {
-        root: true,
-      });
-    }
+    api.post(`${commoditiesEndpoints.files}/${id}`, formData)
+      .then((res) => {
+        commit('REPLACE_COMMODITY', res.data);
+        commit('MESSAGE', messages.update, { root: true })
+      })
+      .catch(() => commit('ERROR', errors.oops, { root: true }))
   },
 
-  async DELETE_IMAGE({ commit }, id) {
-    const res = await api.delete(`${commoditiesEndpoints.file}/${id}`);
-    if (res.statusText === 'OK') {
-      commit('REMOVE_IMAGE', id);
-      commit('MESSAGE', messages.update, { root: true });
-    } else {
-      commit('ERROR', errors.oops, {
-        root: true,
-      });
-    }
+  DELETE_IMAGE({ commit }, id) {
+    api.delete(`${commoditiesEndpoints.file}/${id}`)
+      .then(() => {
+        commit('REMOVE_IMAGE', id);
+        commit('MESSAGE', messages.update, { root: true });
+      })
+      .catch(() => commit('ERROR', errors.oops, { root: true }))
   },
 
-  async DELETE_COMMODITY({ commit }, id) {
-    const res = await api.delete(`${commoditiesEndpoints.commodity}/${id}`);
-    if (res.statusText === 'OK') {
-      commit('REMOVE_COMMODITY', id);
-    } else {
-      commit('ERROR', errors.oops, {
-        root: true,
-      });
-    }
+  DELETE_COMMODITY({ commit }, id) {
+    api.delete(`${commoditiesEndpoints.commodity}/${id}`)
+      .then(() => commit('REMOVE_COMMODITY', id))
+      .catch(() => commit('ERROR', errors.oops, { root: true }))
   },
 };
 

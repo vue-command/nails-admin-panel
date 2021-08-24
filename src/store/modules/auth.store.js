@@ -32,12 +32,12 @@ const actions = {
     const res = await api.get(endpoints.profile);
     if (res.statusText === 'OK') {
       if(!res.data.roles.includes('Admin')){
-        window.location = `${process.env.VUE_APP_HOST_URL}/user-cabinet`;
+        // window.location = `${process.env.VUE_APP_HOST_URL}/user-cabinet`;
       }
       commit('USER', res.data);
       commit('IS_LOGGED', true);
     } else {
-      window.location = `${process.env.VUE_APP_HOST_URL}/user-cabinet`
+      // window.location = `${process.env.VUE_APP_HOST_URL}/user-cabinet`
       commit('IS_LOGGED', false);
       commit('ERROR', Object.assign({}, errors.signIn, { errorMessage: res.data.message }), { root: true });
     }

@@ -24,27 +24,21 @@ const mutations = {
 };
 
 const actions = {
-  async GET_COUNTRIES({ commit }) {
+  GET_COUNTRIES({ commit }) {
     commit('LOADING', true, { root: true });
     const params = { full: true }
-    const res = await api.get(endpoints.get, { params });
-    if (res.statusText === 'OK') {
-      commit('PRICES', res.data);
-    } else {
-      commit('ERROR', errors.get, { root: true });
-    }
-    commit('LOADING', false, { root: true });
+    api.get(endpoints.get, { params })
+      .then((res) => commit('PRICES', res.data))
+      .catch(() => commit('ERROR', errors.get, { root: true }))
+      .finally(() => commit('LOADING', false, { root: true }))
   },
 
-  async UPDATE_COUNTRY_PRICE({ commit }, { id, price }) {
+  UPDATE_COUNTRY_PRICE({ commit }, { id, price }) {
     commit('LOADING', true, { root: true });
-    const res = await api.patch(`${endpoints.patch}/${id}`, { price });
-    if (res.statusText === 'OK') {
-      commit('CHANGE_PRICE', { id, price });
-    } else {
-      commit('ERROR', errors.get, { root: true });
-    }
-    commit('LOADING', false, { root: true });
+    api.patch(`${endpoints.patch}/${id}`, { price })
+      .then(() => commit('CHANGE_PRICE', { id, price }))
+      .catch(() => commit('ERROR', errors.get, { root: true }))
+      .finally(() => commit('LOADING', false, { root: true }))
   },
 };
 

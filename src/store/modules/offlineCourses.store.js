@@ -1,4 +1,5 @@
 import { api } from './../../helpers/api';
+import router from './../../router';
 
 const endpoints = require('@/config/endpoints').default.offline;
 const errors = require('@/config/errors').default.offline;
@@ -28,85 +29,74 @@ const mutations = {
 };
 
 const actions = {
-  async GET_COURSES({ commit }) {
+  GET_COURSES({ commit }) {
     commit('LOADING', true, { root: true });
-    const res = await api.get(endpoints.get);
-    if (res.statusText === 'OK') {
-      commit('COURSES', res.data.data);
-      commit('TOTAL', res.data.total);
-    } else {
-      commit('ERROR', errors.get, { root: true });
-    }
-    commit('LOADING', false, { root: true });
+    api.get(endpoints.get)
+      .then((res) => {
+        commit('COURSES', res.data.data);
+        commit('TOTAL', res.data.total);
+      })
+      .catch(() => commit('ERROR', errors.get, { root: true }))
+      .finally(() => commit('LOADING', false, { root: true }))
   },
 
-  async GET_MORE_COURSES({ commit }, params) {
+  GET_MORE_COURSES({ commit }, params) {
     commit('LOADING', true, { root: true });
-    const res = await api.get(endpoints.get, { params });
-    if (res.statusText === 'OK') {
-      commit('MORE_COURSES', res.data.data);
-      commit('TOTAL', res.data.total);
-    } else {
-      commit('ERROR', errors.get, { root: true });
-    }
-    commit('LOADING', false, { root: true });
+    api.get(endpoints.get, { params })
+      .then((res) => {
+        commit('MORE_COURSES', res.data.data);
+        commit('TOTAL', res.data.total);
+      })
+      .catch(() => commit('ERROR', errors.get, { root: true }))
+      .finally(() => commit('LOADING', false, { root: true }))
   },
 
-  async GET_COURSE({ commit }, id) {
+  GET_COURSE({ commit }, id) {
     commit('LOADING', true, { root: true });
-    const res = await api.get(`${endpoints.get}/${id}`);
-    if (res.statusText === 'OK') {
-      res.data.dateOfCourses = res.data.dateOfCourses.map(item => {
-        const { availableSpots, ...rest } = item;
-        const str = availableSpots.toString();
-        return { availableSpots: str, ...rest };
-      });
-      commit('COURSE', res.data);
-    } else {
-      commit('ERROR', errors.get_by_id, { root: true });
-    }
-    commit('LOADING', false, { root: true });
+    api.get(`${endpoints.get}/${id}`)
+      .then((res) => {
+        commit('COURSE', res.data);
+      })
+      .catch(() => commit('ERROR', errors.get_by_id, { root: true }))
+      .finally(() => commit('LOADING', false, { root: true }))
   },
 
-  async POST_COURSE({ commit }, data) {
+  POST_COURSE({ commit }, data) {
     commit('LOADING', true, { root: true });
-    const res = await api.post(endpoints.post, data);
-    if (res.statusText === 'Created') {
-      commit('MESSAGE', messages.post, { root: true });
-    } else {
-      commit('ERROR', errors.post, { root: true });
-    }
-    commit('LOADING', false, { root: true });
-    return res.data?._id;
+    api.post(endpoints.post, data)
+      .then((res) => {
+        commit('MESSAGE', messages.post, { root: true })
+        router.push({
+          name: 'offline-course',
+          params: {
+            courseid: res.data._id,
+          },
+        });
+      })
+      .catch(() => commit('ERROR', errors.post, { root: true }))
+      .finally(() => commit('LOADING', false, { root: true }))
   },
 
-  async PUT_COURSE({ commit }, { data, id }) {
+  PUT_COURSE({ commit }, { data, id }) {
     commit('LOADING', true, { root: true });
-    const res = await api.put(`${endpoints.put}/${id}`, data);
-    if (res.statusText === 'OK') {
-      res.data.dateOfCourses = res.data.dateOfCourses.map(item => {
-        const { availableSpots, ...rest } = item;
-        const str = availableSpots.toString();
-        return { availableSpots: str, ...rest };
-      });
-      commit('COURSE', res.data);
-      commit('MESSAGE', messages.put, { root: true });
-    } else {
-      commit('ERROR', errors.put, { root: true });
-    }
-    commit('LOADING', false, { root: true });
+    api.put(`${endpoints.put}/${id}`, data)
+      .then((res) => {
+        commit('COURSE', res.data);
+        commit('MESSAGE', messages.put, { root: true });
+      })
+      .catch(() => commit('ERROR', errors.put, { root: true }))
+      .finally(() => commit('LOADING', false, { root: true }))
   },
 
-  async DELETE_COURSE({ commit, dispatch }, id) {
+  DELETE_COURSE({ commit, dispatch }, id) {
     commit('LOADING', true, { root: true });
-    const res = await api.delete(`${endpoints.delete}/${id}`);
-    if (res.statusText === 'OK') {
-      commit('MESSAGE', messages.delete, { root: true });
-      dispatch('GET_COURSES');
-    } else {
-      commit('ERROR', errors.delete, { root: true });
-    }
-    commit('LOADING', false, { root: true });
+    api.delete(`${endpoints.delete}/${id}`)
+      .then(() => {
+        commit('MESSAGE', messages.delete, { root: true });
+        dispatch('GET_COURSES');
+      })
+      .catch(() => commit('ERROR', errors.delete, { root: true }))
+      .finally(() => commit('LOADING', false, { root: true }))
   },
 };
 

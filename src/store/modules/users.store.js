@@ -16,11 +16,10 @@ const mutations = {
   },
 };
 const actions = {
-  async GET_USERS({ commit }) {
-    const res = await api.get(endpoints.find);
-    if (res.statusText === 'OK') {
-      commit('USERS', res.data);
-    }
+  GET_USERS({ commit }) {
+    api.get(endpoints.find)
+      .then((res) => commit('USERS', res.data))
+      .catch(() => { })
   },
 };
 

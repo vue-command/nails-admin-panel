@@ -50,7 +50,6 @@ export default {
   },
   data() {
     return {
-      loading: false,
       schema,
       courseData: null,
       editing: false,
@@ -58,7 +57,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['loading', 'error']),
+    ...mapState(['loading']),
     ...mapState('offlineCourses', ['course']),
   },
   watch: {
@@ -72,6 +71,7 @@ export default {
       putCourse: 'PUT_COURSE',
       getCourse: 'GET_COURSE',
     }),
+    ...mapActions({ setLoading: 'SET_LOADING' }),
     fillingForm() {
       if (this.course) {
         this.courseData = JSON.parse(JSON.stringify(this.course));
@@ -83,14 +83,11 @@ export default {
         });
       }
     },
-    async submit(data) {
-      this.loading = true;
-      await this.putCourse({
+    submit(data) {
+      this.putCourse({
         data,
         id: this.$route.params.courseid,
       });
-      this.loading = false;
-      if (!this.error) this.back();
     },
     back() {
       this.editing = false;
