@@ -106,7 +106,7 @@ export default {
         id: this.productId,
       });
     },
-    async submitHandler() {
+    submitHandler() {
       const formData = new FormData();
       Object.entries(this.currentCommodity).forEach(([key, value]) => {
         if (value instanceof File) formData.append('previewFile', value);
@@ -118,14 +118,7 @@ export default {
       if (this.$route.name !== 'commodity-create') {
         this.$store.dispatch('shop/UPDATE_COMMODITY', { commodity: formData, id: this.productId });
       } else {
-        const id = await this.$store.dispatch('shop/CREATE_COMMODITY', formData);
-        if (id)
-          this.$router.push({
-            name: 'commodity-edit',
-            params: {
-              commodityId: id,
-            },
-          });
+        this.$store.dispatch('shop/CREATE_COMMODITY', formData);
       }
     },
     previewFilesHandler(data) {
@@ -144,7 +137,7 @@ export default {
     if (this.$route.name !== 'commodity-create') {
       this.$store.dispatch('shop/GET_COMMODITY', this.productId);
     } else {
-      this.currentCommodity = { };
+      this.currentCommodity = {};
       this.$store.commit('shop/CLEAR_COMMODITY');
     }
   },

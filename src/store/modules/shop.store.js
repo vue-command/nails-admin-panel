@@ -1,4 +1,6 @@
 import { api } from './../../helpers/api';
+import router from './../../router';
+
 const commoditiesEndpoints = require('@/config/endpoints').default.commodities;
 const errors = require('@/config/errors').default.shop;
 const messages = require('@/config/messages').default.shop;
@@ -107,11 +109,17 @@ const actions = {
   CREATE_COMMODITY({ commit }, payload) {
     commit('COMMODITY_LOADING', true);
     api.post(commoditiesEndpoints.newCommodity, payload)
-      .then((res) => commit('ADD_COMMODITY', res.data))
-      .catch((e) => {
-        commit('ERROR', Object.assign({}, errors.oops, { errorMessage: e.response.data.message }), {
-          root: true,
+      .then((res) => {
+        commit('ADD_COMMODITY', res.data)
+        router.push({
+          name: 'commodity-edit',
+          params: {
+            commodityId: res.data._id,
+          },
         });
+      })
+      .catch((e) => {
+        commit('ERROR', Object.assign({}, errors.oops, { errorMessage: e.response.data.message }), { root: true });
       })
       .finally(() => commit('COMMODITY_LOADING', false))
   },
