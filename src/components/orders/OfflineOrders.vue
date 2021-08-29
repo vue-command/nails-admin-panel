@@ -63,7 +63,7 @@ export default {
             nameOfCourse: order.product[0].productId.nameOfCourse,
             price: order.product[0].productId.price,
             purchasedDate: this.dateOfCourses(
-              order.product[0].productId.dateOfCourses.find(item => item.vendorСode === order.product[0].vendorСode)
+              order.product[0].productId.dateOfCourses.find(item => item.vendorCode === order.product[0].vendorCode)
             ),
           },
           order
