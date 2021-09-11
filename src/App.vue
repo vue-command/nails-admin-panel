@@ -53,8 +53,8 @@ export default {
     ...mapState('onlineCourses', ['uploadDialog']),
     ...mapState('auth', ['user']),
     baseUrl() {
-      return process.env.BASE_URL;
-      // return process.env.VUE_APP_API_URL
+      // return process.env.BASE_URL;
+      return process.env.VUE_APP_HOST_URL
     },
   },
 

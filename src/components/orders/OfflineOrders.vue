@@ -60,10 +60,10 @@ export default {
           {
             user: this.users.find(user => user._id === order.paymentInfo.userId) ?? {},
             userName: order.paymentInfo.userName,
-            nameOfCourse: order.product[0].productId.nameOfCourse,
-            price: order.product[0].productId.price,
+            nameOfCourse: order.product[0].product.nameOfCourse,
+            price: order.product[0].product.price,
             purchasedDate: this.dateOfCourses(
-              order.product[0].productId.dateOfCourses.find(item => item.vendorCode === order.product[0].vendorCode)
+              order.product[0].product.dateOfCourses.find(item => item.vendorCode === order.product[0].vendorCode)
             ),
           },
           order
