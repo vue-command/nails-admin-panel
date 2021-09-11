@@ -99,7 +99,7 @@ const actions = {
   },
 
   PUT_COURSE({ state, commit }, { data, id }) {
-    api.post(`${endpoints.get}/${id}`, data)
+    api.put(`${endpoints.get}/${id}`, data)
       .then((res) => {
         commit('COURSE', res.data);
         commit(
