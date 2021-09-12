@@ -53,7 +53,7 @@ export default {
           return res || 'Input is required';
         },
         onlyDigits: v => !/\D/g.test(v) || 'input should consist only of digits',
-        limit: v => v.length <= this.limit || `Max ${this.limit} characters`,
+        limit: v => (v?.length <= this.limit || v <= 1000) || `Max ${this.limit} characters`,
         noRepeat: value =>
           !this.noRepeat || value.split(' ').join('') !== this.noRepeat.split(' ').join('') || 'Digits must not match',
       },

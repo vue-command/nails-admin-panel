@@ -4,6 +4,9 @@
       <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
 
       <v-toolbar-title><a class="white--text" :href="baseUrl">Nails AUSTRALIA</a></v-toolbar-title>
+      <v-toolbar-title
+        ><a class="white--text ml-12" @click="$router.push({ name: 'home' })">Nails ADMIN PANEL</a></v-toolbar-title
+      >
     </v-app-bar>
 
     <NavigationDrawer :drawer.sync="drawer" />
@@ -54,13 +57,13 @@ export default {
     ...mapState('auth', ['user']),
     baseUrl() {
       // return process.env.BASE_URL;
-      return process.env.VUE_APP_HOST_URL
+      return process.env.VUE_APP_HOST_URL;
     },
   },
 
   methods: {},
   created() {
-    subscribeToFailedRefresh(() => window.location = `${process.env.VUE_APP_HOST_URL}/user-cabinet`);
+    subscribeToFailedRefresh(() => (window.location = `${process.env.VUE_APP_HOST_URL}/user-cabinet`));
     this.$store.dispatch('categories/GET_CATEGORIES');
     this.$store.dispatch('auth/GET_PROFILE');
   },

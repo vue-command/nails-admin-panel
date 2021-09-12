@@ -79,13 +79,20 @@ const actions = {
 
   PUT_COURSE({ commit }, { data, id }) {
     commit('LOADING', true, { root: true });
+    let resolve = null
+    const promise = new Promise(res => resolve = res)
     api.put(`${endpoints.put}/${id}`, data)
       .then((res) => {
         commit('COURSE', res.data);
         commit('MESSAGE', messages.put, { root: true });
+        resolve(true)
       })
-      .catch(() => commit('ERROR', errors.put, { root: true }))
+      .catch(() => {
+        commit('ERROR', errors.put, { root: true })
+        resolve(false)
+      })
       .finally(() => commit('LOADING', false, { root: true }))
+    return promise
   },
 
   DELETE_COURSE({ commit, dispatch }, id) {
