@@ -150,9 +150,18 @@ const actions = {
   },
 
   DELETE_VIDEO({ commit, dispatch }, { id, courseId }) {
+    let resolve = null
+    const promise = new Promise(res => resolve = res)
     api.delete(`${endpoints.video}/${id}`)
-      .then(() => dispatch('GET_COURSE', courseId))
-      .catch(() => commit('ERROR', errors.delete, { root: true }))
+      .then(() => {
+        dispatch('GET_COURSE', courseId)
+        resolve(true)
+      })
+      .catch(() => {
+        commit('ERROR', errors.delete, { root: true })
+        resolve(false)
+      })
+    return promise
   },
 
   PUBLISH({ commit, dispatch }, { id, publish }) {

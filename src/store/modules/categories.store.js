@@ -51,7 +51,7 @@ const actions = {
       })
       .catch(() => {
         commit('ERROR', errors.oops, { root: true })
-        resolve(false)
+        resolve(null)
       })
     return promise
   },
@@ -63,12 +63,20 @@ const actions = {
   },
 
   DELETE_CATEGORY({ state, commit }, id) {
+    let resolve = null
+    const promise = new Promise(res => resolve = res)
     api.delete(`${categoriesEndpoints.delete}/${id}`)
       .then(() => {
         const categories = state.categories.filter(elem => elem._id !== id);
         commit('CATEGORIES', categories);
+        resolve(true)
       })
-      .catch(() => commit('ERROR', errors.oops, { root: true }))
+      .catch(() => {
+        commit('ERROR', errors.oops, { root: true })
+        resolve(false)
+      })
+    return promise
+
   },
 
   CREATE_NEW_SUBCATEGORY({ commit }, { name, id }) {
@@ -78,18 +86,36 @@ const actions = {
   },
 
   DELETE_SUBCATEGORY({ commit }, { id }) {
+    let resolve = null
+    const promise = new Promise(res => resolve = res)
     api.delete(`${categoriesEndpoints.subcategory}/${id}`)
-      .then((res) => commit('CATEGORIES', res.data))
-      .catch(() => commit('ERROR', errors.oops, { root: true }))
+      .then((res) => {
+        commit('CATEGORIES', res.data)
+        resolve(true)
+      })
+      .catch(() => {
+        commit('ERROR', errors.oops, { root: true })
+        resolve(false)
+      })
+    return promise
   },
 
   CHANGE_SUBCATEGORY_NAME({ commit }, { id, name }) {
+    let resolve = null
+    const promise = new Promise(res => resolve = res)
     const data = {
       name: name,
     };
     api.put(`${categoriesEndpoints.subcategory}/${id}`, data)
-      .then((res) => commit('CATEGORIES', res.data))
-      .catch(() => commit('ERROR', errors.oops, { root: true }))
+      .then((res) => {
+        commit('CATEGORIES', res.data)
+        resolve(true)
+      })
+      .catch(() => {
+        commit('ERROR', errors.oops, { root: true })
+        resolve(false)
+      })
+    return promise
   },
 };
 

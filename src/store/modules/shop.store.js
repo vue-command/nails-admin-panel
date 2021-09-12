@@ -168,7 +168,10 @@ const actions = {
 
   DELETE_COMMODITY({ commit }, id) {
     api.delete(`${commoditiesEndpoints.commodity}/${id}`)
-      .then(() => commit('REMOVE_COMMODITY', id))
+      .then(() => {
+        commit('REMOVE_COMMODITY', id)
+        router.push({ name: 'commodities' })
+      })
       .catch(() => commit('ERROR', errors.oops, { root: true }))
   },
 };
