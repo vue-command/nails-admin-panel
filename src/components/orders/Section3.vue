@@ -1,6 +1,8 @@
 <template>
   <v-card flat class="transparent">
-    <v-card-title>Current status: {{ status }}</v-card-title>
+    <v-card-title
+      >Current status: {{ status }} <span v-if="status === 'created'" class="red-span"> (no payed) </span>
+    </v-card-title>
     <v-select v-model="select" :items="items" item-text="text" item-value="value" label="Change status" outlined dense>
     </v-select>
     <v-text-field v-if="select === 'sent'" v-model="trackingNumber" label="Tracking Number" outlined dense />
@@ -58,7 +60,7 @@ export default {
       if (this.select) return true;
       return false;
     },
-    items(){
+    items() {
       const pickup = [
         { text: 'Processed', value: 'processed' },
         { text: 'Waiting pickup', value: 'waiting-pickup' },
@@ -101,5 +103,8 @@ export default {
     padding: 5px;
     text-align: center;
   }
+}
+.red-span {
+  color: red;
 }
 </style>
