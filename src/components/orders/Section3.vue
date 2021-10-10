@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { formatDate } from '@/helpers/formatDate'
 export default {
   name: 'Section3',
   props: {
@@ -87,10 +88,8 @@ export default {
       this.$emit('changeStatus', order);
       this.clear();
     },
-    formatDate(dateStr) {
-      const date = new Date(Number(dateStr));
-      return date.toLocaleDateString();
-    },
+    formatDate
+    
   },
   mounted() {},
 };
