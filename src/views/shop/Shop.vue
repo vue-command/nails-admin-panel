@@ -198,6 +198,9 @@ export default {
       if (this.page !== 1) this.page = 1;
       this.searchDebounced();
     },
+    ready(val) {
+      if (val) this.getCommodities();
+    }
   },
   methods: {
     getCommodities() {
@@ -233,7 +236,6 @@ export default {
   },
   created() {
     this.readIndexes();
-
     this.getCommodities();
     this.searchDebounced = debounce(this.getCommodities, 1000);
   },

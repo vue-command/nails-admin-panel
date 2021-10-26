@@ -107,7 +107,10 @@ const actions = {
           state.courses.map(course => (course._id === id ? res.data : course))
         );
       })
-      .catch(() => commit('ERROR', errors.get, { root: true }))
+      .catch((e) => {
+        const { error, message } = e.response.data
+        commit('ERROR', { ...errors.get, errorType: error, errorMessage: message }, { root: true })
+      })
   },
 
   DELETE_COURSE({ commit }, courseId) {
@@ -150,9 +153,18 @@ const actions = {
   },
 
   DELETE_VIDEO({ commit, dispatch }, { id, courseId }) {
+    let resolve = null
+    const promise = new Promise(res => resolve = res)
     api.delete(`${endpoints.video}/${id}`)
-      .then(() => dispatch('GET_COURSE', courseId))
-      .catch(() => commit('ERROR', errors.delete, { root: true }))
+      .then(() => {
+        dispatch('GET_COURSE', courseId)
+        resolve(true)
+      })
+      .catch(() => {
+        commit('ERROR', errors.delete, { root: true })
+        resolve(false)
+      })
+    return promise
   },
 
   PUBLISH({ commit, dispatch }, { id, publish }) {
@@ -174,7 +186,10 @@ const actions = {
         // dispatch('GET_COURSE', currentCourseId);
         dispatch('GET_VIDEO', lessonId);
       })
-      .catch(() => commit('ERROR', errors.addPdf, { root: true }))
+      .catch((e) => {
+        const { error, message } = e.response.data
+        commit('ERROR', { error: true, errorType: error, errorMessage: message }, { root: true })
+      })
   },
 
   REMOVE_PDF({ commit, dispatch }, { id, lessonId }) {
@@ -184,7 +199,10 @@ const actions = {
         // dispatch('GET_COURSE', currentCourseId);
         dispatch('GET_VIDEO', lessonId);
       })
-      .catch(() => commit('ERROR', errors.delete, { root: true }))
+      .catch((e) => {
+        const { error, message } = e.response.data
+        commit('ERROR', { error: true, errorType: error, errorMessage: message }, { root: true })
+      })
   },
 };
 

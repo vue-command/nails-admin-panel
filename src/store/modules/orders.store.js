@@ -38,7 +38,7 @@ const actions = {
       .catch(() => { })
   },
   PATCH_COMMODITY_ORDER({ commit }, { id, orderPatch }) {
-    api.path(endpoints.patch, orderPatch)
+    api.patch(`${endpoints.patch}/${id}`, orderPatch)
       .then(() => commit('PATCH_COMMODITY_ORDER', { id, orderPatch }))
       .catch(() => { })
   },

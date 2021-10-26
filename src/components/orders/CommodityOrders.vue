@@ -30,6 +30,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import { formatDate } from '@/helpers/formatDate'
 
 export default {
   name: 'CommodityOrders',
@@ -69,10 +70,7 @@ export default {
   },
   methods: {
     ...mapActions('orders', { getOrders: 'GET_ORDERS', patchCommodityOrder: 'PATCH_COMMODITY_ORDER' }),
-    formatDate(dateStr) {
-      const date = new Date(dateStr);
-      return date.toLocaleDateString();
-    },
+    formatDate
   },
   mounted() {
     this.getOrders('commodity');

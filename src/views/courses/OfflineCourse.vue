@@ -83,11 +83,12 @@ export default {
         });
       }
     },
-    submit(data) {
-      this.putCourse({
+    async submit(data) {
+      const success = await this.putCourse({
         data,
         id: this.$route.params.courseid,
       });
+      success && this.back()
     },
     back() {
       this.editing = false;

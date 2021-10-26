@@ -127,9 +127,8 @@ export default {
     deleteImageHandler(id) {
       this.$store.dispatch('shop/DELETE_IMAGE', id);
     },
-    async deleteCommodityHandler() {
-      await this.$store.dispatch('shop/DELETE_COMMODITY', this.commodity._id);
-      this.$router.push({ name: 'commodities' });
+    deleteCommodityHandler() {
+      this.$store.dispatch('shop/DELETE_COMMODITY', this.commodity._id);
     },
   },
 
