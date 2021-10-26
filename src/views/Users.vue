@@ -62,7 +62,7 @@
           <v-card-title>
             <v-row v-if="$vuetify.breakpoint.xs">
               <v-col cols="12" xs="12">
-                <h5 class="text-truncate">
+                <h5 :class="['text-truncate', { admincolor: user.roles.includes('Admin') }]">
                   {{ user.firstName + ' ' + user.lastName }}
                 </h5>
               </v-col>
@@ -70,7 +70,7 @@
 
             <v-row v-else>
               <v-col cols="12" sm="4" md="3">
-                <h5 class="text-truncate">
+                <h5 :class="['text-truncate', { admincolor: user.roles.includes('Admin') }]">
                   {{ user.firstName + ' ' + user.lastName }}
                 </h5>
               </v-col>
@@ -102,6 +102,22 @@
               </v-row>
             </v-list-item>
           </v-list>
+
+          <v-card-actions v-if="isExpanded(user)" dense>
+            <v-btn
+              :disabled="user._id === authUser._id"
+              @click="changeRoles(user)"
+            >
+              {{user.roles.includes('Admin') ? 'unset role "admin"' : 'set role "admin"'}}
+            </v-btn>
+            <v-spacer/>
+            <v-btn
+              :disabled="user._id === authUser._id"
+              @click="_deleteUser(user._id)"
+            >
+              DELETE USER
+            </v-btn>
+          </v-card-actions>
         </v-card>
       </template>
 
@@ -171,6 +187,7 @@ export default {
   },
   computed: {
     ...mapState('users', ['users']),
+    ...mapState('auth', {authUser: 'user'}),
     numberOfPages() {
       return Math.ceil(this.users.length / this.itemsPerPage);
     },
@@ -183,7 +200,11 @@ export default {
   },
   watch: {},
   methods: {
-    ...mapActions('users', { getUsers: 'GET_USERS' }),
+    ...mapActions('users', {
+      getUsers: 'GET_USERS',
+      setRoles: 'SET_ROLES',
+      deleteUser: 'DELETE_USER',
+      }),
     nextPage() {
       if (this.page + 1 <= this.numberOfPages) this.page += 1;
     },
@@ -213,9 +234,30 @@ export default {
         },
       ];
     },
+    changeRoles(user) {
+      if(user._id === this.authUser?._id) return
+      const isAdmin = user.roles.includes('Admin')
+      let roles = []
+      if (isAdmin) {
+        roles = user.roles.filter(role => role !== 'Admin')
+      } else {
+        roles = [...user.roles, 'Admin']
+      }
+      this.setRoles({id: user._id, roles})
+    },
+    _deleteUser(id) {
+      if(id === this.authUser?._id) return
+      this.deleteUser(id)
+    }
   },
   mounted() {
     this.getUsers();
   },
 };
 </script>
+
+<style scoped>
+.admincolor {
+  color:rgb(158, 19, 19) !important;
+}
+</style>

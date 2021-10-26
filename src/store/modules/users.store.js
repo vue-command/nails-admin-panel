@@ -17,9 +17,19 @@ const mutations = {
 };
 const actions = {
   GET_USERS({ commit }) {
-    api.get(endpoints.find)
-      .then((res) => commit('USERS', res.data))
-      .catch(() => { })
+    const params = {
+      limit: 1_000
+    }
+    api.get(endpoints.get, {params})
+      .then((res) => commit('USERS', res.data.data))
+  },
+  SET_ROLES({ dispatch }, {id, roles}) {
+    api.post(endpoints.setRoles + '/' + id, roles)
+      .then(() => dispatch('GET_USERS'))
+  },
+  DELETE_USER({ dispatch }, id) {
+    api.delete(endpoints.get + '/' + id)
+      .then(() => dispatch('GET_USERS'))
   },
 };
 

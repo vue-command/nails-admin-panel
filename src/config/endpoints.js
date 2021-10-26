@@ -1,6 +1,7 @@
 export default {
   users: {
     get: 'users',
+    setRoles: 'users/set-roles'
   },
   orders: {
     get: 'orders',
